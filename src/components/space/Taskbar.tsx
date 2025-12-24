@@ -144,7 +144,7 @@ export function Taskbar() {
       animate={{ y: 0, opacity: 1 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-3 md:py-4 rounded-full border border-white/5 bg-[#030014]/60 backdrop-blur-2xl flex items-center gap-3 md:gap-8 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.8)] transition-all duration-300 hover:border-white/10 w-auto justify-center overflow-hidden group"
+      className={`fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-3 md:py-4 rounded-full border border-white/5 bg-[#030014]/60 backdrop-blur-2xl flex items-center shadow-[0_20px_50px_-12px_rgba(0,0,0,0.8)] transition-all duration-300 hover:border-white/10 w-auto justify-center overflow-hidden group ${isHovered ? 'gap-3 md:gap-8' : 'gap-0'}`}
     >
       {/* Global Scroll Track (Background) */}
       <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-white/5 z-0" />
@@ -157,7 +157,7 @@ export function Taskbar() {
       />
 
       {/* Home Navigation */}
-      <div className="flex items-center gap-2 md:gap-6 relative z-[2]">
+      <div className={`flex items-center relative z-[2] transition-all duration-300 ${isHovered ? 'gap-2 md:gap-6' : 'gap-0'}`}>
         {sections.map((section) => (
           <motion.div
             key={section.id}
