@@ -1,6 +1,3 @@
-/* Updated: 2025-12-24T09:51:53.076Z */
-/* Updated: 2025-12-24T09:18:33.270Z */
-/* Updated: 2025-12-24T09:13:41.255Z */
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -139,37 +136,26 @@
   background: radial-gradient(circle at 50% 50%, rgba(76, 29, 149, 0.1) 0%, transparent 80%);
 }
 
+/* Smooth Scroll Optimizations */
 html.has-scroll-smooth {
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html.has-scroll-smooth::-webkit-scrollbar {
+  display: none;
+}
+
+.has-scroll-smooth body {
   overflow: hidden;
 }
 
-  .has-scroll-smooth body {
-    @apply overflow-hidden selection:bg-purple-500/30;
-  }
-  
-  /* Hide native scrollbar when smooth scroll is active */
-  .has-scroll-smooth {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .has-scroll-smooth::-webkit-scrollbar {
-    display: none;
-  }
+.has-scroll-smooth [data-scroll-container] {
+  min-height: 100vh;
 }
 
-.text-glow {
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-}
-
-.glass-card {
-  @apply bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)];
-}
-
-.cosmic-gradient {
-  background: radial-gradient(circle at 50% 50%, rgba(76, 29, 149, 0.1) 0%, transparent 80%);
-}
-
-/* Custom Locomotive Scrollbar */
+/* Custom Locomotive Scrollbar - Optimized for Accuracy */
 .c-scrollbar {
   position: fixed !important;
   right: 2px !important;
@@ -211,20 +197,4 @@ html.has-scroll-smooth {
 
 .c-scrollbar_thumb:active {
   cursor: grabbing;
-}
-
-
-.has-scroll-smooth [data-scroll-container] {
-  min-height: 100vh;
-}
-
-[data-scroll-direction="vertical"] .c-scrollbar {
-  width: 10px;
-}
-
-[data-scroll-direction="vertical"] .c-scrollbar_thumb {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
-  margin: 2px;
-  cursor: grab;
 }
