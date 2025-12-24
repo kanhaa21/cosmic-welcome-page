@@ -68,23 +68,29 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
               height: window.innerHeight,
             };
           },
-          pinType: containerRef.current?.style.transform ? "transform" : "fixed",
+          // Always use transform for Locomotive Scroll v4 as it applies styles to the container
+          pinType: "transform",
         });
 
         // Sync ScrollTrigger with Locomotive Scroll
-        scrollInstance.on("scroll", ScrollTrigger.update);
+        scrollInstance.on("scroll", () => {
+          ScrollTrigger.update();
+        });
 
         // Resize Observer with debounced RAF
         let rafId: number;
         resizeObserver = new ResizeObserver(() => {
           if (rafId) cancelAnimationFrame(rafId);
           rafId = requestAnimationFrame(() => {
-            if (scrollInstance && isMounted) {
+            if (scrollInstance && isMounted && containerRef.current) {
               try {
-                scrollInstance.update();
-                ScrollTrigger.refresh();
+                // Only update if the instance hasn't been destroyed and elements are present
+                if (typeof scrollInstance.update === 'function') {
+                  scrollInstance.update();
+                  ScrollTrigger.refresh();
+                }
               } catch (e) {
-                // Silently handle errors during update if the DOM is in a weird state
+                console.warn("SmoothScroll update suppressed:", e);
               }
             }
           });
