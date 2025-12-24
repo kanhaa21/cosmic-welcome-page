@@ -133,7 +133,7 @@ export default function Home() {
         </section>
 
         {/* Milky Way Feature */}
-        <section className="relative py-40 px-4 md:px-20 z-10" data-scroll-section>
+        <section className="relative py-20 px-4 md:px-20 z-10" data-scroll-section>
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
             <div className="reveal-text">
               <span className="text-purple-400 font-bold uppercase tracking-widest text-sm mb-4 block">Cosmic Origins</span>
