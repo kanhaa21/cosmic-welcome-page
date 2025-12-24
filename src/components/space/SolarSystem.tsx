@@ -98,13 +98,13 @@ export function SolarSystem() {
     return () => ctx.revert();
   }, []);
 
-  return (
-    <section ref={containerRef} className="relative min-h-screen flex flex-col items-center z-10 bg-[#020108] overflow-hidden pt-32 md:pt-40">
-      {/* Visibility Enhancer */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none opacity-80" />
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-purple-900/5 blur-[180px] rounded-full pointer-events-none" />
-      
-      <div className="relative text-center w-full reveal-text z-20 px-4 mb-20 md:mb-32">
+    return (
+      <section ref={containerRef} className="relative min-h-screen flex flex-col items-center z-10 bg-[#020108] overflow-hidden pt-32 md:pt-48">
+        {/* Visibility Enhancer */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none opacity-80" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-purple-900/5 blur-[180px] rounded-full pointer-events-none" />
+        
+        <div className="relative text-center w-full reveal-text z-20 px-4 mb-32 md:mb-48">
         <motion.span 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
