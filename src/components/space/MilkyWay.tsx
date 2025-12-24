@@ -1,9 +1,27 @@
 "use client";
 
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import * as THREE from "three";
+
+function MouseGlow() {
+  const ref = useRef<THREE.Mesh>(null!);
+  const { mouse, viewport } = useThree();
+
+  useFrame(() => {
+    const x = (mouse.x * viewport.width) / 2;
+    const y = (mouse.y * viewport.height) / 2;
+    ref.current.position.set(x, y, 0);
+  });
+
+  return (
+    <mesh ref={ref}>
+      <sphereGeometry args={[0.5, 32, 32]} />
+      <meshBasicMaterial color="#9333ea" transparent opacity={0.15} />
+    </mesh>
+  );
+}
 
 function StarField() {
   const ref = useRef<THREE.Points>(null!);
@@ -12,7 +30,7 @@ function StarField() {
   const sphere = useMemo(() => {
     const positions = new Float32Array(5000 * 3);
     for (let i = 0; i < 5000; i++) {
-      const r = 2;
+      const r = 4;
       const theta = 2 * Math.PI * Math.random();
       const phi = Math.acos(2 * Math.random() - 1);
       positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
@@ -23,12 +41,11 @@ function StarField() {
   }, []);
 
   useFrame((state, delta) => {
-    ref.current.rotation.x -= delta / 20;
-    ref.current.rotation.y -= delta / 25;
+    ref.current.rotation.x -= delta / 30;
+    ref.current.rotation.y -= delta / 40;
     
-    // Smoothly follow mouse
-    ref.current.position.x = THREE.MathUtils.lerp(ref.current.position.x, mouse.x * 0.2, 0.1);
-    ref.current.position.y = THREE.MathUtils.lerp(ref.current.position.y, mouse.y * 0.2, 0.1);
+    ref.current.position.x = THREE.MathUtils.lerp(ref.current.position.x, mouse.x * 0.4, 0.05);
+    ref.current.position.y = THREE.MathUtils.lerp(ref.current.position.y, mouse.y * 0.4, 0.05);
   });
 
   return (
@@ -37,7 +54,7 @@ function StarField() {
         <PointMaterial
           transparent
           color="#ffffff"
-          size={0.005}
+          size={0.008}
           sizeAttenuation={true}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
@@ -53,7 +70,7 @@ function Galaxy() {
   const { mouse } = useThree();
   
   const particles = useMemo(() => {
-    const count = 15000;
+    const count = 20000;
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
     
@@ -83,14 +100,12 @@ function Galaxy() {
   }, []);
 
   useFrame((state, delta) => {
-    ref.current.rotation.y += delta * 0.05;
-    
-    // Tilt galaxy towards mouse
-    ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, -mouse.y * 0.2, 0.1);
-    ref.current.rotation.z = THREE.MathUtils.lerp(ref.current.rotation.z, mouse.x * 0.2, 0.1);
+    ref.current.rotation.y += delta * 0.03;
+    ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, -mouse.y * 0.3, 0.05);
+    ref.current.rotation.z = THREE.MathUtils.lerp(ref.current.rotation.z, mouse.x * 0.3, 0.05);
     
     if (materialRef.current) {
-      materialRef.current.size = 0.015 + Math.sin(state.clock.elapsedTime * 2) * 0.005;
+      materialRef.current.size = 0.012 + Math.sin(state.clock.elapsedTime * 1.5) * 0.004;
     }
   });
 
@@ -101,7 +116,7 @@ function Galaxy() {
           ref={materialRef}
           transparent
           vertexColors
-          size={0.015}
+          size={0.012}
           sizeAttenuation={true}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
@@ -113,8 +128,9 @@ function Galaxy() {
 
 export function MilkyWay() {
   return (
-    <div className="fixed inset-0 -z-10 bg-black">
-      <Canvas camera={{ position: [0, 3, 6], fov: 60 }}>
+    <div className="fixed inset-0 -z-10 bg-[#030014]">
+      <Canvas camera={{ position: [0, 4, 8], fov: 60 }}>
+        <MouseGlow />
         <StarField />
         <Galaxy />
       </Canvas>
