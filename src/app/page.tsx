@@ -101,10 +101,15 @@ export default function Home() {
   }, []);
 
   return (
-    <SmoothScroll>
+    <SmoothScroll
+      fixedChildren={
+        <>
+          <CustomCursor />
+          <Taskbar />
+        </>
+      }
+    >
       <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 will-change-transform">
-        <CustomCursor />
-        <Taskbar />
         <GSAPStars speed={starSpeed} count={1500} />
         
         <div className="fixed inset-0 z-0 bg-black/60 pointer-events-none" />
