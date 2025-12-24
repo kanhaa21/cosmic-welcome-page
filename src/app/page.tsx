@@ -35,7 +35,7 @@ export default function Home() {
     };
 
     window.addEventListener("hashchange", handleHashChange);
-    handleHashChange(); // Initial check
+    handleHashChange();
 
     const initAnimations = () => {
       const titles = document.querySelectorAll(".reveal-text");
@@ -61,11 +61,9 @@ export default function Home() {
       });
     };
 
-    // Refresh ScrollTrigger after a delay to ensure proxy is ready
     const timer = setTimeout(() => {
       initAnimations();
       ScrollTrigger.refresh();
-      // Force a scroll event to trigger initial checks
       window.dispatchEvent(new Event('resize'));
     }, 500);
 
@@ -135,18 +133,18 @@ export default function Home() {
                 transition={{ delay: 1, duration: 1 }}
                 className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
               >
-            <span className="text-zinc-500 text-[8px] md:text-xs uppercase tracking-[0.4em] font-bold">Initiate Descent</span>
-            <div className="w-px h-12 md:h-16 bg-gradient-to-b from-purple-500 to-transparent relative">
-              <motion.div 
-                animate={{ y: [0, 40, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full blur-[2px]" 
-              />
-            </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
+                <span className="text-zinc-500 text-[8px] md:text-xs uppercase tracking-[0.4em] font-bold">Initiate Descent</span>
+                <div className="w-px h-12 md:h-16 bg-gradient-to-b from-purple-500 to-transparent relative">
+                  <motion.div 
+                    animate={{ y: [0, 40, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full blur-[2px]" 
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </section>
 
         {/* Earth Feature */}
         <section id="earth" className="relative py-20 md:py-32 px-4 md:px-20 z-10" data-scroll-section>
