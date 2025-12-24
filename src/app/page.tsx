@@ -28,7 +28,16 @@ export default function Home() {
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
 
+  const [stars, setStars] = useState<{ top: string; left: string; size: string; opacity: number }[]>([]);
+
   useEffect(() => {
+    setStars([...Array(50)].map(() => ({
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      size: `${Math.random() * 2 + 1}px`,
+      opacity: Math.random() * 0.5 + 0.3
+    })));
+    
     // GSAP Font Animations
     const titles = document.querySelectorAll(".reveal-text");
     titles.forEach((title) => {
