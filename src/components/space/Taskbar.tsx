@@ -110,7 +110,8 @@ export function Taskbar() {
                   {activeSection === section.id && (
                     <motion.div
                       layoutId="nav-scroll-segment"
-                      className="absolute -bottom-[12px] md:-bottom-[16px] left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 via-white to-purple-500"
+                      className="absolute -bottom-[12px] md:-bottom-[16px] left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 via-white to-purple-500 origin-left"
+                      style={{ scaleX: sectionProgress }}
                       transition={{ type: "spring", bounce: 0, duration: 0.6 }}
                     />
                   )}
