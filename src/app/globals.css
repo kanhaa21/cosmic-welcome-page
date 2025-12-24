@@ -118,6 +118,36 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-foreground antialiased selection:bg-white selection:text-black;
   }
+}
+
+html.has-scroll-smooth {
+  overflow: hidden;
+}
+
+html.has-scroll-dragging {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.has-scroll-smooth body {
+  overflow: hidden;
+}
+
+.has-scroll-smooth [data-scroll-container] {
+  min-height: 100vh;
+}
+
+[data-scroll-direction="vertical"] .c-scrollbar {
+  width: 10px;
+}
+
+[data-scroll-direction="vertical"] .c-scrollbar_thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  margin: 2px;
+  cursor: grab;
 }
