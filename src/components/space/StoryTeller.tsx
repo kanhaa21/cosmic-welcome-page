@@ -1,191 +1,155 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
+import { useEffect, useState } from "react";
 
-const milestones = [
+const planets = [
   {
-    year: "1957",
-    title: "Sputnik 1",
-    agency: "Soviet Union",
-    description: "The dawn of the space age. The first artificial satellite to orbit Earth, changing history forever.",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200",
-    color: "from-zinc-500/20"
+    name: "Mercury",
+    description: "The smallest planet in our solar system and closest to the Sun.",
+    image: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&q=80&w=400",
+    color: "from-zinc-400"
   },
   {
-    year: "1961",
-    title: "Vostok 1",
-    agency: "Soviet Union",
-    description: "Yuri Gagarin becomes the first human to journey into outer space, orbiting the Earth once.",
-    image: "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&q=80&w=1200",
-    color: "from-blue-500/20"
+    name: "Venus",
+    description: "The hottest planet in our solar system with a thick, toxic atmosphere.",
+    image: "https://images.unsplash.com/photo-1614313913007-2b4ae8ce32d6?auto=format&fit=crop&q=80&w=400",
+    color: "from-orange-400"
   },
   {
-    year: "1969",
-    title: "Apollo 11",
-    agency: "NASA",
-    description: "One small step for man, one giant leap for mankind. Humans walk on the lunar surface for the first time.",
-    image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=1200",
-    color: "from-blue-600/20"
+    name: "Earth",
+    description: "Our home planet, the only known world to harbor life.",
+    image: "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?auto=format&fit=crop&q=80&w=400",
+    color: "from-blue-400"
   },
   {
-    year: "1977",
-    title: "Voyager 1",
-    agency: "NASA",
-    description: "The farthest human-made object. A message in a bottle cast into the cosmic ocean, carrying the Golden Record.",
-    image: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&q=80&w=1200",
-    color: "from-purple-500/20"
+    name: "Mars",
+    description: "The Red Planet, home to the largest volcano in the solar system.",
+    image: "https://images.unsplash.com/photo-1614728423169-3f65fd722b7e?auto=format&fit=crop&q=80&w=400",
+    color: "from-red-500"
   },
   {
-    year: "1990",
-    title: "Hubble Telescope",
-    agency: "NASA / ESA",
-    description: "Our eye on the universe. Capturing the birth of stars and the collision of galaxies billions of light-years away.",
-    image: "https://images.unsplash.com/photo-1446776879694-90d17c71283d?auto=format&fit=crop&q=80&w=1200",
-    color: "from-emerald-500/20"
+    name: "Jupiter",
+    description: "A gas giant twice as massive as all other planets combined.",
+    image: "https://images.unsplash.com/photo-1630839437035-dac17da580d0?auto=format&fit=crop&q=80&w=400",
+    color: "from-orange-600"
   },
   {
-    year: "1998",
-    title: "The ISS",
-    agency: "International",
-    description: "A symbol of global unity. The largest modular space station in low Earth orbit, permanently inhabited since 2000.",
-    image: "https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&q=80&w=1200",
-    color: "from-blue-400/20"
+    name: "Saturn",
+    description: "Famous for its dazzling and complex system of icy rings.",
+    image: "https://images.unsplash.com/photo-1614314107768-6018061b5b72?auto=format&fit=crop&q=80&w=400",
+    color: "from-yellow-600"
   },
   {
-    year: "2012",
-    title: "Curiosity Rover",
-    agency: "NASA",
-    description: "A nuclear-powered chemist on wheels. Searching for signs of past life and habitability in the Martian dust.",
-    image: "https://images.unsplash.com/photo-1614728423169-3f65fd722b7e?auto=format&fit=crop&q=80&w=1200",
-    color: "from-orange-600/20"
+    name: "Uranus",
+    description: "An ice giant that rotates on its side at nearly a 90-degree angle.",
+    image: "https://images.unsplash.com/photo-1614732414444-096e5f1122d5?auto=format&fit=crop&q=80&w=400",
+    color: "from-cyan-400"
   },
   {
-    year: "2015",
-    title: "Falcon 9 Landing",
-    agency: "SpaceX",
-    description: "The era of reusability begins. SpaceX successfully lands an orbital-class rocket back on Earth.",
-    image: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&q=80&w=1200",
-    color: "from-zinc-700/20"
-  },
-  {
-    year: "2021",
-    title: "James Webb",
-    agency: "NASA / ESA / CSA",
-    description: "The most powerful space telescope ever built, peering through cosmic dust to see the first stars in existence.",
-    image: "https://images.unsplash.com/photo-1464802686167-b939a67e06a1?auto=format&fit=crop&q=80&w=1200",
-    color: "from-amber-600/20"
-  },
-  {
-    year: "2023",
-    title: "Chandrayaan-3",
-    agency: "ISRO",
-    description: "India becomes the first nation to land near the lunar south pole, proving the power of scientific resourcefulness.",
-    image: "https://images.unsplash.com/photo-1444703686981-a3abb997b724?auto=format&fit=crop&q=80&w=1200",
-    color: "from-orange-500/20"
+    name: "Neptune",
+    description: "The most distant planet, dark, cold, and whipped by supersonic winds.",
+    image: "https://images.unsplash.com/photo-1614732484003-ef9881555dc3?auto=format&fit=crop&q=80&w=400",
+    color: "from-blue-600"
   }
 ];
 
 export function StoryTeller() {
-  const [index, setIndex] = useState(0);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [hoveredPlanet, setHoveredPlanet] = useState<string | null>(null);
+  const controls = useAnimationControls();
 
-  useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setIndex((prev) => (prev + 1) % milestones.length);
-    }, 6000);
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, []);
+  // Duplicate planets for seamless loop
+  const displayPlanets = [...planets, ...planets];
 
   return (
-    <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden py-8 bg-black">
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 text-center">
-        <h2 className="text-purple-500 text-[10px] font-black uppercase tracking-[1em] mb-1">Cosmic Milestones</h2>
-        <div className="text-xl md:text-3xl font-black text-white tracking-tighter">Traversing <span className="text-zinc-700">Space-Time</span></div>
+    <section className="relative min-h-[70vh] flex flex-col items-center justify-center overflow-hidden py-20 bg-black/20">
+      <div className="absolute top-10 text-center z-10">
+        <motion.span 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          className="text-purple-500 text-[10px] font-black uppercase tracking-[1em] mb-2 block"
+        >
+          Planetary Voyage
+        </motion.span>
+        <motion.h2 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-3xl md:text-5xl font-black text-white tracking-tighter"
+        >
+          Cosmic <span className="text-zinc-700">Neighborhood</span>
+        </motion.h2>
       </div>
 
-      <div className="relative w-full max-w-4xl px-4 h-[450px] md:h-[350px] flex items-center justify-center">
-        <AnimatePresence mode="wait">
+      <div className="relative w-full mt-20">
+        <motion.div 
+          className="flex gap-8 px-4"
+          animate={{
+            x: ["0%", "-50%"],
+          }}
+          transition={{
+            duration: 40,
+            ease: "linear",
+            repeat: Infinity,
+          }}
+          style={{ width: "fit-content" }}
+          onHoverStart={() => {
+            // Optional: slow down or pause on hover
+          }}
+        >
+          {displayPlanets.map((planet, i) => (
             <motion.div
-              key={index}
-              initial={{ opacity: 0, x: 50, filter: "blur(10px)", scale: 0.98 }}
-              animate={{ opacity: 1, x: 0, filter: "blur(0px)", scale: 1 }}
-              exit={{ opacity: 0, x: -50, filter: "blur(10px)", scale: 0.98 }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-              className={`relative w-full h-full rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden glass-card border-white/5 bg-gradient-to-br ${milestones[index].color} to-transparent group`}
+              key={`${planet.name}-${i}`}
+              className="relative w-64 h-80 md:w-80 md:h-[450px] group flex-shrink-0 cursor-pointer"
+              onHoverStart={() => setHoveredPlanet(planet.name + i)}
+              onHoverEnd={() => setHoveredPlanet(null)}
             >
-              <div className="absolute inset-0">
+              <div className={`absolute inset-0 rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-br ${planet.color} to-black/80 transition-all duration-500 group-hover:scale-[1.02] group-hover:border-purple-500/50`}>
                 <img 
-                  src={milestones[index].image} 
-                  alt={milestones[index].title}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover opacity-30 transition-transform duration-[6000ms] ease-linear scale-100 group-hover:scale-110"
+                  src={planet.image} 
+                  alt={planet.name}
+                  className="w-full h-full object-cover opacity-60 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-100 transition-all duration-700 scale-110 group-hover:scale-100"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
-              </div>
-            
-            <div className="relative h-full flex flex-col justify-center px-6 md:px-16 max-w-2xl">
-              <motion.span 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-purple-500 font-bold tracking-[0.3em] md:tracking-[0.5em] uppercase text-[8px] md:text-[10px] mb-2 md:mb-4"
-              >
-                {milestones[index].year} — {milestones[index].agency}
-              </motion.span>
-              
-              <motion.h3 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="text-3xl md:text-6xl font-black text-white mb-2 md:mb-4 tracking-tighter"
-              >
-                {milestones[index].title}
-              </motion.h3>
-              
-              <motion.p 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="text-zinc-300 text-sm md:text-xl leading-relaxed font-light italic max-w-lg"
-              >
-                "{milestones[index].description}"
-              </motion.p>
-              
-              <div className="mt-6 md:mt-8 flex items-center gap-4">
-                <div className="flex gap-1 md:gap-1.5 flex-wrap">
-                  {milestones.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setIndex(i)}
-                      className={`h-1 rounded-full transition-all duration-500 ${i === index ? 'w-4 md:w-8 bg-purple-500' : 'w-1 md:w-2 bg-white/10'}`}
-                    />
-                  ))}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                
+                <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                  <h3 className="text-2xl md:text-4xl font-black text-white tracking-tighter mb-2 group-hover:text-purple-400 transition-colors">
+                    {planet.name}
+                  </h3>
+                  
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ 
+                      height: hoveredPlanet === planet.name + i ? "auto" : 0,
+                      opacity: hoveredPlanet === planet.name + i ? 1 : 0
+                    }}
+                    transition={{ duration: 0.4, ease: "circOut" }}
+                    className="overflow-hidden"
+                  >
+                    <p className="text-zinc-300 text-sm md:text-base leading-relaxed font-light italic">
+                      {planet.description}
+                    </p>
+                  </motion.div>
                 </div>
               </div>
-            </div>
-
-            {/* Background numeral */}
-            <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 text-[8rem] md:text-[15rem] font-black text-white/[0.02] select-none pointer-events-none">
-              {index + 1}
-            </div>
-          </motion.div>
-        </AnimatePresence>
+              
+              {/* Decorative Number */}
+              <div className="absolute -top-4 -right-4 text-6xl md:text-8xl font-black text-white/[0.03] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors">
+                {(i % planets.length) + 1}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="absolute bottom-4 left-0 w-full h-0.5 bg-white/5">
-        <motion.div
-          key={index}
-          initial={{ width: "0%" }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 6, ease: "linear" }}
-          className="h-full bg-purple-500/30"
-        />
+      <div className="absolute bottom-10 flex gap-4">
+        <div className="w-12 h-0.5 bg-purple-500/20 rounded-full overflow-hidden">
+          <motion.div 
+            className="h-full bg-purple-500"
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
       </div>
     </section>
   );
