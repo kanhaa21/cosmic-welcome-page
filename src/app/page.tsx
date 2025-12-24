@@ -111,7 +111,7 @@ export default function Home() {
         <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/40 via-transparent to-[#030014] pointer-events-none" />
 
         {/* Hero Section */}
-        <section id="hero" ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden z-10" data-scroll-section>
+        <section id="hero" ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden z-10">
           <AnimatePresence mode="wait">
             {!isNexusActive ? (
               <motion.div
