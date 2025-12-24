@@ -34,13 +34,14 @@ export function Taskbar() {
   const isAgencyPage = pathname?.startsWith("/agencies/");
   const currentAgencyId = isAgencyPage ? pathname.split("/").pop() : null;
 
-    const [isHovered, setIsHovered] = useState(false);
-    const navTransition = { 
-      duration: isHovered ? 0.3 : 0.8, 
-      ease: [0.16, 1, 0.3, 1] // Custom quintic ease for premium feel
-    };
+      const [isHovered, setIsHovered] = useState(false);
+      const navTransition = { 
+        duration: isHovered ? 0.3 : 0.8, 
+        ease: [0.16, 1, 0.3, 1]
+      };
 
-    useEffect(() => {
+      useEffect(() => {
+
     if (pathname === "/solar-system") {
       setActiveSection("solar");
       return;
