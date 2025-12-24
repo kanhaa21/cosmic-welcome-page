@@ -40,6 +40,7 @@ export function GSAPStars({ count = 2000 }: { count?: number }) {
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
+      ctx.globalCompositeOperation = "lighter";
       
       stars.forEach((star) => {
         ctx.beginPath();
@@ -48,15 +49,17 @@ export function GSAPStars({ count = 2000 }: { count?: number }) {
         ctx.globalAlpha = star.opacity;
         
         if (star.glow) {
-          ctx.shadowBlur = 10 * star.opacity;
+          ctx.shadowBlur = 15 * star.opacity;
           ctx.shadowColor = star.color;
         } else {
-          ctx.shadowBlur = 0;
+          ctx.shadowBlur = 5 * star.opacity;
+          ctx.shadowColor = "white";
         }
         
         ctx.fill();
       });
       ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = "source-over";
     };
 
     // Use GSAP to animate star properties
