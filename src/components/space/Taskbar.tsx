@@ -1,7 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useSmoothScroll } from "./SmoothScroll";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+const sections = [
+  { name: "Nexus", id: "hero" },
+  { name: "Earth", id: "earth" },
+  { name: "Story", id: "story" },
+  { name: "Solar", id: "solar" },
+  { name: "Explore", id: "explore" },
+];
 
 const agencies = [
   { name: "NASA", path: "/agencies/nasa" },
@@ -11,34 +23,109 @@ const agencies = [
 ];
 
 export function Taskbar() {
+  const { scroll } = useSmoothScroll();
+  const [activeSection, setActiveSection] = useState("hero");
+
+  useEffect(() => {
+    // Only run on home page
+    if (window.location.pathname !== "/") return;
+
+    sections.forEach((section) => {
+      ScrollTrigger.create({
+        trigger: `#${section.id}`,
+        scroller: ".smooth-scroll",
+        start: "top center",
+        end: "bottom center",
+        onToggle: (self) => {
+          if (self.isActive) setActiveSection(section.id);
+        },
+      });
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(st => {
+        if (sections.some(s => st.vars.trigger === `#${s.id}`)) {
+          st.kill();
+        }
+      });
+    };
+  }, []);
+
+  const handleScroll = (id: string) => {
+    if (scroll) {
+      const target = document.querySelector(`#${id}`);
+      if (target) {
+        scroll.scrollTo(target, {
+          offset: 0,
+          duration: 1.5,
+          easing: [0.25, 0.00, 0.35, 1.00]
+        });
+      }
+    }
+  };
+
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 px-4 md:px-8 py-3 md:py-4 rounded-full border border-white/5 bg-[#030014]/40 backdrop-blur-2xl flex items-center gap-4 md:gap-10 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-white/10 w-[95%] md:w-auto justify-between md:justify-center"
+      className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-3 md:py-4 rounded-full border border-white/5 bg-[#030014]/40 backdrop-blur-2xl flex items-center gap-3 md:gap-8 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-white/10 w-[98%] md:w-auto justify-between md:justify-center"
     >
-      <Link href="/" className="text-zinc-400 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] hover:text-white transition-all whitespace-nowrap">
-        Nexus
-      </Link>
+      {/* Home Navigation */}
+      <div className="flex items-center gap-2 md:gap-6">
+        {sections.map((section) => (
+          <button
+            key={section.id}
+            onClick={() => handleScroll(section.id)}
+            className={`text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all relative px-2 py-1 rounded-full whitespace-nowrap ${
+              activeSection === section.id ? "text-white" : "text-zinc-500 hover:text-zinc-300"
+            }`}
+          >
+            {section.name}
+            {activeSection === section.id && (
+              <>
+                <motion.span
+                  layoutId="nav-glow"
+                  className="absolute inset-0 bg-white/10 rounded-full -z-10 blur-[4px]"
+                  initial={false}
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+                <motion.span
+                  layoutId="nav-border"
+                  className="absolute inset-0 border border-white/20 rounded-full -z-10 shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                  initial={false}
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              </>
+            )}
+          </button>
+        ))}
+      </div>
       
-      <div className="hidden xs:block h-4 w-px bg-white/5" />
+      <div className="hidden sm:block h-4 w-px bg-white/10" />
       
-      <div className="flex items-center gap-3 md:gap-8 overflow-x-auto no-scrollbar max-w-[50vw] md:max-w-none px-2">
+      {/* Agency Links */}
+      <div className="hidden lg:flex items-center gap-6">
         {agencies.map((agency) => (
           <Link
             key={agency.name}
             href={agency.path}
-            className="text-zinc-500 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] hover:text-purple-400 transition-all relative group whitespace-nowrap"
+            className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.3em] hover:text-purple-400 transition-all relative group whitespace-nowrap"
           >
             {agency.name}
-            <span className="absolute -bottom-1 left-0 w-0 h-px bg-purple-500 transition-all group-hover:w-full" />
           </Link>
         ))}
       </div>
       
-      <div className="hidden xs:block h-4 w-px bg-white/5" />
+      <div className="hidden sm:block h-4 w-px bg-white/10" />
       
-      <Link href="#contact" className="text-zinc-400 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] hover:text-white transition-all whitespace-nowrap">
+      <Link 
+        href="#terminal" 
+        onClick={(e) => {
+          e.preventDefault();
+          handleScroll("explore");
+        }}
+        className="text-zinc-400 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] hover:text-white transition-all whitespace-nowrap"
+      >
         Terminal
       </Link>
     </motion.nav>
