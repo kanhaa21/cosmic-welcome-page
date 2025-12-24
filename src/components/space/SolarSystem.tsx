@@ -74,7 +74,6 @@ const planets = [
 export function SolarSystem() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedPlanet, setSelectedPlanet] = useState<number | null>(0);
-  const [rotations, setRotations] = useState<number[]>(planets.map(() => 0));
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -86,14 +85,6 @@ export function SolarSystem() {
           repeat: -1,
           ease: "none",
           transformOrigin: "center center",
-          onUpdate: function() {
-            const currentRotation = gsap.getProperty(`.planet-${i}`, "rotation") as number;
-            setRotations(prev => {
-              const next = [...prev];
-              next[i] = currentRotation;
-              return next;
-            });
-          }
         });
       });
     }, containerRef);
