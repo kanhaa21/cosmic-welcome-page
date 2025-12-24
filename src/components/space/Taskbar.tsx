@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useSmoothScroll } from "./SmoothScroll";
 import gsap from "gsap";
