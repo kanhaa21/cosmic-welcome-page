@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export const GalaxyFeature = () => {
   return (
-    <section className="relative py-32 px-4 md:px-20 z-10" data-scroll-section>
+    <section className="relative py-32 px-4 md:px-20 z-10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
         <div className="reveal-text">
           <div className="flex items-center gap-4 mb-6">
