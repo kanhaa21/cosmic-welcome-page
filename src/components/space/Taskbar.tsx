@@ -8,7 +8,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const sections = [
-  { name: "Nexus", id: "hero" },
+  { name: "Home", id: "hero" },
+  { name: "Nexus", id: "nexus" },
   { name: "Earth", id: "earth" },
   { name: "Story", id: "story" },
   { name: "Solar", id: "solar" },
