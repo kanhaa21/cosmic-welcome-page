@@ -7,6 +7,7 @@ import { Taskbar } from "@/components/space/Taskbar";
 import { SmoothScroll } from "@/components/space/SmoothScroll";
 import { StoryTeller } from "@/components/space/StoryTeller";
 import { SolarSystem } from "@/components/space/SolarSystem";
+import { RealisticEarth } from "@/components/space/RealisticEarth";
 import { CustomCursor } from "@/components/space/CustomCursor";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
