@@ -25,10 +25,17 @@ const agencies = [
 export function Taskbar() {
   const { scroll } = useSmoothScroll();
   const [activeSection, setActiveSection] = useState("hero");
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     // Only run on home page
     if (window.location.pathname !== "/") return;
+
+    if (scroll) {
+      scroll.on("scroll", (args: any) => {
+        setScrollProgress(args.scroll.y / args.limit.y);
+      });
+    }
 
     // Use a cleaner ScrollTrigger approach for active state
     sections.forEach((section) => {
@@ -64,7 +71,7 @@ export function Taskbar() {
         }
       });
     };
-  }, []);
+  }, [scroll]);
 
   const handleScroll = (id: string) => {
     if (scroll) {
@@ -79,13 +86,6 @@ export function Taskbar() {
     }
   };
 
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
-
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
@@ -94,11 +94,11 @@ export function Taskbar() {
     >
       {/* Scroll Progress Bar */}
       <motion.div 
-        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent origin-left"
-        style={{ scaleX }}
+        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 via-white/50 to-purple-500 origin-left z-[1]"
+        style={{ scaleX: scrollProgress }}
       />
       {/* Home Navigation */}
-        <div className="flex items-center gap-2 md:gap-6">
+        <div className="flex items-center gap-2 md:gap-6 relative z-[2]">
             {sections.map((section) => (
                 <button
                   key={section.id}
@@ -110,15 +110,15 @@ export function Taskbar() {
                   } ${section.name === "Nexus" ? "font-[family-name:var(--font-orbitron)] font-black text-[12px] md:text-[14px] tracking-[0.4em] scale-110" : ""}`}
                 >
                   {section.name}
-                  {activeSection === section.id && (
-                    <motion.div
-                      layoutId="nav-underline"
-                      className="absolute -bottom-1 left-3 right-3 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    >
-                      <div className="absolute inset-0 bg-purple-400/50 blur-[2px]" />
-                    </motion.div>
-                  )}
+                  <AnimatePresence>
+                    {activeSection === section.id && (
+                      <motion.div
+                        layoutId="nav-underline"
+                        className="absolute -bottom-[2px] left-0 right-0 h-[3px] bg-purple-500 rounded-full shadow-[0_0_15px_rgba(168,85,247,0.8)]"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                  </AnimatePresence>
                 </button>
             ))}
         </div>
