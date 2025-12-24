@@ -73,7 +73,7 @@ const planets = [
 
 export function SolarSystem() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [hoveredPlanet, setHoveredPlanet] = useState<number | null>(null);
+  const [selectedPlanet, setSelectedPlanet] = useState<number | null>(0);
   const [rotations, setRotations] = useState<number[]>(planets.map(() => 0));
 
   useEffect(() => {
@@ -95,21 +95,6 @@ export function SolarSystem() {
             });
           }
         });
-
-        // Initial entry animation for names
-        gsap.fromTo(`.name-${i}`, 
-          { opacity: 0, scale: 0.5 },
-          {
-            opacity: 1,
-            scale: 1,
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top center",
-              end: "bottom center",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
       });
     }, containerRef);
 
@@ -117,110 +102,140 @@ export function SolarSystem() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative min-h-[80vh] py-20 flex flex-col items-center justify-center overflow-hidden z-10 bg-[#020108]">
+    <section ref={containerRef} className="relative min-h-screen py-32 flex flex-col items-center justify-center overflow-hidden z-10 bg-[#020108]">
       {/* Visibility Enhancer */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none opacity-80" />
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-900/10 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-purple-900/5 blur-[180px] rounded-full pointer-events-none" />
       
-      <div className="absolute top-10 text-center reveal-text">
-        <span className="text-purple-500 font-black uppercase tracking-[0.5em] text-[10px] mb-2 block">The Solar Neighborhood</span>
-        <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">Celestial <span className="text-zinc-700">Harmony</span></h2>
+      <div className="absolute top-20 text-center reveal-text z-20">
+        <span className="text-purple-500 font-black uppercase tracking-[0.6em] text-[10px] mb-4 block">Planetary System</span>
+        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">COSMIC <span className="text-zinc-800">NAVIGATOR</span></h2>
       </div>
 
-      <div className="relative w-[800px] h-[800px] flex items-center justify-center scale-75 md:scale-90">
-        {/* Sun */}
-        <div className="absolute w-16 h-16 bg-yellow-400 rounded-full blur-[2px] shadow-[0_0_80px_#fbbf24] z-20">
-          <div className="absolute inset-0 bg-orange-500 rounded-full animate-pulse opacity-50" />
+      <div className="relative w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-12 px-8">
+        {/* Sidebar Controls */}
+        <div className="w-full lg:w-80 z-30 flex flex-col gap-4">
+          <div className="space-y-2">
+            {planets.map((planet, i) => (
+              <div key={planet.name} className="group">
+                <button
+                  onClick={() => setSelectedPlanet(i)}
+                  className={`w-full text-left px-6 py-4 rounded-2xl transition-all duration-500 flex flex-col gap-2 ${
+                    selectedPlanet === i 
+                    ? "bg-white/10 border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]" 
+                    : "hover:bg-white/5 border border-transparent"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs font-black uppercase tracking-[0.3em] transition-colors ${
+                      selectedPlanet === i ? "text-white" : "text-zinc-600 group-hover:text-zinc-400"
+                    }`}>
+                      {planet.name}
+                    </span>
+                    <div 
+                      className="w-2 h-2 rounded-full" 
+                      style={{ backgroundColor: planet.color, boxShadow: `0 0 10px ${planet.color}` }} 
+                    />
+                  </div>
+                  
+                  <AnimatePresence mode="wait">
+                    {selectedPlanet === i && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <p className="text-[11px] leading-relaxed text-zinc-400 font-medium py-2">
+                          {planet.description}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Planets and Orbits */}
-        {planets.map((planet, i) => (
-          <div key={planet.name} className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            {/* Orbit Ring */}
-            <div 
-              className="absolute border border-white/5 rounded-full"
-              style={{
-                width: planet.distance * 2,
-                height: planet.distance * 2,
-              }}
-            />
-            
-            {/* Planet Container (Rotated by GSAP) */}
-            <div 
-              className={`planet-${i} absolute`}
-              style={{
-                width: planet.distance * 2,
-                height: planet.distance * 2,
-              }}
-            >
-              {/* Actual Planet */}
-              <div 
-                className="absolute flex flex-col items-center group cursor-pointer pointer-events-auto"
-                style={{
-                  top: "50%",
-                  left: "100%",
-                  transform: "translate(-50%, -50%)",
-                }}
-                onMouseEnter={() => setHoveredPlanet(i)}
-                onMouseLeave={() => setHoveredPlanet(null)}
-              >
-                <motion.div 
-                  animate={{ 
-                    scale: hoveredPlanet === i ? 2.5 : 1,
-                    boxShadow: hoveredPlanet === i ? `0 0 30px ${planet.color}` : `0 0 20px ${planet.color}44`
-                  }}
-                  className="rounded-full shadow-lg transition-colors z-30"
+        {/* Solar System Visualization */}
+        <div className="relative flex-1 h-[600px] lg:h-[800px] flex items-center justify-center">
+          <div className="relative w-[600px] h-[600px] lg:w-[800px] lg:h-[800px] flex items-center justify-center scale-[0.6] sm:scale-75 md:scale-100">
+            {/* Sun */}
+            <div className="absolute w-24 h-24 bg-yellow-400 rounded-full blur-[2px] shadow-[0_0_100px_#fbbf24] z-20">
+              <div className="absolute inset-0 bg-orange-500 rounded-full animate-pulse opacity-50" />
+            </div>
+
+            {/* Planets and Orbits */}
+            {planets.map((planet, i) => (
+              <div key={planet.name} className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                {/* Orbit Ring */}
+                <div 
+                  className={`absolute border rounded-full transition-all duration-700 ${
+                    selectedPlanet === i ? "border-purple-500/40 border-2" : "border-white/5"
+                  }`}
                   style={{
-                    width: planet.size,
-                    height: planet.size,
-                    backgroundColor: planet.color,
+                    width: planet.distance * 2,
+                    height: planet.distance * 2,
                   }}
                 />
-
-                <AnimatePresence>
-                  {hoveredPlanet === i && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.8 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.8 }}
-                      style={{
-                        transform: `rotate(${-rotations[i]}deg)`,
-                        transformOrigin: "center bottom"
-                      }}
-                      className="absolute bottom-full mb-8 z-50 pointer-events-none"
-                    >
-                      <div className="bg-black/90 backdrop-blur-2xl border border-white/10 p-4 rounded-2xl w-60 shadow-2xl relative">
-                        <div className="text-purple-400 font-black text-[10px] uppercase tracking-[0.2em] mb-1">{planet.name}</div>
-                        <div className="text-zinc-300 text-[11px] leading-relaxed font-medium">
-                          {planet.description}
-                        </div>
-                        {/* Little tail for the speech bubble */}
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-black/90" />
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <span 
-                  className={`name-${i} absolute -bottom-6 text-[9px] font-bold text-white uppercase tracking-widest whitespace-nowrap opacity-40 transition-opacity group-hover:opacity-100`}
+                
+                {/* Planet Container (Rotated by GSAP) */}
+                <div 
+                  className={`planet-${i} absolute`}
                   style={{
-                    transform: `rotate(${-rotations[i]}deg)`
+                    width: planet.distance * 2,
+                    height: planet.distance * 2,
                   }}
                 >
-                  {planet.name}
-                </span>
+                  {/* Actual Planet */}
+                  <div 
+                    className="absolute flex flex-col items-center group cursor-pointer pointer-events-auto"
+                    style={{
+                      top: "50%",
+                      left: "100%",
+                      transform: "translate(-50%, -50%)",
+                    }}
+                    onClick={() => setSelectedPlanet(i)}
+                  >
+                    <motion.div 
+                      animate={{ 
+                        scale: selectedPlanet === i ? 2.8 : 1,
+                        boxShadow: selectedPlanet === i ? `0 0 40px ${planet.color}` : `0 0 20px ${planet.color}33`
+                      }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      className="rounded-full shadow-lg transition-colors z-30"
+                      style={{
+                        width: planet.size,
+                        height: planet.size,
+                        backgroundColor: planet.color,
+                      }}
+                    />
+
+                    <span 
+                      className={`absolute -bottom-8 text-[9px] font-black text-white uppercase tracking-[0.4em] whitespace-nowrap transition-all duration-500 ${
+                        selectedPlanet === i ? "opacity-100 scale-110" : "opacity-30"
+                      }`}
+                      style={{
+                        transform: `rotate(${-rotations[i]}deg)`
+                      }}
+                    >
+                      {planet.name}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
       
-      <div className="absolute bottom-10 max-w-lg text-center reveal-text px-4">
-        <p className="text-zinc-500 text-[11px] leading-relaxed font-medium">
-          Eight worlds dancing in a mathematical waltz around a single star. 
-          Each one a unique testament to the laws of physics and the beauty of creation.
+      <div className="absolute bottom-10 max-w-lg text-center reveal-text px-4 opacity-50">
+        <p className="text-zinc-500 text-[10px] uppercase tracking-[0.4em] font-bold">
+          Interactive Orbital Mapping Interface v2.0
         </p>
       </div>
     </section>
   );
 }
+
