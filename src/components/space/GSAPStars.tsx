@@ -34,7 +34,7 @@ export function GSAPStars() {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
         this.size = Math.random() * 1.5;
-        this.baseOpacity = Math.random() * 0.5 + 0.1;
+        this.baseOpacity = Math.random() * 0.3 + 0.05;
         this.opacity = this.baseOpacity;
         this.speed = Math.random() * 0.05;
       }
