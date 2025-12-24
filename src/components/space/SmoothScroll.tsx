@@ -14,7 +14,7 @@ const SmoothScrollContext = createContext<SmoothScrollContextType>({ scroll: nul
 
 export const useSmoothScroll = () => useContext(SmoothScrollContext);
 
-export function SmoothScroll({ children }: { children: ReactNode }) {
+export function SmoothScroll({ children, fixedChildren }: { children: ReactNode, fixedChildren?: ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [locoScroll, setLocoScroll] = useState<any>(null);
 
@@ -23,7 +23,6 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     let resizeObserver: ResizeObserver | null = null;
     let isMounted = true;
 
-    // Small delay to ensure Next.js has finished initial hydration
     const timeoutId = setTimeout(async () => {
       try {
         const LocomotiveScroll = (await import("locomotive-scroll")).default;
@@ -39,7 +38,6 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
           touchMultiplier: 2,
           lerp: 0.1,
           scrollFromAnywhere: true,
-          // Disable reloadOnContextChange as it can cause issues in React
           reloadOnContextChange: false,
         });
 
@@ -50,7 +48,6 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
         setLocoScroll(scrollInstance);
 
-        // Tell ScrollTrigger to use these proxy methods for the ".smooth-scroll" element
         ScrollTrigger.scrollerProxy(containerRef.current, {
           scrollTop(value) {
             if (scrollInstance) {
@@ -68,23 +65,19 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
               height: window.innerHeight,
             };
           },
-          // Always use transform for Locomotive Scroll v4 as it applies styles to the container
           pinType: "transform",
         });
 
-        // Sync ScrollTrigger with Locomotive Scroll
         scrollInstance.on("scroll", () => {
           ScrollTrigger.update();
         });
 
-        // Resize Observer with debounced RAF
         let rafId: number;
         resizeObserver = new ResizeObserver(() => {
           if (rafId) cancelAnimationFrame(rafId);
           rafId = requestAnimationFrame(() => {
             if (scrollInstance && isMounted && containerRef.current) {
               try {
-                // Only update if the instance hasn't been destroyed and elements are present
                 if (typeof scrollInstance.update === 'function') {
                   scrollInstance.update();
                   ScrollTrigger.refresh();
@@ -97,7 +90,6 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
         });
         resizeObserver.observe(containerRef.current);
 
-        // Initial refresh
         ScrollTrigger.refresh();
         
       } catch (error) {
@@ -114,7 +106,6 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       if (resizeObserver) {
         resizeObserver.disconnect();
       }
-      // Clean up ScrollTrigger proxy
       if (containerRef.current) {
         ScrollTrigger.scrollerProxy(containerRef.current, null);
       }
@@ -123,6 +114,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
   return (
     <SmoothScrollContext.Provider value={{ scroll: locoScroll }}>
+      {fixedChildren}
       <main ref={containerRef} data-scroll-container className="smooth-scroll">
         {children}
       </main>
