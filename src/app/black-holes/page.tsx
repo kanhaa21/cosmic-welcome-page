@@ -135,9 +135,23 @@ export default function BlackHolePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5 }}
-            className="mt-16 animate-bounce"
+            className="mt-16 flex flex-col items-center gap-1"
           >
-            <div className="w-px h-24 bg-gradient-to-b from-purple-500 to-transparent mx-auto" />
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                animate={{ 
+                  opacity: [0.2, 1, 0.2],
+                  scale: [1, 1.5, 1],
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity, 
+                  delay: i * 0.2 
+                }}
+                className="w-1 h-1 rounded-full bg-amber-400/60 blur-[0.5px]"
+              />
+            ))}
             <span className="text-[10px] uppercase tracking-widest text-zinc-500 mt-4 block">Scroll to Descend</span>
           </motion.div>
         </div>
