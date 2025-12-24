@@ -157,7 +157,7 @@ export function Taskbar() {
       />
 
       {/* Home Navigation */}
-      <div className={`flex items-center relative z-[2] transition-all duration-200 ${isHovered ? 'gap-2 md:gap-6' : 'gap-0'}`}>
+      <div className={`flex items-center relative z-[2] transition-all duration-500 ${isHovered ? 'gap-2 md:gap-6' : 'gap-0'}`}>
         {sections.map((section) => (
           <motion.div
             key={section.id}
