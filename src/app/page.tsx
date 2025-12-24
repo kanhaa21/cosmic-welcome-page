@@ -20,6 +20,7 @@ export default function Home() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
   const [isNexusActive, setIsNexusActive] = useState(false);
+  const [isBoosted, setIsBoosted] = useState(false);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -30,8 +31,16 @@ export default function Home() {
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
 
   useEffect(() => {
+    let boostTimer: NodeJS.Timeout;
     const handleHashChange = () => {
-      setIsNexusActive(window.location.hash === "#nexus");
+      const active = window.location.hash === "#nexus";
+      setIsNexusActive(active);
+      if (active) {
+        setIsBoosted(true);
+        boostTimer = setTimeout(() => setIsBoosted(false), 10000);
+      } else {
+        setIsBoosted(false);
+      }
     };
 
     window.addEventListener("hashchange", handleHashChange);
