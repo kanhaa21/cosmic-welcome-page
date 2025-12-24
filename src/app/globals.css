@@ -153,6 +153,9 @@ html.has-scroll-smooth::-webkit-scrollbar {
 
 .has-scroll-smooth [data-scroll-container] {
   min-height: 100vh;
+  /* Ensure a valid matrix is always present for Locomotive Scroll's getTranslate */
+  transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  will-change: transform;
 }
 
 /* Custom Locomotive Scrollbar - Optimized for Accuracy */
