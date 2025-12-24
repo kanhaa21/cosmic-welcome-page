@@ -1,6 +1,5 @@
 "use client";
 
-import { GSAPStars } from "@/components/space/GSAPStars";
 import { CustomCursor } from "@/components/space/CustomCursor";
 import { Taskbar } from "@/components/space/Taskbar";
 import { motion, useScroll, useTransform } from "framer-motion";
