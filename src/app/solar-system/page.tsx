@@ -23,71 +23,71 @@ export default function SolarSystemPage() {
       }
     >
       <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 bg-[#020108] overflow-hidden">
-        <GSAPStars count={1200} />
+        <GSAPStars count={1500} />
         
-        {/* Subtle Background Overlays */}
-        <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,10,40,0.3),transparent_70%)] pointer-events-none" />
-        <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/20 via-transparent to-[#030014] pointer-events-none" />
+        {/* Cinematic Background Elements */}
+        <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_50%_50%,rgba(15,5,30,0.4),transparent_70%)] pointer-events-none" />
+        <div className="fixed inset-0 z-0 bg-gradient-to-b from-transparent via-transparent to-[#020108] pointer-events-none" />
 
-        {/* Hero Section - Sleek and Aesthetic */}
-        <div className="relative z-10 pt-48 pb-32 px-4 text-center">
+        {/* Hero Section - Refined & Elegant */}
+        <div className="relative z-10 pt-64 pb-32 px-6 flex flex-col items-center justify-center min-h-screen">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-5xl mx-auto"
+            transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center max-w-6xl"
           >
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 2, delay: 0.2 }}
-              className="inline-block mb-6"
+              transition={{ duration: 2, delay: 0.3 }}
+              className="inline-flex items-center gap-4 mb-10"
             >
-              <span className="text-[10px] font-medium uppercase tracking-[1em] text-purple-400/60 pl-[1em]">
-                Nexus Celestial Division
+              <div className="h-px w-8 bg-purple-500/40" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-purple-400/80 pl-[0.8em]">
+                System Directory 01
               </span>
+              <div className="h-px w-8 bg-purple-500/40" />
             </motion.div>
 
-            <h1 className="text-8xl md:text-[12rem] font-light text-white tracking-[-0.04em] leading-[0.85] mb-12 font-[family-name:var(--font-orbitron)]">
+            <h1 className="text-7xl md:text-[10rem] font-light text-white tracking-[-0.04em] leading-[0.8] mb-16 font-[family-name:var(--font-orbitron)]">
               SOLAR<br />
-              <span className="font-bold bg-gradient-to-b from-white via-white to-white/20 bg-clip-text text-transparent">SYSTEM</span>
+              <span className="font-bold bg-gradient-to-b from-white via-white/90 to-white/30 bg-clip-text text-transparent">SYSTEM</span>
             </h1>
 
-            <div className="flex items-center justify-center gap-12 mb-16">
-              <div className="h-[1px] w-24 bg-gradient-to-r from-transparent to-white/10" />
-              <p className="text-[11px] font-bold uppercase tracking-[0.5em] text-zinc-500 whitespace-nowrap">
-                System Survey 01 // Core Worlds
+            <div className="flex flex-col items-center gap-12 max-w-2xl mx-auto">
+              <p className="text-lg md:text-xl text-zinc-500 font-light leading-relaxed tracking-wide">
+                A definitive survey of the local planetary neighborhood, rendered through the lens of modern celestial observation.
               </p>
-              <div className="h-[1px] w-24 bg-gradient-to-l from-transparent to-white/10" />
+              
+              <div className="w-px h-24 bg-gradient-to-b from-white/20 to-transparent" />
             </div>
-
-            <p className="text-xl md:text-2xl text-zinc-400 max-w-3xl mx-auto font-light leading-relaxed mb-20 tracking-wide">
-              A cinematic exploration of our celestial neighborhood. From the scorched inner worlds to the frozen giants of the outer rim.
-            </p>
-
-            <motion.div
-              animate={{ y: [0, 15, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="inline-flex flex-col items-center gap-6 opacity-30"
-            >
-              <div className="w-[1px] h-20 bg-gradient-to-b from-white/40 via-white/10 to-transparent" />
-              <span className="text-[9px] font-bold uppercase tracking-[0.6em] text-white">Initiate Descent</span>
-            </motion.div>
           </motion.div>
+
+          {/* Background Ambient Glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-900/10 rounded-full blur-[160px] pointer-events-none -z-10" />
         </div>
 
-        {/* Detailed Planet Information Section */}
+        {/* Planet Detail Sections */}
         <PlanetDetailSection />
 
-        <footer className="relative py-32 px-4 text-center border-t border-white/5 z-10 bg-black/40 backdrop-blur-md">
+        <footer className="relative py-48 px-6 text-center z-10">
           <div className="max-w-4xl mx-auto">
-            <p className="text-zinc-500 text-[10px] font-bold tracking-[1em] uppercase mb-8 pl-[1em]">
-              The Horizon Awaits
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent mb-20" />
+            
+            <p className="text-zinc-600 text-[9px] font-bold tracking-[1.2em] uppercase mb-12 pl-[1.2em]">
+              Finality // Deep Space
             </p>
-            <p className="text-zinc-400 text-lg font-light italic tracking-wide">
-              "Somewhere, something incredible is waiting to be known."
-            </p>
-            <div className="mt-12 h-px w-24 bg-white/10 mx-auto" />
+            
+            <h4 className="text-3xl md:text-5xl font-light text-white/40 tracking-tight italic mb-16 font-[family-name:var(--font-orbitron)]">
+              "The cosmos is within us."
+            </h4>
+            
+            <div className="inline-flex items-center gap-4 text-zinc-700">
+              <span className="text-[8px] font-bold tracking-[0.5em] uppercase">Nexus Protocol</span>
+              <div className="w-1 h-1 rounded-full bg-zinc-800" />
+              <span className="text-[8px] font-bold tracking-[0.5em] uppercase">v2.0.4</span>
+            </div>
           </div>
         </footer>
       </div>
