@@ -110,22 +110,22 @@ function Galaxy() {
     }
   });
 
-  return (
-    <group ref={ref} scale={1.6}>
-      <Points positions={particles.positions} colors={particles.colors} stride={3}>
-        <PointMaterial
-          ref={materialRef}
-          transparent
-          opacity={0.6}
-          vertexColors
-          size={0.012}
-          sizeAttenuation={true}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </Points>
-    </group>
-  );
+    return (
+      <group ref={ref} scale={2.2}>
+        <Points positions={particles.positions} colors={particles.colors} stride={3}>
+          <PointMaterial
+            ref={materialRef}
+            transparent
+            opacity={0.85}
+            vertexColors
+            size={0.012}
+            sizeAttenuation={true}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+          />
+        </Points>
+      </group>
+    );
 }
 
 export function MilkyWay() {
