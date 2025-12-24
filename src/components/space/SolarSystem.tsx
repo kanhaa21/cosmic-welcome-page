@@ -74,6 +74,7 @@ const planets = [
 export function SolarSystem() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredPlanet, setHoveredPlanet] = useState<number | null>(null);
+  const [rotations, setRotations] = useState<number[]>(planets.map(() => 0));
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -85,6 +86,14 @@ export function SolarSystem() {
           repeat: -1,
           ease: "none",
           transformOrigin: "center center",
+          onUpdate: function() {
+            const currentRotation = gsap.getProperty(`.planet-${i}`, "rotation") as number;
+            setRotations(prev => {
+              const next = [...prev];
+              next[i] = currentRotation;
+              return next;
+            });
+          }
         });
 
         // Initial entry animation for names
@@ -108,19 +117,19 @@ export function SolarSystem() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen py-40 flex flex-col items-center justify-center overflow-hidden z-10 bg-[#020108]">
+    <section ref={containerRef} className="relative min-h-[80vh] py-20 flex flex-col items-center justify-center overflow-hidden z-10 bg-[#020108]">
       {/* Visibility Enhancer */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none opacity-80" />
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-900/10 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-900/10 blur-[150px] rounded-full pointer-events-none" />
       
-      <div className="absolute top-20 text-center reveal-text">
-        <span className="text-purple-500 font-black uppercase tracking-[0.5em] text-xs mb-4 block">The Solar Neighborhood</span>
-        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">Celestial <span className="text-zinc-700">Harmony</span></h2>
+      <div className="absolute top-10 text-center reveal-text">
+        <span className="text-purple-500 font-black uppercase tracking-[0.5em] text-[10px] mb-2 block">The Solar Neighborhood</span>
+        <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">Celestial <span className="text-zinc-700">Harmony</span></h2>
       </div>
 
-      <div className="relative w-[1000px] h-[1000px] flex items-center justify-center scale-75 md:scale-100">
+      <div className="relative w-[800px] h-[800px] flex items-center justify-center scale-75 md:scale-90">
         {/* Sun */}
-        <div className="absolute w-20 h-20 bg-yellow-400 rounded-full blur-[2px] shadow-[0_0_100px_#fbbf24] z-20">
+        <div className="absolute w-16 h-16 bg-yellow-400 rounded-full blur-[2px] shadow-[0_0_80px_#fbbf24] z-20">
           <div className="absolute inset-0 bg-orange-500 rounded-full animate-pulse opacity-50" />
         </div>
 
@@ -174,21 +183,30 @@ export function SolarSystem() {
                       initial={{ opacity: 0, y: 10, scale: 0.8 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.8 }}
+                      style={{
+                        transform: `rotate(${-rotations[i]}deg)`,
+                        transformOrigin: "center bottom"
+                      }}
                       className="absolute bottom-full mb-8 z-50 pointer-events-none"
                     >
-                      <div className="bg-black/80 backdrop-blur-xl border border-white/10 p-4 rounded-2xl w-64 shadow-2xl relative">
-                        <div className="text-purple-400 font-black text-xs uppercase tracking-[0.2em] mb-1">{planet.name}</div>
-                        <div className="text-zinc-300 text-xs leading-relaxed font-medium">
+                      <div className="bg-black/90 backdrop-blur-2xl border border-white/10 p-4 rounded-2xl w-60 shadow-2xl relative">
+                        <div className="text-purple-400 font-black text-[10px] uppercase tracking-[0.2em] mb-1">{planet.name}</div>
+                        <div className="text-zinc-300 text-[11px] leading-relaxed font-medium">
                           {planet.description}
                         </div>
                         {/* Little tail for the speech bubble */}
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-black/80" />
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-black/90" />
                       </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
 
-                <span className={`name-${i} absolute -bottom-6 text-[10px] font-bold text-white uppercase tracking-widest whitespace-nowrap opacity-40 transition-opacity group-hover:opacity-100`}>
+                <span 
+                  className={`name-${i} absolute -bottom-6 text-[9px] font-bold text-white uppercase tracking-widest whitespace-nowrap opacity-40 transition-opacity group-hover:opacity-100`}
+                  style={{
+                    transform: `rotate(${-rotations[i]}deg)`
+                  }}
+                >
                   {planet.name}
                 </span>
               </div>
@@ -197,8 +215,8 @@ export function SolarSystem() {
         ))}
       </div>
       
-      <div className="absolute bottom-20 max-w-xl text-center reveal-text">
-        <p className="text-zinc-500 text-sm leading-relaxed font-medium">
+      <div className="absolute bottom-10 max-w-lg text-center reveal-text px-4">
+        <p className="text-zinc-500 text-[11px] leading-relaxed font-medium">
           Eight worlds dancing in a mathematical waltz around a single star. 
           Each one a unique testament to the laws of physics and the beauty of creation.
         </p>
