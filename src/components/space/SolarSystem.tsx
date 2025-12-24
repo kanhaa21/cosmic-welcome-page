@@ -50,10 +50,10 @@ export function SolarSystem() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen py-40 flex flex-col items-center justify-center overflow-hidden z-10">
+    <section ref={containerRef} className="relative min-h-screen py-40 flex flex-col items-center justify-center overflow-hidden z-10 bg-[#020108]">
       {/* Visibility Enhancer */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent pointer-events-none" />
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none opacity-80" />
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-900/10 blur-[150px] rounded-full pointer-events-none" />
       
       <div className="absolute top-20 text-center reveal-text">
         <span className="text-purple-500 font-black uppercase tracking-[0.5em] text-xs mb-4 block">The Solar Neighborhood</span>
