@@ -335,10 +335,10 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
       </div>
 
       <SmoothScroll key={id}>
-        <div className="max-w-7xl mx-auto px-6 pt-32 pb-40 relative z-10" data-scroll-section>
+        <div className="max-w-7xl mx-auto px-6 pt-32 pb-40 relative z-10">
           
           {/* Header Section - High Impact Dossier Style */}
-          <header id="overview" className="relative mb-32">
+          <header id="overview" className="relative mb-32" data-scroll-section>
             <div className="absolute -left-20 top-0 text-[20vw] font-black text-white/[0.02] select-none pointer-events-none tracking-tighter leading-none font-[family-name:var(--font-syncopate)]">
               {data.name}
             </div>
@@ -402,7 +402,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </header>
 
           {/* Technical Arsenal - Bento Grid */}
-          <section id="capabilities" className="mb-40">
+          <section id="capabilities" className="mb-40" data-scroll-section>
              <div className="flex items-center gap-6 mb-16">
                <h2 className="text-white text-3xl font-black uppercase tracking-tighter">Technical Arsenal</h2>
                <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
@@ -456,7 +456,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Strategic Projects Gallery */}
-          <section id="projects" className="mb-40">
+          <section id="projects" className="mb-40" data-scroll-section>
              <div className="flex items-center gap-6 mb-16">
                <h2 className="text-white text-3xl font-black uppercase tracking-tighter">Strategic Projects</h2>
                <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
@@ -482,7 +482,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Record of Achievements */}
-          <section id="achievements" className="mb-40">
+          <section id="achievements" className="mb-40" data-scroll-section>
              <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
                 <div className="lg:col-span-4">
                    <h2 className="text-white text-3xl font-black uppercase tracking-tighter mb-8 leading-tight">
@@ -519,7 +519,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Future Horizon - Roadmap */}
-          <section id="roadmap" className="mb-40 py-24 px-8 md:px-16 rounded-[3rem] bg-gradient-to-br from-blue-600/10 via-transparent to-transparent border border-white/5 relative overflow-hidden">
+          <section id="roadmap" className="mb-40 py-24 px-8 md:px-16 rounded-[3rem] bg-gradient-to-br from-blue-600/10 via-transparent to-transparent border border-white/5 relative overflow-hidden" data-scroll-section>
              <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
              
              <div className="relative z-10">
@@ -549,7 +549,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Operational Infrastructure */}
-          <section id="infrastructure" className="mb-40">
+          <section id="infrastructure" className="mb-40" data-scroll-section>
              <div className="flex items-center gap-6 mb-16">
                <h2 className="text-white text-3xl font-black uppercase tracking-tighter">Global Infrastructure</h2>
                <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
@@ -592,7 +592,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Footer Metadata */}
-          <footer className="pt-12 border-t border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] text-zinc-600 font-mono tracking-[0.4em] uppercase">
+          <footer className="pt-12 border-t border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] text-zinc-600 font-mono tracking-[0.4em] uppercase" data-scroll-section>
              <div>Source: Official {data.name} Communications Archive</div>
              <div className="flex gap-8">
                 <span>Last Refreshed: {new Date().toLocaleDateString()}</span>
