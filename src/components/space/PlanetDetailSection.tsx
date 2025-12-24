@@ -219,6 +219,16 @@ export function PlanetDetailSection() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Preload textures
+    planetData.forEach(planet => {
+      const img = new Image();
+      img.src = planet.textureUrl;
+      if (planet.cloudUrl) {
+        const cloudImg = new Image();
+        cloudImg.src = planet.cloudUrl;
+      }
+    });
+
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
