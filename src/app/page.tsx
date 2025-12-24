@@ -9,7 +9,6 @@ import { StoryTeller } from "@/components/space/StoryTeller";
 import { SolarSystem } from "@/components/space/SolarSystem";
 import { RealisticEarth } from "@/components/space/RealisticEarth";
 import { CustomCursor } from "@/components/space/CustomCursor";
-import { SectionDivider } from "@/components/space/SectionDivider";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
@@ -108,8 +107,6 @@ export default function Home() {
           </motion.div>
         </section>
 
-        <SectionDivider label="Planetary Interface" color="blue-400" />
-
         {/* Earth Feature */}
         <section id="earth" className="relative py-20 md:py-32 px-4 md:px-20 z-10" data-scroll-section>
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -144,21 +141,15 @@ export default function Home() {
           </div>
         </section>
 
-        <SectionDivider label="Celestial Narratives" color="purple-500" />
-
         {/* Storytelling Section */}
         <div id="story" data-scroll-section>
           <StoryTeller />
         </div>
 
-        <SectionDivider label="Orrery Simulation" color="orange-500" />
-
         {/* Solar System Section */}
         <div id="solar" className="-mt-12" data-scroll-section>
           <SolarSystem />
         </div>
-
-        <SectionDivider label="Cosmic Horizon" color="indigo-500" />
 
         {/* Infinite Wonders */}
         <section id="explore" className="relative py-24 px-4 md:px-20 z-10 bg-black/40 backdrop-blur-sm border-y border-white/5" data-scroll-section>
