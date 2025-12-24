@@ -38,22 +38,26 @@ export function GSAPStars({ count = 2000 }: { count?: number }) {
       glow: Math.random() > 0.8,
     }));
 
-    const render = () => {
+    const render = (time: number) => {
       ctx.clearRect(0, 0, width, height);
       ctx.globalCompositeOperation = "lighter";
       
-      stars.forEach((star) => {
+      stars.forEach((star, i) => {
+        // Calculate twinkle based on time and star's unique offset
+        const twinkle = Math.sin(time * star.twinkleSpeed + i) * 0.5 + 0.5;
+        const currentOpacity = star.opacity * (0.3 + twinkle * 0.7);
+        const currentSize = star.size * (0.8 + twinkle * 0.2);
+
         ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.arc(star.x, star.y, currentSize, 0, Math.PI * 2);
         ctx.fillStyle = star.color;
-        ctx.globalAlpha = star.opacity;
+        ctx.globalAlpha = currentOpacity;
         
-        if (star.glow) {
-          ctx.shadowBlur = 15 * star.opacity;
+        if (star.glow && currentOpacity > 0.5) {
+          ctx.shadowBlur = 10 * currentOpacity;
           ctx.shadowColor = star.color;
         } else {
-          ctx.shadowBlur = 5 * star.opacity;
-          ctx.shadowColor = "white";
+          ctx.shadowBlur = 0;
         }
         
         ctx.fill();
@@ -62,29 +66,12 @@ export function GSAPStars({ count = 2000 }: { count?: number }) {
       ctx.globalCompositeOperation = "source-over";
     };
 
-    // Use GSAP to animate star properties
-    const timelines: gsap.core.Tween[] = [];
-    
-    stars.forEach((star) => {
-      const tween = gsap.to(star, {
-        opacity: star.opacity * 0.2,
-        size: star.size * 0.5,
-        duration: star.twinkleSpeed,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: Math.random() * 5,
-      });
-      timelines.push(tween);
-    });
-
-    const ticker = () => render();
+    const ticker = () => render(gsap.ticker.time);
     gsap.ticker.add(ticker);
 
     const handleResize = () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
-      // Re-position stars proportionally or just redraw
       stars.forEach(star => {
         star.x = Math.random() * width;
         star.y = Math.random() * height;
@@ -96,7 +83,6 @@ export function GSAPStars({ count = 2000 }: { count?: number }) {
     return () => {
       window.removeEventListener("resize", handleResize);
       gsap.ticker.remove(ticker);
-      timelines.forEach(t => t.kill());
     };
   }, [count]);
 
