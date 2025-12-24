@@ -34,52 +34,48 @@ export function Taskbar() {
     // Only run on home page
     if (window.location.pathname !== "/") return;
 
-    // Use a cleaner ScrollTrigger approach for active state
-    sections.forEach((section) => {
-      const element = document.querySelector(`#${section.id}`);
-      if (!element) return;
+    const ctx = gsap.context(() => {
+      // Use a cleaner ScrollTrigger approach for active state
+      sections.forEach((section) => {
+        const element = document.querySelector(`#${section.id}`);
+        if (!element) return;
 
-      ScrollTrigger.create({
-        trigger: element,
-        scroller: ".smooth-scroll",
-        start: "top 20%",
-        end: "bottom 20%",
-        onUpdate: (self) => {
-          if (self.isActive) {
-            setActiveSection(section.id);
-            setSectionProgress(self.progress);
-          }
-        },
-        onToggle: (self) => {
-          if (self.isActive) setActiveSection(section.id);
-        },
-        onEnter: () => setActiveSection(section.id),
-        onEnterBack: () => setActiveSection(section.id),
+        ScrollTrigger.create({
+          trigger: element,
+          scroller: ".smooth-scroll",
+          start: "top 20%",
+          end: "bottom 20%",
+          onUpdate: (self) => {
+            if (self.isActive) {
+              setActiveSection(section.id);
+              setSectionProgress(self.progress);
+            }
+          },
+          onToggle: (self) => {
+            if (self.isActive) setActiveSection(section.id);
+          },
+          onEnter: () => setActiveSection(section.id),
+          onEnterBack: () => setActiveSection(section.id),
+        });
       });
+
+      // Special case for top of page
+      const heroElement = document.querySelector("#hero");
+      if (heroElement) {
+        ScrollTrigger.create({
+          trigger: heroElement,
+          scroller: ".smooth-scroll",
+          start: "top top",
+          end: "bottom 50%",
+          onToggle: (self) => {
+            if (self.isActive) setActiveSection("hero");
+          },
+          onEnterBack: () => setActiveSection("hero"),
+        });
+      }
     });
 
-    // Special case for top of page
-    const heroElement = document.querySelector("#hero");
-    if (heroElement) {
-      ScrollTrigger.create({
-        trigger: heroElement,
-        scroller: ".smooth-scroll",
-        start: "top top",
-        end: "bottom 50%",
-        onToggle: (self) => {
-          if (self.isActive) setActiveSection("hero");
-        },
-        onEnterBack: () => setActiveSection("hero"),
-      });
-    }
-
-    return () => {
-      ScrollTrigger.getAll().forEach(st => {
-        if (st.vars.trigger && typeof st.vars.trigger === 'string' && sections.some(s => st.vars.trigger === `#${s.id}`)) {
-          st.kill();
-        }
-      });
-    };
+    return () => ctx.revert();
   }, [scroll]);
 
   const handleScroll = (id: string) => {
