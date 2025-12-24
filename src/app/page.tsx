@@ -149,14 +149,10 @@ export default function Home() {
           <StoryTeller />
         </div>
 
-        <SectionDivider label="Orrery Simulation" color="orange-500" />
-
         {/* Solar System Section */}
         <div id="solar" className="-mt-12" data-scroll-section>
           <SolarSystem />
         </div>
-
-        <SectionDivider label="Cosmic Horizon" color="indigo-500" />
 
         {/* Infinite Wonders */}
         <section id="explore" className="relative py-24 px-4 md:px-20 z-10 bg-black/40 backdrop-blur-sm border-y border-white/5" data-scroll-section>
