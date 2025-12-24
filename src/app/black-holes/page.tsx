@@ -99,7 +99,6 @@ export default function BlackHolePage() {
         style={{ opacity: backgroundOpacity }}
         className="fixed inset-0 z-0"
       >
-        <GSAPStars count={2000} />
       </motion.div>
 
       {/* Dark Overlay for Readability */}
