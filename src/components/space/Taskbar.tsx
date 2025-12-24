@@ -146,86 +146,99 @@ export function Taskbar() {
     );
   }
 
-  return (
-    <motion.nav
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-3 md:py-4 rounded-full border border-white/5 bg-[#030014]/60 backdrop-blur-2xl flex items-center shadow-[0_20px_50px_-12px_rgba(0,0,0,0.8)] transition-all duration-500 hover:border-white/10 w-auto justify-center overflow-hidden group ${isHovered ? 'gap-3 md:gap-8' : 'gap-0'}`}
-    >
-      {/* Global Scroll Track (Background) */}
-      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-white/5 z-0" />
-      
-      {/* Global Scroll Progress Bar (Main) */}
-      <motion.div
-        className="absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent z-10"
-        style={{ width: "100%", scaleX: globalProgress, originX: 0 }}
-        transition={{ type: "spring", stiffness: 100, damping: 30 }}
-      />
+    return (
+      <motion.nav
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className={`fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-3 md:py-4 rounded-full border border-white/5 bg-[#030014]/60 backdrop-blur-2xl flex items-center shadow-[0_20px_50px_-12px_rgba(0,0,0,0.8)] transition-all hover:border-white/10 w-auto justify-center overflow-hidden group ${isHovered ? 'gap-3 md:gap-8 duration-300' : 'gap-0 duration-800'}`}
+      >
+        {/* Global Scroll Track (Background) */}
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-white/5 z-0" />
+        
+        {/* Global Scroll Progress Bar (Main) */}
+        <motion.div
+          className="absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent z-10"
+          style={{ width: "100%", scaleX: globalProgress, originX: 0 }}
+          transition={{ type: "spring", stiffness: 100, damping: 30 }}
+        />
+  
+        {/* Home Navigation */}
+        <div className={`flex items-center relative z-[2] transition-all ${isHovered ? 'gap-2 md:gap-6 duration-300' : 'gap-0 duration-800'}`}>
+          {sections.map((section) => (
+            <motion.div
+              key={section.id}
+              initial={false}
+              animate={{
+                width: section.name === "Nexus" || isHovered ? "auto" : 0,
+                opacity: section.name === "Nexus" || isHovered ? 1 : 0,
+                pointerEvents: section.name === "Nexus" || isHovered ? "auto" : "none"
+              }}
+              transition={navTransition}
+              className="overflow-hidden flex items-center"
+            >
+                    <motion.button
+                      whileHover={section.id === "solar" ? { 
+                        scale: 1.1, 
+                        textShadow: "0 0 20px rgba(168,85,247,0.5)",
+                        letterSpacing: "0.4em"
+                      } : { scale: 1.05 }}
+                      onClick={() => {
+                        if (section.path && pathname !== section.path) {
+                          window.location.href = section.path;
+                          return;
+                        }
+                        if (pathname !== "/" && !section.path) {
+                          window.location.href = `/#${section.id}`;
+                          return;
+                        }
+                        if (section.id !== "nexus") {
+                          if (window.location.hash === "#nexus") window.location.hash = "";
+                          handleScroll(section.id);
+                        }
+                      }}
+                      className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
+                        activeSection === section.id 
+                          ? (section.name === "Nexus" ? "bg-gradient-to-r from-purple-400 via-white to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" : "text-white")
+                          : (section.name === "Nexus" ? "bg-gradient-to-r from-zinc-400 via-zinc-200 to-zinc-500 bg-clip-text text-transparent hover:from-white hover:to-white" : "text-zinc-500 hover:text-zinc-300")
+                      } ${section.name === "Nexus" ? "font-[family-name:var(--font-syncopate)] font-black text-[10px] md:text-[12px] tracking-[0.4em] scale-110" : ""} ${
+                        section.id === "solar" ? "hover:bg-white/5 hover:border-white/20 border border-transparent transition-all duration-300 relative overflow-visible" : ""
+                      }`}
+                    >
+                      {section.name === "Solar" && (
+                        <motion.div 
+                          className="absolute inset-0 rounded-full border border-purple-500/0 group-hover:border-purple-500/50 -z-10 transition-colors duration-500"
+                          initial={false}
+                          animate={isHovered ? { scale: [0.8, 1.2, 1] } : { scale: 1 }}
+                        />
+                      )}
+                      
+                      <span className="relative z-10">{section.name}</span>
 
-      {/* Home Navigation */}
-      <div className={`flex items-center relative z-[2] transition-all duration-500 ${isHovered ? 'gap-2 md:gap-6' : 'gap-0'}`}>
-        {sections.map((section) => (
-          <motion.div
-            key={section.id}
-            initial={false}
-            animate={{
-              width: section.name === "Nexus" || isHovered ? "auto" : 0,
-              opacity: section.name === "Nexus" || isHovered ? 1 : 0,
-              pointerEvents: section.name === "Nexus" || isHovered ? "auto" : "none"
-            }}
-            transition={{ duration: 0.5, ease: "circOut" }}
-            className="overflow-hidden flex items-center"
-          >
-                  <motion.button
-                    whileHover={section.id === "solar" ? { 
-                      scale: 1.15, 
-                      textShadow: "0 0 15px rgba(168,85,247,0.8)",
-                      letterSpacing: "0.4em"
-                    } : { scale: 1.05 }}
-                    onClick={() => {
-                      if (section.path && pathname !== section.path) {
-                        window.location.href = section.path;
-                        return;
-                      }
-                      if (pathname !== "/" && !section.path) {
-                        window.location.href = `/#${section.id}`;
-                        return;
-                      }
-                      if (section.id !== "nexus") {
-                        if (window.location.hash === "#nexus") window.location.hash = "";
-                        handleScroll(section.id);
-                      }
-                    }}
-                    className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
-                      activeSection === section.id 
-                        ? (section.name === "Nexus" ? "bg-gradient-to-r from-purple-400 via-white to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" : "text-white")
-                        : (section.name === "Nexus" ? "bg-gradient-to-r from-zinc-400 via-zinc-200 to-zinc-500 bg-clip-text text-transparent hover:from-white hover:to-white" : "text-zinc-500 hover:text-zinc-300")
-                    } ${section.name === "Nexus" ? "font-[family-name:var(--font-orbitron)] font-black text-[12px] md:text-[14px] tracking-[0.4em] scale-110" : ""} ${
-                      section.id === "solar" ? "hover:bg-purple-600/30 hover:border-purple-400/50 border border-transparent transition-all duration-500 shadow-[0_0_25px_rgba(168,85,247,0)] hover:shadow-[0_0_30px_rgba(168,85,247,0.4)] relative overflow-visible" : ""
-                    }`}
-                  >
-                    {section.name === "Solar" && (
-                      <motion.span 
-                        animate={{ 
-                          scale: [1, 1.5, 1],
-                          opacity: [0.3, 1, 0.3],
-                          rotate: 360
-                        }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                        className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-purple-500 rounded-full blur-[2px] shadow-[0_0_10px_rgba(168,85,247,1)]"
-                      />
-                    )}
-                    <span className="relative z-10">{section.name}</span>
-                    {section.name === "Solar" && isHovered && (
-                      <motion.div
-                        layoutId="solar-glow"
-                        className="absolute inset-0 bg-purple-500/10 blur-xl rounded-full -z-10"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                      />
-                    )}
+                      {section.id === "solar" && (
+                        <div className="absolute -top-1 -right-1 flex items-center justify-center">
+                          <motion.div 
+                            animate={{ 
+                              scale: [1, 1.8, 1],
+                              opacity: [0.2, 0.6, 0.2],
+                            }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute w-4 h-4 bg-purple-500/30 rounded-full blur-md"
+                          />
+                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full shadow-[0_0_10px_rgba(168,85,247,1)]" />
+                        </div>
+                      )}
+
+                      {section.name === "Solar" && isHovered && (
+                        <motion.div
+                          layoutId="solar-glow"
+                          className="absolute inset-0 bg-purple-600/10 blur-2xl rounded-full -z-20"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                        />
+                      )}
+
 
               {activeSection === section.id && (
                 <motion.div
