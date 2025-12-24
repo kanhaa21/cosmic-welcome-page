@@ -13,6 +13,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
