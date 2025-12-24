@@ -143,8 +143,10 @@ export default function Home() {
                 className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full blur-[2px]" 
               />
             </div>
-          </motion.div>
-        </section>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
 
         {/* Earth Feature */}
         <section id="earth" className="relative py-20 md:py-32 px-4 md:px-20 z-10" data-scroll-section>
