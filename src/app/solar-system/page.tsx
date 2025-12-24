@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 
 const GSAPStars = dynamic(() => import("@/components/space/GSAPStars").then(mod => mod.GSAPStars), { ssr: false });
 const SolarSystem = dynamic(() => import("@/components/space/SolarSystem").then(mod => mod.SolarSystem), { ssr: false });
+const PlanetDetailSection = dynamic(() => import("@/components/space/PlanetDetailSection").then(mod => mod.PlanetDetailSection), { ssr: false });
 
 export default function SolarSystemPage() {
   const containerRef = useRef(null);
@@ -35,10 +36,13 @@ export default function SolarSystemPage() {
         <div className="fixed inset-0 z-0 bg-black/60 pointer-events-none" />
         <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/40 via-transparent to-[#030014] pointer-events-none" />
 
-        {/* Solar System Section */}
+        {/* Hero Section - Solar System Overview */}
         <div className="relative z-10">
           <SolarSystem />
         </div>
+
+        {/* Detailed Planet Information Section */}
+        <PlanetDetailSection />
 
         <footer className="relative py-16 px-4 text-center border-t border-white/5 z-10 bg-black/40 backdrop-blur-sm">
           <p className="text-zinc-600 text-[10px] font-black tracking-[0.8em] uppercase mb-3">
