@@ -15,7 +15,6 @@ import { useSmoothScroll } from "@/components/space/SmoothScroll";
 
 const GSAPStars = dynamic(() => import("@/components/space/GSAPStars").then(mod => mod.GSAPStars), { ssr: false });
 const StoryTeller = dynamic(() => import("@/components/space/StoryTeller").then(mod => mod.StoryTeller), { ssr: false });
-const SolarSystem = dynamic(() => import("@/components/space/SolarSystem").then(mod => mod.SolarSystem), { ssr: false });
 const RealisticEarth = dynamic(() => import("@/components/space/RealisticEarth").then(mod => mod.RealisticEarth), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger);
