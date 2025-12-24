@@ -50,16 +50,17 @@ function StarField() {
 
   return (
     <group rotation={[0, 0, Math.PI / 4]}>
-      <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
-        <PointMaterial
-          transparent
-          color="#ffffff"
-          size={0.008}
-          sizeAttenuation={true}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </Points>
+        <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
+          <PointMaterial
+            transparent
+            opacity={0.3}
+            color="#ffffff"
+            size={0.008}
+            sizeAttenuation={true}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+          />
+        </Points>
     </group>
   );
 }
