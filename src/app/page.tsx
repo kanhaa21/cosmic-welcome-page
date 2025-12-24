@@ -41,10 +41,10 @@ export default function Home() {
     handleHashChange();
 
     const initAnimations = () => {
-      const titles = document.querySelectorAll(".reveal-text");
+      const titles = gsap.utils.toArray(".reveal-text");
       if (titles.length === 0) return;
       
-      titles.forEach((title) => {
+      titles.forEach((title: any) => {
         gsap.fromTo(
           title,
           { opacity: 0, y: 30, filter: "blur(10px)" },
@@ -52,7 +52,7 @@ export default function Home() {
             opacity: 1,
             y: 0,
             filter: "blur(0px)",
-            duration: 2,
+            duration: 1.5,
             ease: "expo.out",
             scrollTrigger: {
               trigger: title,
@@ -60,30 +60,35 @@ export default function Home() {
               start: "top 95%",
               toggleActions: "play none none reverse",
               invalidateOnRefresh: true,
+              fastScrollEnd: true,
             },
           }
         );
       });
     };
 
+    let ctx: gsap.Context;
     const timer = setTimeout(() => {
-      initAnimations();
+      ctx = gsap.context(() => {
+        initAnimations();
+      }, containerRef);
       ScrollTrigger.refresh();
       window.dispatchEvent(new Event('resize'));
     }, 1000);
 
     return () => {
       clearTimeout(timer);
+      if (ctx) ctx.revert();
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
   }, []);
 
   return (
     <SmoothScroll>
-      <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30">
+      <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 will-change-transform">
         <CustomCursor />
         <Taskbar />
-        <GSAPStars speed={1.5} />
+        <GSAPStars speed={1.2} count={1500} />
         
         <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/20 via-transparent to-[#030014] pointer-events-none" />
 
@@ -96,8 +101,8 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 1.1, filter: "blur(40px)" }}
-                transition={{ duration: 1, ease: "circOut" }}
-                style={{ opacity, scale }}
+                transition={{ duration: 0.8, ease: "circOut" }}
+                style={{ opacity, scale, willChange: "transform, opacity" }}
                 className="text-center w-full max-w-5xl mx-auto"
               >
                 <div className="relative inline-block w-full">
