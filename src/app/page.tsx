@@ -36,43 +36,50 @@ export default function Home() {
       opacity: Math.random() * 0.5 + 0.3
     })));
 
-    const titles = document.querySelectorAll(".reveal-text");
-    titles.forEach((title) => {
-      gsap.fromTo(
-        title,
-        { opacity: 0, y: 50, skewY: 7 },
-        {
-          opacity: 1,
-          y: 0,
-          skewY: 0,
-          duration: 1.5,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: title,
-            scroller: ".smooth-scroll",
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
-    });
+    const initAnimations = () => {
+      const titles = document.querySelectorAll(".reveal-text");
+      titles.forEach((title) => {
+        gsap.fromTo(
+          title,
+          { opacity: 0, y: 50, skewY: 7 },
+          {
+            opacity: 1,
+            y: 0,
+            skewY: 0,
+            duration: 1.5,
+            ease: "power4.out",
+            scrollTrigger: {
+              trigger: title,
+              scroller: ".smooth-scroll",
+              start: "top 90%",
+              toggleActions: "play none none reverse",
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      });
 
-    gsap.to(".star-layer", {
-      y: (i, target) => -ScrollTrigger.maxScroll(".smooth-scroll") * (target.dataset.speed || 0.1),
-      ease: "none",
-      scrollTrigger: {
-        trigger: "body",
-        scroller: ".smooth-scroll",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-      }
-    });
+      gsap.to(".star-layer", {
+        y: (i, target) => -ScrollTrigger.maxScroll(".smooth-scroll") * (target.dataset.speed || 0.1),
+        ease: "none",
+        scrollTrigger: {
+          trigger: "body",
+          scroller: ".smooth-scroll",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+          invalidateOnRefresh: true,
+        }
+      });
+    };
 
     // Refresh ScrollTrigger after a delay to ensure proxy is ready
     const timer = setTimeout(() => {
+      initAnimations();
       ScrollTrigger.refresh();
-    }, 1000);
+      // Force a scroll event to trigger initial checks
+      window.dispatchEvent(new Event('resize'));
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
