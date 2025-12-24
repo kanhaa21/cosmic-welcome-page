@@ -24,6 +24,7 @@ interface AgencyData {
   description: string;
   color: string;
   accent: string;
+  flagGradient: string;
   achievements: StoryItem[];
   projects: StoryItem[];
 }
@@ -35,6 +36,7 @@ const agencyData: Record<string, AgencyData> = {
     description: "The National Aeronautics and Space Administration is America's civil space program and the global leader in space exploration.",
     color: "from-blue-600",
     accent: "#2563eb",
+    flagGradient: "from-[#3C3B6E] via-[#FFFFFF] to-[#B22234]",
     achievements: [
       {
         title: "The Apollo Era",
@@ -76,6 +78,7 @@ const agencyData: Record<string, AgencyData> = {
     description: "India's premier space agency, known for its cost-effective and innovative approach to planetary exploration.",
     color: "from-orange-500",
     accent: "#f97316",
+    flagGradient: "from-[#FF9933] via-[#FFFFFF] to-[#138808]",
     achievements: [
       {
         title: "Mangalyaan Success",
@@ -99,12 +102,43 @@ const agencyData: Record<string, AgencyData> = {
       }
     ]
   },
+  esa: {
+    name: "ESA",
+    tagline: "Shaping the development of Europe's space capability.",
+    description: "The European Space Agency is Europe's gateway to space, coordinating the financial and intellectual resources of its member states.",
+    color: "from-blue-800",
+    accent: "#1e3a8a",
+    flagGradient: "from-[#003399] to-[#FFCC00]",
+    achievements: [
+      {
+        title: "Rosetta Mission",
+        year: "2014",
+        description: "The first mission to orbit and land on a comet, unlocking secrets of the solar system's origins.",
+        image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=1200"
+      },
+      {
+        title: "Ariane Rockets",
+        year: "Ongoing",
+        description: "Providing Europe with independent access to space through highly reliable launch vehicles.",
+        image: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&q=80&w=1200"
+      }
+    ],
+    projects: [
+      {
+        title: "JUICE",
+        year: "Current",
+        description: "Exploring Jupiter's icy moons to determine if they could harbor life in their hidden oceans.",
+        image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
+      }
+    ]
+  },
   spacex: {
     name: "SpaceX",
     tagline: "Making humanity multi-planetary.",
     description: "Revolutionizing space transportation through reusable rocketry and visionary engineering.",
     color: "from-zinc-600",
     accent: "#52525b",
+    flagGradient: "from-[#3C3B6E] via-[#FFFFFF] to-[#B22234]",
     achievements: [
       {
         title: "First Landing",
@@ -185,7 +219,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
             className="text-center"
           >
             <span className="text-zinc-500 font-bold tracking-[0.8em] uppercase text-xs mb-6 block">Agency Profile</span>
-            <h1 className={`text-8xl md:text-[12rem] font-black bg-gradient-to-b ${data.color} to-white bg-clip-text text-transparent leading-none tracking-tighter mb-8`}>
+            <h1 className={`text-8xl md:text-[14rem] font-black bg-gradient-to-br ${data.flagGradient} bg-clip-text text-transparent leading-none tracking-tighter mb-8 drop-shadow-2xl`}>
               {data.name}
             </h1>
             <p className="text-zinc-400 text-xl md:text-3xl font-light italic max-w-2xl mx-auto leading-relaxed">
@@ -200,9 +234,14 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
         </section>
 
         {/* Introduction */}
-        <section className="relative py-40 px-4 md:px-20 z-20 bg-black/50 backdrop-blur-3xl">
+        <section className="relative py-40 px-4 md:px-20 z-20 bg-black/50 backdrop-blur-3xl border-y border-white/5">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-12 tracking-tight">The Mission</h2>
+            <div className="flex justify-center gap-2 mb-8">
+               <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-purple-500" />
+               <div className="w-2 h-0.5 bg-purple-500" />
+               <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-purple-500" />
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-12 tracking-tight uppercase tracking-widest">The Mission</h2>
             <p className="text-zinc-400 text-xl md:text-3xl leading-relaxed font-light">
               {data.description} Our journey through space is a testament to the indomitable human spirit and our innate curiosity to explore the unknown.
             </p>
@@ -211,9 +250,9 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
 
         {/* Achievements Storyteller */}
         <div className="relative z-10">
-          <div className="sticky top-20 left-20 z-30 pointer-events-none">
-             <h3 className="text-purple-500 text-xs font-black uppercase tracking-[1em] mb-2">Historical</h3>
-             <div className="text-3xl font-bold text-white">Legacy</div>
+          <div className="sticky top-20 left-20 z-30 pointer-events-none p-8">
+             <h3 className="text-purple-500 text-[10px] font-black uppercase tracking-[1em] mb-2">Historical</h3>
+             <div className="text-3xl font-bold text-white tracking-tighter">Legacy Archive</div>
           </div>
 
           {data.achievements.map((item, i) => (
@@ -222,9 +261,9 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
               
               <div className="content-box relative z-20 max-w-4xl px-8 text-center">
-                <span className="text-white/60 font-mono text-sm mb-4 block">Milestone 0{i + 1} // {item.year}</span>
-                <h3 className="text-6xl md:text-8xl font-black text-white mb-8 tracking-tighter">{item.title}</h3>
-                <p className="text-zinc-300 text-xl md:text-2xl leading-relaxed font-medium bg-black/40 backdrop-blur-md p-8 rounded-3xl border border-white/5">
+                <span className="text-white/40 font-mono text-xs mb-4 block tracking-widest uppercase">Index // 0{i + 1} // AD {item.year}</span>
+                <h3 className="text-6xl md:text-9xl font-black text-white mb-8 tracking-tighter drop-shadow-2xl">{item.title}</h3>
+                <p className="text-zinc-200 text-lg md:text-2xl leading-relaxed font-medium bg-black/60 backdrop-blur-xl p-10 rounded-[3rem] border border-white/10 shadow-2xl">
                   {item.description}
                 </p>
               </div>
@@ -233,23 +272,26 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
         </div>
 
         {/* Projects Section */}
-        <section className="relative py-40 bg-[#05001a] z-20">
+        <section className="relative py-40 bg-[#05001a] z-20 border-t border-white/5">
           <div className="max-w-7xl mx-auto px-4">
             <div className="mb-24 text-center">
-              <h2 className="text-purple-500 text-xs font-black uppercase tracking-[1em] mb-4">The Future</h2>
-              <div className="text-5xl md:text-7xl font-black text-white tracking-tighter">Current <span className="text-zinc-800">&</span> Upcoming</div>
+              <h2 className="text-purple-500 text-[10px] font-black uppercase tracking-[1em] mb-4">Frontiers</h2>
+              <div className="text-5xl md:text-8xl font-black text-white tracking-tighter italic">Active <span className="text-zinc-800">Spectrums</span></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
               {data.projects.map((project, i) => (
-                <div key={i} className="group relative aspect-square rounded-[3rem] overflow-hidden glass-card border-white/5 p-12 flex flex-col justify-end">
-                  <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-40 transition-opacity duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#05001a] to-transparent" />
+                <div key={i} className="group relative aspect-[4/5] rounded-[4rem] overflow-hidden glass-card border-white/5 p-16 flex flex-col justify-end transition-all duration-700 hover:scale-[1.02]">
+                  <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-60 transition-all duration-1000 scale-100 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#05001a] via-[#05001a]/40 to-transparent" />
                   
                   <div className="relative z-10">
-                    <span className="text-purple-400 font-bold uppercase tracking-widest text-xs mb-4 block">{project.year}</span>
-                    <h4 className="text-4xl font-black text-white mb-6 tracking-tight">{project.title}</h4>
-                    <p className="text-zinc-400 text-lg leading-relaxed">
+                    <div className="flex items-center gap-4 mb-6">
+                      <span className="h-px w-12 bg-purple-500" />
+                      <span className="text-purple-400 font-bold uppercase tracking-[0.3em] text-[10px]">{project.year}</span>
+                    </div>
+                    <h4 className="text-5xl font-black text-white mb-6 tracking-tighter uppercase">{project.title}</h4>
+                    <p className="text-zinc-400 text-xl leading-relaxed font-light">
                       {project.description}
                     </p>
                   </div>
@@ -260,13 +302,18 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
         </section>
 
         {/* Footer */}
-        <footer className="relative py-24 px-4 text-center border-t border-white/5 z-20">
-          <p className="text-zinc-600 text-xs font-black tracking-[0.8em] uppercase mb-4">
-            Continuing the Voyage
-          </p>
-          <p className="text-zinc-500 text-sm italic">
-            "To infinity and beyond."
-          </p>
+        <footer className="relative py-32 px-4 text-center border-t border-white/5 z-20 bg-black">
+          <div className="max-w-xl mx-auto">
+            <p className="text-zinc-700 text-[10px] font-black tracking-[1em] uppercase mb-6">
+              Continuing the Voyage
+            </p>
+            <p className="text-zinc-500 text-lg font-light italic">
+              "The exploration of space will go ahead, whether we join in it or not, and it is one of the great adventures of all time."
+            </p>
+            <div className="mt-12 text-[10px] text-zinc-800 font-mono">
+              SYSTEM STATUS: NOMINAL // DATA STREAM: ENCRYPTED
+            </div>
+          </div>
         </footer>
       </div>
     </SmoothScroll>
