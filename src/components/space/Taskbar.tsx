@@ -36,8 +36,11 @@ export function Taskbar() {
 
     // Use a cleaner ScrollTrigger approach for active state
     sections.forEach((section) => {
+      const element = document.querySelector(`#${section.id}`);
+      if (!element) return;
+
       ScrollTrigger.create({
-        trigger: `#${section.id}`,
+        trigger: element,
         scroller: ".smooth-scroll",
         start: "top 20%",
         end: "bottom 20%",
@@ -56,16 +59,19 @@ export function Taskbar() {
     });
 
     // Special case for top of page
-    ScrollTrigger.create({
-      trigger: "#hero",
-      scroller: ".smooth-scroll",
-      start: "top top",
-      end: "bottom 50%",
-      onToggle: (self) => {
-        if (self.isActive) setActiveSection("hero");
-      },
-      onEnterBack: () => setActiveSection("hero"),
-    });
+    const heroElement = document.querySelector("#hero");
+    if (heroElement) {
+      ScrollTrigger.create({
+        trigger: heroElement,
+        scroller: ".smooth-scroll",
+        start: "top top",
+        end: "bottom 50%",
+        onToggle: (self) => {
+          if (self.isActive) setActiveSection("hero");
+        },
+        onEnterBack: () => setActiveSection("hero"),
+      });
+    }
 
     return () => {
       ScrollTrigger.getAll().forEach(st => {
