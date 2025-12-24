@@ -40,11 +40,13 @@ export default function Home() {
     window.addEventListener("hashchange", handleHashChange);
     handleHashChange();
 
-    const initAnimations = () => {
-      const titles = gsap.utils.toArray(".reveal-text");
+    const initAnimations = (q: gsap.utils.SelectorFunc) => {
+      const titles = q(".reveal-text");
       if (titles.length === 0) return;
       
-      titles.forEach((title: any) => {
+      titles.forEach((title: Element) => {
+        if (!title) return;
+        
         gsap.fromTo(
           title,
           { opacity: 0, y: 30, filter: "blur(10px)" },
@@ -69,9 +71,14 @@ export default function Home() {
 
     let ctx: gsap.Context;
     const timer = setTimeout(() => {
-      ctx = gsap.context(() => {
-        initAnimations();
+      if (!containerRef.current) return;
+      
+      ctx = gsap.context((self) => {
+        if (self.selector) {
+          initAnimations(self.selector);
+        }
       }, containerRef);
+      
       ScrollTrigger.refresh();
       window.dispatchEvent(new Event('resize'));
     }, 1000);
