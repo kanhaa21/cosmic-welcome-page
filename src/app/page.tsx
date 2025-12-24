@@ -30,6 +30,7 @@ export default function Home() {
 
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
+  const starSpeed = useTransform(scrollYProgress, [0, 1], [1.5, 10]);
 
   useEffect(() => {
     const handleHashChange = () => {
