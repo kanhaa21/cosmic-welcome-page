@@ -13,44 +13,52 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     let locoScroll: any = null;
 
     (async () => {
-      const LocomotiveScroll = (await import("locomotive-scroll")).default;
-      
-      locoScroll = new LocomotiveScroll({
-        el: containerRef.current,
-        smooth: true,
-        multiplier: 1,
-        class: "is-reveal",
-      });
+      try {
+        const LocomotiveScroll = (await import("locomotive-scroll")).default;
+        
+        if (!containerRef.current) return;
 
-      // Each time Locomotive Scroll updates, tell ScrollTrigger to update too (sync positioning)
-      locoScroll.on("scroll", ScrollTrigger.update);
+        locoScroll = new LocomotiveScroll({
+          el: containerRef.current,
+          smooth: true,
+          multiplier: 1,
+          class: "is-reveal",
+          getDirection: true,
+          reloadOnContextChange: true
+        });
 
-      // Tell ScrollTrigger to use these proxy methods for the ".smooth-scroll" element since Locomotive Scroll is hijacking the scroll
-      ScrollTrigger.scrollerProxy(containerRef.current, {
-        scrollTop(value) {
-          return arguments.length
-            ? locoScroll.scrollTo(value, 0, 0)
-            : locoScroll.scroll.instance.scroll.y;
-        },
-        getBoundingClientRect() {
-          return {
-            top: 0,
-            left: 0,
-            width: window.innerWidth,
-            height: window.innerHeight,
-          };
-        },
-        // LocomotiveScroll handles things completely differently on mobile devices - it doesn't even transform the container at all! 
-        // So to get the correct behavior and avoid jitters, we should pin things with position: fixed on mobile. 
-        // We can skip this for now for simplicity as we target desktop-first professional look.
-        pinType: containerRef.current?.style.transform ? "transform" : "fixed",
-      });
+        // Each time Locomotive Scroll updates, tell ScrollTrigger to update too (sync positioning)
+        locoScroll.on("scroll", ScrollTrigger.update);
 
-      // Each time the window updates, we should refresh ScrollTrigger and then update LocomotiveScroll. 
-      ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
+        // Tell ScrollTrigger to use these proxy methods for the ".smooth-scroll" element
+        ScrollTrigger.scrollerProxy(containerRef.current, {
+          scrollTop(value) {
+            if (locoScroll) {
+              return arguments.length
+                ? locoScroll.scrollTo(value, 0, 0)
+                : locoScroll.scroll.instance.scroll.y;
+            }
+            return 0;
+          },
+          getBoundingClientRect() {
+            return {
+              top: 0,
+              left: 0,
+              width: window.innerWidth,
+              height: window.innerHeight,
+            };
+          },
+          pinType: containerRef.current?.style.transform ? "transform" : "fixed",
+        });
 
-      // After everything is set up, refresh() ScrollTrigger and update LocomotiveScroll because padding may have been added for pinning, etc.
-      ScrollTrigger.refresh();
+        // Each time the window updates, we should refresh ScrollTrigger and then update LocomotiveScroll. 
+        ScrollTrigger.addEventListener("refresh", () => locoScroll?.update());
+
+        // After everything is set up, refresh() ScrollTrigger and update LocomotiveScroll
+        ScrollTrigger.refresh();
+      } catch (error) {
+        console.error("Locomotive Scroll initialization failed:", error);
+      }
     })();
 
     return () => {
