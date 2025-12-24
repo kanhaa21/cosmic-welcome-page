@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useSmoothScroll } from "./SmoothScroll";
 import gsap from "gsap";
@@ -26,8 +26,6 @@ const agencies = [
 export function Taskbar() {
   const { scroll } = useSmoothScroll();
   const [activeSection, setActiveSection] = useState("hero");
-  const [scrollProgress, setScrollProgress] = useState(0);
-
   const [sectionProgress, setSectionProgress] = useState(0);
 
     useEffect(() => {
@@ -74,23 +72,6 @@ export function Taskbar() {
           ScrollTrigger.create({
             trigger: heroElement,
             scroller: ".smooth-scroll",
-            start: "top top",
-            end: "bottom 50%",
-            onToggle: (self) => {
-              if (self.isActive) setActiveSection("hero");
-            },
-            onEnterBack: () => setActiveSection("hero"),
-          });
-        }
-      });
-        });
-
-        // Special case for top of page
-        const heroElement = document.querySelector("#hero");
-        if (heroElement) {
-          ScrollTrigger.create({
-            trigger: heroElement,
-            scroller: scroller,
             start: "top top",
             end: "bottom 50%",
             onToggle: (self) => {
