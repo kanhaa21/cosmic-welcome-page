@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
-import { useInView } from "framer-motion";
 
 const PlanetSphere = dynamic(() => import("./PlanetSphere").then(mod => mod.PlanetSphere), { 
   ssr: false,
@@ -131,66 +130,89 @@ const planetData: PlanetData[] = [
 ];
 
 function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: false, amount: 0.1, margin: "200px 0px" });
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        onToggle: (self) => {
+          if (self.isActive) setIsVisible(true);
+        }
+      });
+    });
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section 
       ref={sectionRef}
-      className="planet-section min-h-screen flex items-center justify-center px-6 py-32"
+      className="planet-section min-h-screen flex items-center justify-center px-6 py-20"
     >
-      <div className={`max-w-7xl w-full flex flex-col lg:flex-row gap-16 lg:gap-32 items-center justify-between ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
-        {/* Info Box */}
-        <div className="planet-info w-full max-w-xl p-10 md:p-16 rounded-[4rem] border border-white/5 bg-white/[0.01] backdrop-blur-[60px] relative group overflow-hidden">
-          <div className="flex items-center gap-6 mb-12 opacity-50">
-            <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-white whitespace-nowrap">
-              Designation // {planet.name.substring(0, 3)}
+      <div className={`max-w-7xl w-full flex flex-col lg:flex-row gap-20 lg:gap-40 items-center justify-between ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+        {/* Info Box - Sleek Redesign */}
+        <div className="planet-info w-full max-w-xl relative">
+          <div className="flex items-center gap-4 mb-8 opacity-40">
+            <span className="text-[9px] font-bold uppercase tracking-[0.5em] text-white">
+              S0{idx + 1}
             </span>
-            <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
+            <div className="h-px w-12 bg-white/20" />
+            <span className="text-[9px] font-bold uppercase tracking-[0.5em] text-zinc-500">
+              {planet.name.substring(0, 3)}
+            </span>
           </div>
 
-          <h3 className="text-7xl md:text-9xl font-bold text-white tracking-[-0.05em] mb-6 font-[family-name:var(--font-orbitron)]">
+          <h3 className="text-6xl md:text-8xl font-light text-white tracking-tight mb-4 font-[family-name:var(--font-orbitron)]">
             {planet.name}
           </h3>
-          <p className="text-[11px] font-bold text-purple-400 uppercase tracking-[0.5em] mb-12 flex items-center gap-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,1)]" />
-            {planet.tagline}
-          </p>
           
-          <p className="text-xl text-zinc-400 font-light leading-relaxed mb-16 tracking-wide">
+          <div className="flex items-center gap-3 mb-12">
+            <div className="w-1 h-1 rounded-full bg-purple-500" />
+            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.4em]">
+              {planet.tagline}
+            </p>
+          </div>
+          
+          <p className="text-lg text-zinc-400 font-light leading-relaxed mb-16 max-w-lg">
             {planet.description}
           </p>
 
-          <div className="grid grid-cols-3 gap-8 pt-12 border-t border-white/5">
+          <div className="grid grid-cols-3 gap-12">
             {planet.details.map((detail) => (
-              <div key={detail.label} className="flex flex-col gap-2">
-                <span className="text-[9px] uppercase tracking-[0.4em] text-zinc-600 font-bold">
+              <div key={detail.label} className="flex flex-col gap-1.5">
+                <span className="text-[8px] uppercase tracking-[0.3em] text-zinc-600 font-bold">
                   {detail.label}
                 </span>
-                <span className="text-white font-medium text-lg tracking-tight">
+                <span className="text-white font-light text-base tracking-tight">
                   {detail.value}
                 </span>
               </div>
             ))}
           </div>
+          
+          {/* Elegant Accents */}
+          <div className="absolute -left-12 top-1/2 -translate-y-1/2 w-px h-32 bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block" />
         </div>
 
-        {/* Revolving Sphere Container */}
-        <div className="planet-sphere-container relative flex justify-center items-center flex-1 min-h-[400px]">
-          {isInView ? (
+        {/* Sphere Container */}
+        <div className="planet-sphere-container relative flex justify-center items-center flex-1">
+          {isVisible ? (
             <PlanetSphere 
               textureUrl={planet.textureUrl} 
               cloudUrl={planet.cloudUrl}
               color={planet.color}
               rotationDuration={planet.rotationDuration}
-              size="w-[350px] md:w-[500px] lg:w-[600px]"
+              size="w-[300px] md:w-[450px] lg:w-[550px]"
             />
           ) : (
-            <div className="w-[350px] md:w-[500px] lg:w-[600px] aspect-square rounded-full bg-white/5 animate-pulse" />
+            <div className="w-[300px] md:w-[450px] lg:w-[550px] aspect-square rounded-full bg-white/[0.02]" />
           )}
           
-          {/* Subtle Ring for aesthetic */}
-          <div className="absolute inset-0 border border-white/5 rounded-full scale-125 opacity-20 pointer-events-none" />
+          {/* Orbital Path Line (Aesthetic) */}
+          <div className="absolute inset-0 border border-white/5 rounded-full scale-[1.3] opacity-10 pointer-events-none" />
         </div>
       </div>
     </section>
@@ -201,16 +223,6 @@ export function PlanetDetailSection() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Texture preloading for smoother scrolling
-    planetData.forEach(planet => {
-      const img = new Image();
-      img.src = planet.textureUrl;
-      if (planet.cloudUrl) {
-        const cloudImg = new Image();
-        cloudImg.src = planet.cloudUrl;
-      }
-    });
-
     const ctx = gsap.context(() => {
       const sections = gsap.utils.toArray(".planet-section");
       
@@ -219,29 +231,31 @@ export function PlanetDetailSection() {
         const sphere = section.querySelector(".planet-sphere-container");
         
         gsap.fromTo(info, 
-          { opacity: 0, y: 50 },
+          { opacity: 0, x: -30 },
           { 
             opacity: 1, 
-            y: 0, 
-            duration: 1,
+            x: 0, 
+            duration: 1.5,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: section,
-              start: "top 80%",
+              start: "top 70%",
               toggleActions: "play none none reverse"
             }
           }
         );
 
         gsap.fromTo(sphere,
-          { opacity: 0, scale: 0.8 },
+          { opacity: 0, scale: 0.9, filter: "blur(20px)" },
           {
             opacity: 1,
             scale: 1,
-            duration: 1.5,
+            filter: "blur(0px)",
+            duration: 2,
             ease: "expo.out",
             scrollTrigger: {
               trigger: section,
-              start: "top 80%",
+              start: "top 70%",
               toggleActions: "play none none reverse"
             }
           }
@@ -253,7 +267,7 @@ export function PlanetDetailSection() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative z-10">
+    <div ref={containerRef} className="relative z-10 bg-[#020108]">
       {planetData.map((planet, idx) => (
         <PlanetSection key={planet.name} planet={planet} idx={idx} />
       ))}
