@@ -82,16 +82,16 @@ export default function Home() {
         
         {/* Parallax Star Layers for "all around" feel */}
         <div className="star-layer fixed inset-0 z-[-1] pointer-events-none opacity-40" data-speed="0.05">
-          {[...Array(50)].map((_, i) => (
+          {stars.map((star, i) => (
             <div 
               key={i} 
               className="absolute bg-white rounded-full blur-[1px]" 
               style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                width: `${Math.random() * 2 + 1}px`,
-                height: `${Math.random() * 2 + 1}px`,
-                opacity: Math.random() * 0.5 + 0.3
+                top: star.top,
+                left: star.left,
+                width: star.size,
+                height: star.size,
+                opacity: star.opacity
               }}
             />
           ))}
