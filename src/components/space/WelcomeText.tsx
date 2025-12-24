@@ -47,7 +47,7 @@ export function WelcomeText() {
     <div className="h-16 md:h-24 flex items-center justify-center overflow-hidden">
       <h1
         ref={textRef}
-        className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter"
+        className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter font-[family-name:var(--font-orbitron)] uppercase"
       >
         {phrases[index]}
       </h1>
