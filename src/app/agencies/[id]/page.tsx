@@ -5,7 +5,7 @@ import { MilkyWay } from "@/components/space/MilkyWay";
 import { Taskbar } from "@/components/space/Taskbar";
 import { SmoothScroll } from "@/components/space/SmoothScroll";
 import { CustomCursor } from "@/components/space/CustomCursor";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface TimelineItem {
   year: string;
@@ -26,6 +26,19 @@ interface Vehicle {
   payload: string;
 }
 
+interface Project {
+  name: string;
+  year: string;
+  description: string;
+  status: "Completed" | "Active" | "Planned";
+}
+
+interface FuturePlan {
+  title: string;
+  timeframe: string;
+  description: string;
+}
+
 interface AgencyData {
   name: string;
   fullname: string;
@@ -42,6 +55,9 @@ interface AgencyData {
   timeline: TimelineItem[];
   activeMissions: string[];
   capabilities: string[];
+  projects: Project[];
+  achievements: string[];
+  futurePlans: FuturePlan[];
 }
 
 const agencyData: Record<string, AgencyData> = {
@@ -87,6 +103,23 @@ const agencyData: Record<string, AgencyData> = {
       "Planetary Entry & Descent",
       "Aeronautical Research",
       "Earth Science Monitoring"
+    ],
+    projects: [
+      { name: "Artemis", year: "2022-Present", description: "Returning humans to the Moon, including the first woman and person of color.", status: "Active" },
+      { name: "Mars 2020", year: "2020-Present", description: "Perseverance rover searching for signs of ancient life on Mars.", status: "Active" },
+      { name: "Voyager 1 & 2", year: "1977-Present", description: "The farthest man-made objects, exploring interstellar space.", status: "Active" }
+    ],
+    achievements: [
+      "First humans on the Moon (Apollo 11)",
+      "First reusable orbital spacecraft (Space Shuttle)",
+      "Discovery of water ice on Mars",
+      "Launch of the most powerful telescope (JWST)",
+      "First powered flight on another planet (Ingenuity)"
+    ],
+    futurePlans: [
+      { title: "Artemis III", timeframe: "2026", description: "First crewed lunar landing of the 21st century." },
+      { title: "Mars Sample Return", timeframe: "2030s", description: "Collaborative mission to bring Martian soil back to Earth." },
+      { title: "Gateway Station", timeframe: "2028", description: "Construction of the first space station in lunar orbit." }
     ]
   },
   isro: {
@@ -129,6 +162,23 @@ const agencyData: Record<string, AgencyData> = {
       "Remote Sensing",
       "Interplanetary Navigation",
       "Indigenous Navigation (NavIC)"
+    ],
+    projects: [
+      { name: "Gaganyaan", year: "2024-Present", description: "India's first human spaceflight program to send crew to LEO.", status: "Active" },
+      { name: "Chandrayaan-3", year: "2023", description: "Successful soft landing on the lunar south pole.", status: "Completed" },
+      { name: "MOM (Mangalyaan)", year: "2013-2022", description: "Mars Orbiter Mission, India's first interplanetary mission.", status: "Completed" }
+    ],
+    achievements: [
+      "First to reach Mars on maiden attempt",
+      "First soft landing on the Lunar South Pole",
+      "World record for launching 104 satellites in one go",
+      "Development of cost-effective Cryogenic engines",
+      "One of the largest Earth observation satellite constellations"
+    ],
+    futurePlans: [
+      { title: "Bharatiya Antariksha Station", timeframe: "2035", description: "Establishment of an indigenous space station." },
+      { title: "Shukrayaan-1", timeframe: "2028", description: "Orbiter mission to explore the atmosphere of Venus." },
+      { title: "Lunar Polar Exploration", timeframe: "2026-28", description: "Joint mission with JAXA for lunar surface analysis." }
     ]
   },
   esa: {
@@ -169,6 +219,23 @@ const agencyData: Record<string, AgencyData> = {
       "Advanced Robotics",
       "Global Navigation Systems",
       "Earth Environment Monitoring"
+    ],
+    projects: [
+      { name: "JUICE", year: "2023-Present", description: "Jupiter Icy Moons Explorer mission to search for life.", status: "Active" },
+      { name: "Rosetta", year: "2004-2016", description: "Historic mission to orbit and land on a comet.", status: "Completed" },
+      { name: "Copernicus", year: "2014-Present", description: "World's most advanced Earth monitoring system.", status: "Active" }
+    ],
+    achievements: [
+      "First landing on a comet (Philae/Rosetta)",
+      "Development of the Galileo satellite navigation system",
+      "Leader in Earth observation data (Copernicus)",
+      "Pioneer in international space collaboration",
+      "Successful launch of James Webb (Ariane 5)"
+    ],
+    futurePlans: [
+      { title: "ExoMars Rover", timeframe: "2028", description: "Search for life beneath the Martian surface." },
+      { title: "LISA", timeframe: "2030s", description: "First space-based gravitational wave observatory." },
+      { title: "HERA", timeframe: "2024", description: "Planetary defense mission to study asteroid deflection." }
     ]
   },
   spacex: {
@@ -214,6 +281,23 @@ const agencyData: Record<string, AgencyData> = {
       "Heavy Lift Capability",
       "Private Astronautics",
       "In-orbit Propellant Transfer (Planned)"
+    ],
+    projects: [
+      { name: "Starship", year: "2019-Present", description: "Fully reusable transport system designed for Moon and Mars.", status: "Active" },
+      { name: "Starlink", year: "2019-Present", description: "Global satellite internet constellation.", status: "Active" },
+      { name: "Crew Dragon", year: "2020-Present", description: "Regular human transport to the International Space Station.", status: "Active" }
+    ],
+    achievements: [
+      "First private company to send humans to orbit",
+      "First reuse of an orbital-class rocket booster",
+      "Most frequent orbital launch cadence in history",
+      "Largest satellite constellation in orbit (Starlink)",
+      "First successful recovery of a super-heavy booster (IFT-5)"
+    ],
+    futurePlans: [
+      { title: "Mars Colony", timeframe: "2029-2040", description: "Sending the first uncrewed and crewed Starships to Mars." },
+      { title: "HLS (Artemis)", timeframe: "2026", description: "Providing the Human Landing System for NASA's Artemis III." },
+      { title: "Global Starship Travel", timeframe: "2030s", description: "Point-to-point Earth transport in under 1 hour." }
     ]
   }
 };
@@ -230,174 +314,285 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
         <MilkyWay />
 
         {/* Sidebar Navigation - Fixed */}
-        <div className="hidden xl:flex fixed left-8 top-1/2 -translate-y-1/2 flex-col gap-6 z-50 text-[10px] uppercase tracking-widest font-bold text-zinc-600">
-           <a href="#overview" className="hover:text-white transition-colors">01 Overview</a>
-           <a href="#technical" className="hover:text-white transition-colors">02 Technical</a>
-           <a href="#facilities" className="hover:text-white transition-colors">03 Facilities</a>
-           <a href="#timeline" className="hover:text-white transition-colors">04 Timeline</a>
-           <a href="#active" className="hover:text-white transition-colors">05 Active</a>
+        <div className="hidden xl:flex fixed left-8 top-1/2 -translate-y-1/2 flex-col gap-6 z-50 text-[10px] uppercase tracking-[0.2em] font-black text-zinc-600">
+           <a href="#overview" className="hover:text-white transition-colors flex items-center gap-4 group">
+             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 01 Overview
+           </a>
+           <a href="#capabilities" className="hover:text-white transition-colors flex items-center gap-4 group">
+             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 02 Arsenal
+           </a>
+           <a href="#projects" className="hover:text-white transition-colors flex items-center gap-4 group">
+             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 03 Projects
+           </a>
+           <a href="#achievements" className="hover:text-white transition-colors flex items-center gap-4 group">
+             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 04 Record
+           </a>
+           <a href="#roadmap" className="hover:text-white transition-colors flex items-center gap-4 group">
+             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 05 Horizon
+           </a>
+           <a href="#infrastructure" className="hover:text-white transition-colors flex items-center gap-4 group">
+             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 06 Network
+           </a>
         </div>
 
         <div className="max-w-7xl mx-auto px-6 pt-32 pb-40 relative z-10" data-scroll-section>
           
-          {/* Header Section - Informative & Clean */}
-          <header className="border-b border-zinc-800 pb-12 mb-20">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
-              <div>
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }} 
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-3 text-blue-500 font-mono text-xs tracking-tighter mb-4"
-                >
-                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                  AGENCY DATA DOSSIER // {id.toUpperCase()}
-                </motion.div>
-                <h1 className="text-6xl md:text-8xl font-bold text-white tracking-tight mb-2 uppercase">{data.name}</h1>
-                <p className="text-zinc-500 font-mono text-sm tracking-tight">{data.fullname}</p>
-              </div>
-              <div className="flex flex-wrap gap-4">
-                 <div className="bg-zinc-900/50 border border-zinc-800 px-6 py-3 rounded-lg">
-                    <span className="block text-[10px] text-zinc-600 uppercase font-bold tracking-widest mb-1">Founded</span>
-                    <span className="text-white font-mono">{data.founded}</span>
-                 </div>
-                 <div className="bg-zinc-900/50 border border-zinc-800 px-6 py-3 rounded-lg">
-                    <span className="block text-[10px] text-zinc-600 uppercase font-bold tracking-widest mb-1">HQ</span>
-                    <span className="text-white font-mono">{data.hq}</span>
-                 </div>
-              </div>
+          {/* Header Section - High Impact Dossier Style */}
+          <header id="overview" className="relative mb-32">
+            <div className="absolute -left-20 top-0 text-[20vw] font-black text-white/[0.02] select-none pointer-events-none tracking-tighter leading-none">
+              {data.name}
             </div>
+            
+            <div className="relative">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }} 
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center gap-4 text-blue-500 font-mono text-xs tracking-[0.4em] mb-8"
+              >
+                <span className="w-12 h-px bg-blue-500/50" />
+                SECURE DATA DOSSIER // {id.toUpperCase()}
+              </motion.div>
+              
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 mb-20">
+                <div className="max-w-3xl">
+                  <h1 className="text-7xl md:text-9xl font-black text-white tracking-tighter mb-4 uppercase leading-none">
+                    {data.name}
+                  </h1>
+                  <p className="text-zinc-500 font-mono text-sm tracking-widest uppercase mb-8">{data.fullname}</p>
+                  <p className="text-2xl text-zinc-300 font-light leading-relaxed italic border-l-2 border-blue-500/30 pl-8">
+                    "{data.motto}"
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                   <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl backdrop-blur-sm">
+                      <span className="block text-[10px] text-zinc-600 uppercase font-black tracking-widest mb-2">Established</span>
+                      <span className="text-white font-mono text-lg">{data.founded.split(',')[1] || data.founded}</span>
+                   </div>
+                   <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl backdrop-blur-sm">
+                      <span className="block text-[10px] text-zinc-600 uppercase font-black tracking-widest mb-2">Budget</span>
+                      <span className="text-white font-mono text-lg">{data.budget.split('(')[0]}</span>
+                   </div>
+                </div>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm leading-relaxed">
-               <div className="col-span-2">
-                 <h2 id="overview" className="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.2em] mb-4">Executive Summary</h2>
-                 <p className="text-xl text-zinc-200 font-light italic leading-relaxed mb-6">"{data.motto}"</p>
-                 <p className="max-w-2xl">{data.description}</p>
-               </div>
-               <div className="space-y-4">
-                 <div>
-                    <span className="block text-[10px] text-zinc-600 uppercase font-bold tracking-widest mb-1">Leadership</span>
-                    <span className="text-white">{data.leadership}</span>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                 <div className="lg:col-span-8">
+                    <h3 className="text-zinc-600 text-[10px] uppercase font-black tracking-[0.3em] mb-6">Mission Briefing</h3>
+                    <p className="text-xl text-zinc-400 leading-relaxed font-light">
+                      {data.description}
+                    </p>
                  </div>
-                 <div>
-                    <span className="block text-[10px] text-zinc-600 uppercase font-bold tracking-widest mb-1">Current Budget</span>
-                    <span className="text-white">{data.budget}</span>
+                 <div className="lg:col-span-4 space-y-8">
+                    <div>
+                       <span className="block text-[10px] text-zinc-600 uppercase font-black tracking-widest mb-2">Command</span>
+                       <span className="text-white text-sm font-medium">{data.leadership}</span>
+                    </div>
+                    <div>
+                       <span className="block text-[10px] text-zinc-600 uppercase font-black tracking-widest mb-2">Headquarters</span>
+                       <span className="text-white text-sm font-medium">{data.hq}</span>
+                    </div>
+                    <div>
+                       <span className="block text-[10px] text-zinc-600 uppercase font-black tracking-widest mb-2">Personnel</span>
+                       <span className="text-white text-sm font-medium">{data.workforce}</span>
+                    </div>
                  </div>
-                 <div>
-                    <span className="block text-[10px] text-zinc-600 uppercase font-bold tracking-widest mb-1">Workforce</span>
-                    <span className="text-white">{data.workforce}</span>
-                 </div>
-               </div>
+              </div>
             </div>
           </header>
 
-          {/* Technical Section */}
-          <section id="technical" className="mb-32">
-             <h2 className="text-zinc-600 text-[10px] uppercase font-bold tracking-[0.3em] mb-12 flex items-center gap-4">
-               <span className="w-8 h-px bg-zinc-800" /> Technical Capabilities & Arsenal
-             </h2>
+          {/* Technical Arsenal - Bento Grid */}
+          <section id="capabilities" className="mb-40">
+             <div className="flex items-center gap-6 mb-16">
+               <h2 className="text-white text-3xl font-black uppercase tracking-tighter">Technical Arsenal</h2>
+               <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
+             </div>
              
-             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                <div className="lg:col-span-4">
-                   <p className="text-zinc-400 leading-relaxed mb-8">{data.technicalOverview}</p>
-                   <ul className="space-y-3">
-                      {data.capabilities.map((cap, i) => (
-                        <li key={i} className="flex items-center gap-3 text-xs font-mono text-zinc-500">
-                           <span className="w-1.5 h-1.5 bg-blue-500/50 rounded-full" /> {cap}
-                        </li>
-                      ))}
-                   </ul>
+             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Capabilities Card */}
+                <div className="lg:col-span-1 p-8 rounded-3xl bg-blue-600/5 border border-blue-500/20 flex flex-col justify-between">
+                   <div>
+                      <span className="text-blue-500 font-mono text-[10px] uppercase tracking-widest mb-4 block">Core Competencies</span>
+                      <ul className="space-y-4">
+                        {data.capabilities.map((cap, i) => (
+                          <li key={i} className="flex items-center gap-4 text-zinc-300 group cursor-default">
+                             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 group-hover:scale-150 transition-transform" />
+                             <span className="text-sm font-medium">{cap}</span>
+                          </li>
+                        ))}
+                      </ul>
+                   </div>
+                   <div className="mt-12 pt-8 border-t border-blue-500/10">
+                      <p className="text-xs text-zinc-500 leading-relaxed">
+                        {data.technicalOverview}
+                      </p>
+                   </div>
                 </div>
-                <div className="lg:col-span-8 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/20 backdrop-blur-sm">
-                   <table className="w-full text-left text-xs border-collapse">
-                      <thead className="bg-zinc-900/50 text-zinc-500 font-mono">
-                         <tr>
-                            <th className="p-4 font-normal">Vehicle / System</th>
-                            <th className="p-4 font-normal">Classification</th>
-                            <th className="p-4 font-normal">Status</th>
-                            <th className="p-4 font-normal">Capability</th>
-                         </tr>
-                      </thead>
-                      <tbody className="divide-y divide-zinc-800">
-                         {data.vehicles.map((v, i) => (
-                           <tr key={i} className="hover:bg-white/[0.02] transition-colors">
-                              <td className="p-4 text-white font-bold">{v.name}</td>
-                              <td className="p-4 text-zinc-500">{v.type}</td>
-                              <td className="p-4">
-                                 <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${v.status.includes('Active') ? 'bg-green-500/10 text-green-500' : 'bg-orange-500/10 text-orange-500'}`}>
-                                   {v.status}
-                                 </span>
-                              </td>
-                              <td className="p-4 font-mono text-zinc-400">{v.payload}</td>
-                           </tr>
-                         ))}
-                      </tbody>
-                   </table>
+
+                {/* Vehicles Grid */}
+                <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                   {data.vehicles.map((v, i) => (
+                     <div key={i} className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors group">
+                        <div className="flex justify-between items-start mb-6">
+                           <h4 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">{v.name}</h4>
+                           <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${v.status.includes('Active') || v.status.includes('Operational') ? 'bg-green-500/10 text-green-500' : 'bg-orange-500/10 text-orange-500'}`}>
+                              {v.status}
+                           </span>
+                        </div>
+                        <div className="space-y-4">
+                           <div>
+                              <span className="block text-[9px] text-zinc-600 uppercase font-black tracking-widest mb-1">Classification</span>
+                              <span className="text-sm text-zinc-300">{v.type}</span>
+                           </div>
+                           <div>
+                              <span className="block text-[9px] text-zinc-600 uppercase font-black tracking-widest mb-1">Payload Capacity</span>
+                              <span className="text-sm font-mono text-zinc-400">{v.payload}</span>
+                           </div>
+                        </div>
+                     </div>
+                   ))}
                 </div>
              </div>
           </section>
 
-          {/* Facilities Section */}
-          <section id="facilities" className="mb-32">
-             <h2 className="text-zinc-600 text-[10px] uppercase font-bold tracking-[0.3em] mb-12 flex items-center gap-4">
-               <span className="w-8 h-px bg-zinc-800" /> Operational Infrastructure
-             </h2>
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {data.facilities.map((f, i) => (
-                  <div key={i} className="p-6 rounded-xl border border-zinc-800 bg-zinc-900/20 hover:border-zinc-700 transition-colors">
-                     <span className="block text-[9px] text-zinc-600 uppercase font-bold tracking-widest mb-3">{f.role}</span>
-                     <h4 className="text-white font-bold mb-1">{f.name}</h4>
-                     <p className="text-zinc-500 text-xs">{f.location}</p>
+          {/* Strategic Projects Gallery */}
+          <section id="projects" className="mb-40">
+             <div className="flex items-center gap-6 mb-16">
+               <h2 className="text-white text-3xl font-black uppercase tracking-tighter">Strategic Projects</h2>
+               <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
+             </div>
+             
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {data.projects.map((p, i) => (
+                  <div key={i} className="relative group overflow-hidden rounded-3xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all p-1">
+                     <div className="p-8 h-full flex flex-col">
+                        <div className="flex justify-between items-center mb-6">
+                           <span className="text-blue-500 font-mono text-xs">{p.year}</span>
+                           <span className={`w-2 h-2 rounded-full ${p.status === 'Active' ? 'bg-blue-500 animate-pulse' : 'bg-zinc-600'}`} />
+                        </div>
+                        <h4 className="text-2xl font-bold text-white mb-4">{p.name}</h4>
+                        <p className="text-zinc-400 text-sm leading-relaxed mb-8 flex-1">{p.description}</p>
+                        <div className="flex items-center gap-2 text-[10px] text-zinc-600 uppercase font-black tracking-widest">
+                           <span>Status: {p.status}</span>
+                        </div>
+                     </div>
                   </div>
                 ))}
              </div>
           </section>
 
-          {/* Dual Column: Timeline & Active Missions */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+          {/* Record of Achievements */}
+          <section id="achievements" className="mb-40">
+             <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
+                <div className="lg:col-span-4">
+                   <h2 className="text-white text-3xl font-black uppercase tracking-tighter mb-8 leading-tight">
+                     Historical <br /> Record & <br /> <span className="text-blue-500">Milestones</span>
+                   </h2>
+                   <p className="text-zinc-500 text-sm leading-relaxed">
+                     A comprehensive log of breakthrough operations and foundational successes that have shaped modern space exploration.
+                   </p>
+                </div>
+                
+                <div className="lg:col-span-8">
+                   <div className="grid grid-cols-1 gap-4">
+                      {data.achievements.map((a, i) => (
+                        <div key={i} className="flex items-center gap-6 p-6 rounded-2xl bg-white/[0.02] border border-white/5 group hover:border-blue-500/30 transition-all">
+                           <span className="text-blue-500 font-mono text-lg font-black opacity-30 group-hover:opacity-100 transition-opacity">0{i+1}</span>
+                           <p className="text-zinc-300 font-medium group-hover:text-white transition-colors">{a}</p>
+                        </div>
+                      ))}
+                   </div>
+                   
+                   {/* Timeline sub-section */}
+                   <div className="mt-20 space-y-12 border-l border-zinc-800 pl-10 ml-4">
+                      {data.timeline.map((t, i) => (
+                        <div key={i} className="relative">
+                           <div className="absolute -left-[45px] top-1 w-2 h-2 rounded-full bg-blue-500" />
+                           <span className="text-blue-500 font-mono text-sm font-black mb-2 block">{t.year}</span>
+                           <h4 className="text-white font-bold mb-3">{t.event}</h4>
+                           <p className="text-sm text-zinc-500 leading-relaxed max-w-2xl">{t.detail}</p>
+                        </div>
+                      ))}
+                   </div>
+                </div>
+             </div>
+          </section>
+
+          {/* Future Horizon - Roadmap */}
+          <section id="roadmap" className="mb-40 py-24 px-8 md:px-16 rounded-[3rem] bg-gradient-to-br from-blue-600/10 via-transparent to-transparent border border-white/5 relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
              
-             {/* Timeline */}
-             <section id="timeline">
-                <h2 className="text-zinc-600 text-[10px] uppercase font-bold tracking-[0.3em] mb-12 flex items-center gap-4">
-                  <span className="w-8 h-px bg-zinc-800" /> Historical Milestones
-                </h2>
-                <div className="space-y-8 border-l border-zinc-800 pl-8 ml-2">
-                   {data.timeline.map((t, i) => (
+             <div className="relative z-10">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-20">
+                   <div>
+                      <span className="text-blue-500 font-mono text-xs uppercase tracking-[0.4em] mb-4 block">The Future Record</span>
+                      <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter">Strategic Horizon</h2>
+                   </div>
+                   <p className="max-w-md text-zinc-500 text-sm italic">
+                     "Charting the course for the next generation of interplanetary existence."
+                   </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                   {data.futurePlans.map((plan, i) => (
                      <div key={i} className="relative">
-                        <div className="absolute -left-[37px] top-1 w-2.5 h-2.5 rounded-full bg-zinc-800 border-2 border-zinc-950" />
-                        <span className="text-blue-500 font-mono text-xs font-bold mb-1 block">{t.year}</span>
-                        <h4 className="text-white font-bold mb-2">{t.event}</h4>
-                        <p className="text-sm text-zinc-500 leading-relaxed">{t.detail}</p>
+                        <div className="text-zinc-800 text-6xl font-black absolute -top-8 -left-4 select-none pointer-events-none opacity-50">0{i+1}</div>
+                        <div className="relative pt-4">
+                           <span className="text-blue-500 font-mono text-xs font-bold mb-4 block">TARGET: {plan.timeframe}</span>
+                           <h4 className="text-2xl font-bold text-white mb-4">{plan.title}</h4>
+                           <p className="text-zinc-400 text-sm leading-relaxed">{plan.description}</p>
+                        </div>
                      </div>
                    ))}
                 </div>
-             </section>
+             </div>
+          </section>
 
-             {/* Active Missions */}
-             <section id="active">
-                <h2 className="text-zinc-600 text-[10px] uppercase font-bold tracking-[0.3em] mb-12 flex items-center gap-4">
-                  <span className="w-8 h-px bg-zinc-800" /> Active Operations
-                </h2>
-                <div className="bg-zinc-900/20 rounded-2xl border border-zinc-800 p-8">
-                   <ul className="divide-y divide-zinc-800">
-                      {data.activeMissions.map((m, i) => (
-                        <li key={i} className="py-5 flex items-center justify-between group cursor-default">
-                           <span className="text-zinc-300 group-hover:text-white transition-colors">{m}</span>
-                           <span className="text-[10px] font-mono text-zinc-600 group-hover:text-blue-500 transition-colors">STATUS: NOMINAL</span>
-                        </li>
-                      ))}
-                   </ul>
-                   <div className="mt-8 p-4 rounded-lg bg-blue-500/5 border border-blue-500/10">
-                      <p className="text-[10px] text-blue-400 font-mono uppercase tracking-tight">
-                        Note: Live telemetry data streams are available for selected missions via the deep space network portal.
+          {/* Operational Infrastructure */}
+          <section id="infrastructure" className="mb-40">
+             <div className="flex items-center gap-6 mb-16">
+               <h2 className="text-white text-3xl font-black uppercase tracking-tighter">Global Infrastructure</h2>
+               <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
+             </div>
+             
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {data.facilities.map((f, i) => (
+                  <div key={i} className="p-8 rounded-3xl border border-white/5 bg-white/[0.01] hover:border-blue-500/20 transition-all group">
+                     <div className="mb-8">
+                        <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-[9px] font-black uppercase tracking-widest">{f.role}</span>
+                     </div>
+                     <h4 className="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">{f.name}</h4>
+                     <p className="text-zinc-500 text-xs font-mono">{f.location.toUpperCase()}</p>
+                  </div>
+                ))}
+             </div>
+             
+             {/* Active Operations Sub-card */}
+             <div className="mt-12 p-8 rounded-3xl bg-zinc-900/40 border border-white/5 backdrop-blur-md">
+                <div className="flex flex-col lg:flex-row gap-12">
+                   <div className="lg:w-1/3">
+                      <h3 className="text-white text-xl font-bold mb-4 flex items-center gap-3">
+                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                         Active Operations
+                      </h3>
+                      <p className="text-zinc-500 text-xs leading-relaxed">
+                         Live telemetry feeds from active mission clusters. Data refreshed every orbital cycle.
                       </p>
                    </div>
+                   <div className="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {data.activeMissions.map((m, i) => (
+                        <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/5 group cursor-default">
+                           <span className="text-sm text-zinc-300 group-hover:text-white transition-colors">{m}</span>
+                           <span className="text-[9px] font-mono text-zinc-600">NOMINAL</span>
+                        </div>
+                      ))}
+                   </div>
                 </div>
-             </section>
-
-          </div>
+             </div>
+          </section>
 
           {/* Footer Metadata */}
-          <footer className="mt-40 pt-12 border-t border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] text-zinc-600 font-mono tracking-widest uppercase">
+          <footer className="pt-12 border-t border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] text-zinc-600 font-mono tracking-[0.4em] uppercase">
              <div>Source: Official {data.name} Communications Archive</div>
              <div className="flex gap-8">
                 <span>Last Refreshed: {new Date().toLocaleDateString()}</span>
