@@ -113,7 +113,7 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.5, filter: "blur(100px)" }}
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 1.5, filter: "blur(100px)" }}
-                transition={{ duration: 1.5, ease: "expoOut" }}
+                transition={{ duration: 1.5, ease: "circOut" }}
                 className="relative"
               >
                 <h1 className="text-[15vw] font-black text-white tracking-[0.5em] uppercase font-[family-name:var(--font-orbitron)] bg-gradient-to-b from-white via-purple-300 to-zinc-500 bg-clip-text text-transparent drop-shadow-[0_0_80px_rgba(168,85,247,0.5)]">
