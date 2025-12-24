@@ -112,55 +112,55 @@ export function SolarSystem() {
         <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">COSMIC <span className="text-zinc-800">NAVIGATOR</span></h2>
       </div>
 
-      <div className="relative w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-start gap-12 px-8">
-        {/* Sidebar Controls */}
-        <div className="w-full lg:w-96 z-30 flex flex-col gap-4 lg:-ml-12">
-          <div className="space-y-2">
-            {planets.map((planet, i) => (
-              <div key={planet.name} className="group">
-                <button
-                  onClick={() => setSelectedPlanet(i)}
-                  className={`w-full text-left px-6 py-4 rounded-2xl transition-all duration-500 flex flex-col gap-2 ${
-                    selectedPlanet === i 
-                    ? "bg-white/10 border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]" 
-                    : "hover:bg-white/5 border border-transparent"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className={`text-xs font-black uppercase tracking-[0.3em] transition-colors ${
-                      selectedPlanet === i ? "text-white" : "text-zinc-600 group-hover:text-zinc-400"
-                    }`}>
-                      {planet.name}
-                    </span>
-                    <div 
-                      className="w-2 h-2 rounded-full" 
-                      style={{ backgroundColor: planet.color, boxShadow: `0 0 10px ${planet.color}` }} 
-                    />
-                  </div>
-                  
-                  <AnimatePresence mode="wait">
-                    {selectedPlanet === i && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="overflow-hidden"
-                      >
-                        <p className="text-[11px] leading-relaxed text-zinc-400 font-medium py-2">
-                          {planet.description}
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </button>
-              </div>
-            ))}
+        <div className="relative w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-start gap-8 lg:gap-12 px-4 md:px-8">
+          {/* Sidebar Controls */}
+          <div className="w-full lg:w-96 z-30 flex flex-col gap-4 lg:-ml-12 order-2 lg:order-1">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 lg:space-y-2">
+              {planets.map((planet, i) => (
+                <div key={planet.name} className="group">
+                  <button
+                    onClick={() => setSelectedPlanet(i)}
+                    className={`w-full text-left px-4 lg:px-6 py-3 lg:py-4 rounded-xl lg:rounded-2xl transition-all duration-500 flex flex-col gap-2 ${
+                      selectedPlanet === i 
+                      ? "bg-white/10 border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]" 
+                      : "hover:bg-white/5 border border-transparent"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className={`text-[10px] lg:text-xs font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] transition-colors ${
+                        selectedPlanet === i ? "text-white" : "text-zinc-600 group-hover:text-zinc-400"
+                      }`}>
+                        {planet.name}
+                      </span>
+                      <div 
+                        className="w-1.5 lg:w-2 h-1.5 lg:h-2 rounded-full" 
+                        style={{ backgroundColor: planet.color, boxShadow: `0 0 10px ${planet.color}` }} 
+                      />
+                    </div>
+                    
+                    <AnimatePresence mode="wait">
+                      {selectedPlanet === i && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="hidden lg:block overflow-hidden"
+                        >
+                          <p className="text-[11px] leading-relaxed text-zinc-400 font-medium py-2">
+                            {planet.description}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Solar System Visualization */}
-        <div className="relative flex-1 h-[600px] lg:h-[800px] flex items-center justify-center">
-          <div className="relative w-[600px] h-[600px] lg:w-[800px] lg:h-[800px] flex items-center justify-center scale-[0.6] sm:scale-75 md:scale-100">
+          {/* Solar System Visualization */}
+          <div className="relative flex-1 h-[400px] sm:h-[600px] lg:h-[800px] flex items-center justify-center order-1 lg:order-2 w-full overflow-hidden">
+            <div className="relative w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] lg:w-[800px] lg:h-[800px] flex items-center justify-center scale-[0.5] sm:scale-75 lg:scale-100">
             {/* Sun */}
             <div className="absolute w-24 h-24 bg-yellow-400 rounded-full blur-[2px] shadow-[0_0_100px_#fbbf24] z-20">
               <div className="absolute inset-0 bg-orange-500 rounded-full animate-pulse opacity-50" />
