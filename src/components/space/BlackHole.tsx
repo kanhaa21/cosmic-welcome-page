@@ -52,42 +52,61 @@ const vertexShader = `
     float r = length(uv);
     float theta = atan(uv.y, uv.x);
 
-    // Revolving motion
-    float rotation = uTime * 0.1;
-    float distTheta = theta + rotation + r * 2.0; // Spiral effect
+    // Revolving motion: outer stars move slower, inner move faster
+    float rotationSpeed = 0.15 / (r + 0.2);
+    float timeRotation = uTime * rotationSpeed;
     
-    vec2 rotUV = vec2(cos(distTheta), sin(distTheta)) * r;
-
-    // 1. GALAXY SPIRAL ARMS
-    float spiral = fbm(vec2(r * 3.0, distTheta * 1.5));
-    spiral *= exp(-r * 1.5); // Fade towards edges
+    // SPIRAL CALCULATION
+    // Arms wrap around based on radius
+    float arms = 2.0;
+    float spiral = sin(theta * arms + r * 5.0 - uTime * 0.5);
+    spiral = pow(max(0.0, spiral), 3.0);
+    
+    // FBM for gas/dust details that also rotates
+    float revolvingTheta = theta - uTime * 0.2;
+    vec2 rotUV = vec2(cos(revolvingTheta), sin(revolvingTheta)) * r;
+    float dust = fbm(rotUV * 3.0 + r * 2.0);
     
     // 2. CORE GLOW
-    float core = exp(-r * 5.0) * 1.5;
+    float core = exp(-r * 6.0) * 2.5;
+    float glow = exp(-r * 2.0) * 0.5;
     
-    // 3. ANIMATED STAR FIELD
-    vec2 starUV = uv * 10.0;
-    float stars = pow(hash(floor(starUV + uTime * 0.05)), 50.0) * 0.5;
-    stars *= fbm(starUV * 0.5 + uTime * 0.1); // Twinkle
+    // 3. REVOLVING STARS
+    float starField = 0.0;
+    for(float i = 1.0; i < 4.0; i++) {
+        float scale = i * 20.0;
+        // Each layer of stars revolves at different speed
+        float sTheta = theta + uTime * (0.1 / i) + hash(vec2(i)) * PI;
+        vec2 sUV = vec2(cos(sTheta), sin(sTheta)) * r * scale;
+        vec2 grid = floor(sUV);
+        float h = hash(grid);
+        if (h > 0.98) {
+            float size = 0.1 * h;
+            float dist = length(fract(sUV) - 0.5);
+            float star = smoothstep(size, 0.0, dist);
+            starField += star * h * (sin(uTime * 2.0 + h * 20.0) * 0.5 + 0.5);
+        }
+    }
 
-    // Random bright stars
-    float brightStars = pow(hash(uv * 500.0), 1000.0) * 2.0;
-    brightStars *= sin(uTime * 2.0 + hash(uv) * 10.0) * 0.5 + 0.5;
+    // 4. BRIGHT CENTER STARS
+    float centerStars = pow(hash(uv * 100.0), 500.0) * (1.0 - smoothstep(0.0, 1.5, r));
 
     // COLORS
-    vec3 col_core = vec3(1.0, 0.9, 0.7);
-    vec3 col_arms = vec3(0.4, 0.2, 0.8);
-    vec3 col_dust = vec3(0.1, 0.05, 0.2);
+    vec3 col_core = vec3(1.0, 0.95, 0.85);
+    vec3 col_arms = vec3(0.5, 0.3, 0.9); // Purple/Violet
+    vec3 col_gas = vec3(0.1, 0.05, 0.3);
+    vec3 col_dust = vec3(0.05, 0.02, 0.1);
 
-    vec3 finalColor = col_dust * (1.0 - spiral);
-    finalColor += col_arms * spiral * 1.5;
+    vec3 finalColor = col_dust;
+    finalColor = mix(finalColor, col_arms, spiral * 0.6);
+    finalColor = mix(finalColor, col_gas, dust * 0.4);
     finalColor += col_core * core;
-    finalColor += vec3(1.0) * stars;
-    finalColor += vec3(0.9, 0.9, 1.0) * brightStars;
+    finalColor += col_core * glow * 0.3;
+    finalColor += vec3(1.0) * starField;
+    finalColor += vec3(0.9, 0.9, 1.0) * centerStars;
 
-    // Add some nebulosity
-    float nebula = fbm(uv * 1.5 + uTime * 0.05);
-    finalColor += vec3(0.2, 0.1, 0.4) * nebula * exp(-r * 0.8);
+    // Outer vignette-like fade
+    finalColor *= smoothstep(2.5, 0.5, r);
 
     gl_FragColor = vec4(finalColor * uIntensity, 1.0);
   }
