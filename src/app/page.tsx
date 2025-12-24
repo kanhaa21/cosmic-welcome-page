@@ -49,6 +49,7 @@ export default function Home() {
           ease: "power4.out",
           scrollTrigger: {
             trigger: title,
+            scroller: ".smooth-scroll",
             start: "top 85%",
             toggleActions: "play none none reverse",
           },
@@ -57,15 +58,23 @@ export default function Home() {
     });
 
     gsap.to(".star-layer", {
-      y: (i, target) => -ScrollTrigger.maxScroll(window) * (target.dataset.speed || 0.1),
+      y: (i, target) => -ScrollTrigger.maxScroll(".smooth-scroll") * (target.dataset.speed || 0.1),
       ease: "none",
       scrollTrigger: {
         trigger: "body",
+        scroller: ".smooth-scroll",
         start: "top top",
         end: "bottom bottom",
         scrub: true,
       }
     });
+
+    // Refresh ScrollTrigger after a delay to ensure proxy is ready
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
