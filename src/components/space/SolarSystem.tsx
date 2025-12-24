@@ -112,9 +112,9 @@ export function SolarSystem() {
         <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">COSMIC <span className="text-zinc-800">NAVIGATOR</span></h2>
       </div>
 
-      <div className="relative w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-12 px-8">
+      <div className="relative w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-start gap-12 px-8">
         {/* Sidebar Controls */}
-        <div className="w-full lg:w-80 z-30 flex flex-col gap-4">
+        <div className="w-full lg:w-96 z-30 flex flex-col gap-4 lg:-ml-12">
           <div className="space-y-2">
             {planets.map((planet, i) => (
               <div key={planet.name} className="group">
