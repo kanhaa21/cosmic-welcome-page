@@ -194,7 +194,6 @@ export function Taskbar() {
             className="text-zinc-500 text-[13px] font-black uppercase tracking-[0.3em] hover:text-purple-400 transition-all relative group whitespace-nowrap"
           >
             {agency.name}
-            <span className="absolute -bottom-1 left-0 w-0 h-px bg-purple-500 transition-all duration-300 group-hover:w-full" />
           </Link>
         ))}
       </div>
