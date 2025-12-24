@@ -134,8 +134,8 @@ export default function Home() {
                 silence of the cosmic arena.
               </p>
               <div className="flex gap-4">
-                <div className="h-1 w-16 md:w-20 bg-gradient-to-r from-blue-600 to-transparent" />
-                <div className="h-1 w-4 md:w-6 bg-zinc-800" />
+                <div className="h-1 w-10 md:w-12 bg-gradient-to-r from-blue-600 to-transparent" />
+                <div className="h-1 w-2 md:w-3 bg-zinc-800" />
               </div>
             </div>
           </div>
