@@ -22,8 +22,8 @@ export const Wonders = () => {
     }
   ];
 
-  return (
-    <section className="relative py-20 md:py-32 px-4 md:px-20 z-10" data-scroll-section>
+    return (
+      <section className="relative py-20 md:py-32 px-4 md:px-20 z-10">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col items-center text-center mb-12 md:mb-20 reveal-text">
           <span className="text-purple-500 font-black uppercase tracking-[0.6em] text-[10px] mb-4">
