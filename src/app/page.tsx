@@ -30,16 +30,9 @@ export default function Home() {
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
 
   useEffect(() => {
-    let boostTimer: NodeJS.Timeout;
     const handleHashChange = () => {
       const active = window.location.hash === "#nexus";
       setIsNexusActive(active);
-      if (active) {
-        setIsBoosted(true);
-        boostTimer = setTimeout(() => setIsBoosted(false), 10000);
-      } else {
-        setIsBoosted(false);
-      }
     };
 
     window.addEventListener("hashchange", handleHashChange);
@@ -79,7 +72,6 @@ export default function Home() {
 
     return () => {
       clearTimeout(timer);
-      if (boostTimer) clearTimeout(boostTimer);
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
   }, []);
