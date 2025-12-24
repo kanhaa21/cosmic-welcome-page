@@ -338,7 +338,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
         <div className="max-w-7xl mx-auto px-6 pt-32 pb-40 relative z-10">
           
           {/* Header Section - High Impact Dossier Style */}
-          <header id="overview" className="relative mb-32" data-scroll-section>
+          <header id="overview" className="relative mb-32">
             <div className="absolute -left-20 top-0 text-[20vw] font-black text-white/[0.02] select-none pointer-events-none tracking-tighter leading-none font-[family-name:var(--font-syncopate)]">
               {data.name}
             </div>
