@@ -109,14 +109,14 @@ export function StoryTeller() {
 
       <div className="relative w-full max-w-4xl px-4 h-[450px] md:h-[350px] flex items-center justify-center">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, x: 100, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: -100, scale: 0.95 }}
-            transition={{ duration: 0.8, ease: "anticipate" }}
-            className={`relative w-full h-full rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden glass-card border-white/5 bg-gradient-to-br ${milestones[index].color} to-transparent group`}
-          >
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: 50, filter: "blur(10px)", scale: 0.98 }}
+              animate={{ opacity: 1, x: 0, filter: "blur(0px)", scale: 1 }}
+              exit={{ opacity: 0, x: -50, filter: "blur(10px)", scale: 0.98 }}
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              className={`relative w-full h-full rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden glass-card border-white/5 bg-gradient-to-br ${milestones[index].color} to-transparent group`}
+            >
             <div className="absolute inset-0">
               <img 
                 src={milestones[index].image} 
