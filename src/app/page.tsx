@@ -161,7 +161,7 @@ export default function Home() {
               <h2 className="text-4xl md:text-7xl font-black text-white tracking-tighter mb-6">
                 Infinite Wonders <span className="text-zinc-700">Await</span>
               </h2>
-              <div className="w-20 h-1 bg-purple-500 mx-auto rounded-full" />
+              <div className="w-12 h-1 bg-purple-500 mx-auto rounded-full" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
