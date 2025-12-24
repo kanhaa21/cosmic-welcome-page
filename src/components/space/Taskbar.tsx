@@ -197,14 +197,15 @@ export function Taskbar() {
         ))}
       </div>
       
-      <motion.div 
-        animate={{ 
-          width: isHovered ? "auto" : 0,
-          opacity: isHovered ? 1 : 0,
-          scale: isHovered ? 1 : 0
-        }}
-        className="flex items-center gap-3 md:gap-8 overflow-hidden"
-      >
+        <motion.div 
+          animate={{ 
+            width: isHovered ? "auto" : 0,
+            opacity: isHovered ? 1 : 0,
+            scale: isHovered ? 1 : 0
+          }}
+          transition={{ duration: 0.2, ease: "circOut" }}
+          className="flex items-center gap-3 md:gap-8 overflow-hidden"
+        >
         <div className="hidden sm:block h-4 w-px bg-white/10 relative z-[2]" />
         
         {/* Agency Links */}
