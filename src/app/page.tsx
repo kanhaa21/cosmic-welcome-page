@@ -39,6 +39,8 @@ export default function Home() {
 
     const initAnimations = () => {
       const titles = document.querySelectorAll(".reveal-text");
+      if (titles.length === 0) return;
+      
       titles.forEach((title) => {
         gsap.fromTo(
           title,
@@ -65,13 +67,16 @@ export default function Home() {
       initAnimations();
       ScrollTrigger.refresh();
       window.dispatchEvent(new Event('resize'));
-    }, 500);
+    }, 1000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
   }, []);
 
   return (
-    <div className="smooth-scroll-wrapper">
+    <SmoothScroll>
       <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30">
         <CustomCursor />
         <Taskbar />
@@ -250,6 +255,6 @@ export default function Home() {
           </p>
         </footer>
       </div>
-    </div>
+    </SmoothScroll>
   );
 }
