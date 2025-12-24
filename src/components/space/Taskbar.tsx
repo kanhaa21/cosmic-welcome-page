@@ -27,15 +27,11 @@ export function Taskbar() {
   const [activeSection, setActiveSection] = useState("hero");
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  const [sectionProgress, setSectionProgress] = useState(0);
+
   useEffect(() => {
     // Only run on home page
     if (window.location.pathname !== "/") return;
-
-    if (scroll) {
-      scroll.on("scroll", (args: any) => {
-        setScrollProgress(args.scroll.y / args.limit.y);
-      });
-    }
 
     // Use a cleaner ScrollTrigger approach for active state
     sections.forEach((section) => {
@@ -44,6 +40,12 @@ export function Taskbar() {
         scroller: ".smooth-scroll",
         start: "top 20%",
         end: "bottom 20%",
+        onUpdate: (self) => {
+          if (self.isActive) {
+            setActiveSection(section.id);
+            setSectionProgress(self.progress);
+          }
+        },
         onToggle: (self) => {
           if (self.isActive) setActiveSection(section.id);
         },
