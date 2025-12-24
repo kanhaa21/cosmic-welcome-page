@@ -2,6 +2,7 @@
 
 import { MilkyWay } from "@/components/space/MilkyWay";
 import { WelcomeText } from "@/components/space/WelcomeText";
+import { Taskbar } from "@/components/space/Taskbar";
 import { SmoothScroll } from "@/components/space/SmoothScroll";
 import { motion } from "framer-motion";
 
@@ -9,6 +10,7 @@ export default function Home() {
   return (
     <SmoothScroll>
       <div className="relative min-h-screen selection:bg-purple-500/30">
+        <Taskbar />
         <MilkyWay />
         
         {/* Hero Section */}
@@ -19,8 +21,10 @@ export default function Home() {
             transition={{ duration: 1, ease: "easeOut" }}
             className="text-center z-10"
           >
-            <WelcomeText />
-            <p className="mt-6 text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+            <div className="drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+              <WelcomeText />
+            </div>
+            <p className="mt-6 text-zinc-300 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-medium drop-shadow-md">
               Venture into the cosmic abyss where galaxies dance and stars tell stories of eternity. 
               The universe is not just above us, it is within us.
             </p>
