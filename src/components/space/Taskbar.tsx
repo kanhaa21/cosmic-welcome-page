@@ -49,7 +49,7 @@ export function Taskbar() {
 
           ScrollTrigger.create({
             trigger: triggerElement,
-            scroller: ".smooth-scroll",
+            scroller: scroller,
             start: "top 20%",
             end: "bottom 20%",
             onUpdate: (self) => {
@@ -71,7 +71,7 @@ export function Taskbar() {
         if (heroElement && heroElement instanceof HTMLElement) {
           ScrollTrigger.create({
             trigger: heroElement,
-            scroller: ".smooth-scroll",
+            scroller: scroller,
             start: "top top",
             end: "bottom 50%",
             onToggle: (self) => {
