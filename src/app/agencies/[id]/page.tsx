@@ -355,7 +355,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
               
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 mb-20">
                 <div className="max-w-3xl">
-                  <h1 className="text-7xl md:text-9xl font-black text-white tracking-tighter mb-4 uppercase leading-none">
+                  <h1 className="text-7xl md:text-9xl font-black text-white tracking-tighter mb-4 uppercase leading-none font-[family-name:var(--font-syncopate)]">
                     {data.name}
                   </h1>
                   <p className="text-zinc-500 font-mono text-sm tracking-widest uppercase mb-8">{data.fullname}</p>
