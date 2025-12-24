@@ -215,7 +215,7 @@ export default function Home() {
         </section>
 
         {/* Earth Feature */}
-        <section id="earth" className="relative py-20 md:py-32 px-4 md:px-20 z-10">
+        <section id="earth" className="relative min-h-screen flex items-center py-20 md:py-32 px-4 md:px-20 z-10">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -247,18 +247,18 @@ export default function Home() {
         </section>
 
         {/* Storytelling Section */}
-        <div id="story">
+        <div id="story" className="min-h-screen flex items-center">
           <StoryTeller />
         </div>
 
         {/* Solar System Section */}
-        <div id="solar" className="-mt-12">
+        <div id="solar" className="min-h-screen flex items-center">
           <SolarSystem />
         </div>
 
         {/* Infinite Wonders */}
-        <section id="explore" className="relative py-24 px-4 md:px-20 z-10 bg-black/40 backdrop-blur-sm border-y border-white/5">
-          <div className="max-w-6xl mx-auto">
+        <section id="explore" className="relative min-h-screen flex items-center py-24 px-4 md:px-20 z-10 bg-black/40 backdrop-blur-sm border-y border-white/5">
+          <div className="max-w-6xl mx-auto w-full">
             <div className="text-center mb-16 reveal-text">
               <span className="text-purple-500 font-black uppercase tracking-[0.5em] text-[10px] mb-3 block">
                 Exploration
@@ -295,6 +295,7 @@ export default function Home() {
                 ].map((item, i) => {
                   const CardContent = (
                     <div
+                      key={item.title}
                       className={`group relative p-8 rounded-[2rem] glass-card ${item.color} transition-all duration-500 hover:bg-white/[0.06] reveal-text h-full`}
                     >
                       <div className="text-3xl mb-5 opacity-50 group-hover:opacity-100 transition-opacity">{item.icon}</div>
@@ -319,7 +320,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="relative py-16 px-4 text-center border-t border-white/5 z-10">
+        <footer id="footer" className="relative py-16 px-4 text-center border-t border-white/5 z-10">
           <p className="text-zinc-600 text-[10px] font-black tracking-[0.8em] uppercase mb-3">
             Cosmic Explorers Guild
           </p>
