@@ -136,12 +136,15 @@ export function Taskbar() {
   return (
     <motion.nav
       initial={{ y: -50, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      animate={{ 
+        y: 0, 
+        opacity: 1,
+        width: isHovered ? "auto" : 160
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-full border border-white/5 bg-[#030014]/40 backdrop-blur-3xl flex items-center shadow-[0_30px_60px_-12px_rgba(0,0,0,0.9)] transition-all duration-700 ease-[0.16,1,0.3,1] hover:border-white/10 overflow-hidden"
       style={{ 
-        width: isHovered ? "auto" : "160px",
         padding: "0.75rem 1.5rem"
       }}
     >
