@@ -112,7 +112,7 @@ export default function Home() {
         <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/20 via-transparent to-[#030014] pointer-events-none" />
 
         {/* Hero Section */}
-        <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden z-10" data-scroll-section>
+        <section id="hero" ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden z-10" data-scroll-section>
           <motion.div
             style={{ opacity, scale }}
             className="text-center w-full max-w-5xl mx-auto"
@@ -145,7 +145,7 @@ export default function Home() {
         </section>
 
         {/* Earth Feature */}
-        <section className="relative py-20 md:py-32 px-4 md:px-20 z-10" data-scroll-section>
+        <section id="earth" className="relative py-20 md:py-32 px-4 md:px-20 z-10" data-scroll-section>
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -179,17 +179,17 @@ export default function Home() {
         </section>
 
         {/* Storytelling Section */}
-        <div data-scroll-section>
+        <div id="story" data-scroll-section>
           <StoryTeller />
         </div>
 
         {/* Solar System Section */}
-        <div className="-mt-12" data-scroll-section>
+        <div id="solar" className="-mt-12" data-scroll-section>
           <SolarSystem />
         </div>
 
         {/* Infinite Wonders */}
-        <section className="relative py-24 px-4 md:px-20 z-10 bg-black/40 backdrop-blur-sm border-y border-white/5" data-scroll-section>
+        <section id="explore" className="relative py-24 px-4 md:px-20 z-10 bg-black/40 backdrop-blur-sm border-y border-white/5" data-scroll-section>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16 reveal-text">
               <span className="text-purple-500 font-black uppercase tracking-[0.5em] text-[10px] mb-3 block">
