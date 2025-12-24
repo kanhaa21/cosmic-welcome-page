@@ -11,7 +11,7 @@ export function CustomCursor() {
     if (!container) return;
 
     let lastTime = 0;
-    const throttle = 40; // milliseconds
+    const throttle = 60; // milliseconds
 
     const onMouseMove = (e: MouseEvent) => {
       const now = Date.now();
@@ -24,17 +24,17 @@ export function CustomCursor() {
     const createSparkle = (x: number, y: number) => {
       const sparkle = document.createElement("div");
       
-      const colors = ["bg-purple-400/60", "bg-indigo-400/60", "bg-white/60"];
+      const colors = ["bg-purple-400/30", "bg-indigo-400/30", "bg-white/30"];
       const colorClass = colors[Math.floor(Math.random() * colors.length)];
       
-      const size = "w-0.5 h-0.5";
-      sparkle.className = `absolute pointer-events-none ${size} rounded-full ${colorClass} blur-[0.2px]`;
+      const size = "w-[1px] h-[1px]";
+      sparkle.className = `absolute pointer-events-none ${size} rounded-full ${colorClass} blur-[0.1px]`;
       sparkle.style.left = `${x}px`;
       sparkle.style.top = `${y}px`;
       container.appendChild(sparkle);
 
       const angle = Math.random() * Math.PI * 2;
-      const distance = Math.random() * 20;
+      const distance = Math.random() * 12;
       const destinationX = Math.cos(angle) * distance;
       const destinationY = Math.sin(angle) * distance;
 
@@ -42,8 +42,8 @@ export function CustomCursor() {
         x: destinationX,
         y: destinationY,
         opacity: 0,
-        scale: 0.5,
-        duration: 0.6 + Math.random() * 0.4,
+        scale: 0.1,
+        duration: 0.8,
         ease: "power1.out",
         onComplete: () => {
           sparkle.remove();
