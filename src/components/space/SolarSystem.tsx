@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 const planets = [
   { 
@@ -75,28 +75,28 @@ export function SolarSystem() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredPlanet, setHoveredPlanet] = useState<number | null>(null);
 
-    useEffect(() => {
-      const ctx = gsap.context((self) => {
-        const q = self.selector!;
-        planets.forEach((planet, i) => {
-          const rawTarget = q(`.planet-${i}`);
-          const targets = gsap.utils.toArray(rawTarget).filter(el => el && el instanceof HTMLElement) as HTMLElement[];
-          
-          if (targets.length === 0) return;
-          
-          // Orbit animation
-          gsap.to(targets, {
-            rotation: 360,
-            duration: 20 / planet.speed,
-            repeat: -1,
-            ease: "none",
-            transformOrigin: "center center",
-          });
+  useEffect(() => {
+    const ctx = gsap.context((self) => {
+      const q = self.selector!;
+      planets.forEach((planet, i) => {
+        const rawTarget = q(`.planet-${i}`);
+        const targets = gsap.utils.toArray(rawTarget).filter(el => el && el instanceof HTMLElement) as HTMLElement[];
+        
+        if (targets.length === 0) return;
+        
+        // Orbit animation
+        gsap.to(targets, {
+          rotation: 360,
+          duration: 20 / planet.speed,
+          repeat: -1,
+          ease: "none",
+          transformOrigin: "center center",
         });
-      }, containerRef);
+      });
+    }, containerRef);
 
-      return () => ctx.revert();
-    }, []);
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section ref={containerRef} className="relative min-h-screen flex flex-col items-center justify-center z-10 bg-[#020108] overflow-hidden">
@@ -177,12 +177,12 @@ export function SolarSystem() {
                         boxShadow: hoveredPlanet === i ? `0 0 40px ${planet.color}` : `0 0 20px ${planet.color}33`
                       }}
                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                      style={{ willChange: "transform, box-shadow" }}
                       className="rounded-full shadow-lg transition-colors z-30 relative"
                       style={{
                         width: planet.size,
                         height: planet.size,
                         backgroundColor: planet.color,
+                        willChange: "transform, box-shadow"
                       }}
                     >
                       {hoveredPlanet === i && (
@@ -209,8 +209,5 @@ export function SolarSystem() {
         <span className="text-[9px] uppercase tracking-[0.5em] text-zinc-500 font-bold">Scroll Down</span>
       </motion.div>
     </section>
-  );
-}
-
   );
 }
