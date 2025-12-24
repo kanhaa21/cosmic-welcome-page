@@ -177,7 +177,7 @@ export default function Home() {
         </section>
 
         {/* Earth Feature */}
-        <section id="earth" className="relative py-20 md:py-32 px-4 md:px-20 z-10" data-scroll-section>
+        <section id="earth" className="relative py-20 md:py-32 px-4 md:px-20 z-10">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
