@@ -37,6 +37,8 @@ export function Taskbar() {
     const ctx = gsap.context(() => {
       // Use a cleaner ScrollTrigger approach for active state
       sections.forEach((section) => {
+        if (section.id === "nexus") return;
+        
         const element = document.querySelector(`#${section.id}`);
         if (!element) return;
 
