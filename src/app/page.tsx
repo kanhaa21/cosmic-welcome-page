@@ -9,8 +9,8 @@ import { StoryTeller } from "@/components/space/StoryTeller";
 import { SolarSystem } from "@/components/space/SolarSystem";
 import { RealisticEarth } from "@/components/space/RealisticEarth";
 import { CustomCursor } from "@/components/space/CustomCursor";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -19,6 +19,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Home() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
+  const [isNexusActive, setIsNexusActive] = useState(false);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -29,6 +30,13 @@ export default function Home() {
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
 
   useEffect(() => {
+    const handleHashChange = () => {
+      setIsNexusActive(window.location.hash === "#nexus");
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    handleHashChange(); // Initial check
+
     const initAnimations = () => {
       const titles = document.querySelectorAll(".reveal-text");
       titles.forEach((title) => {
