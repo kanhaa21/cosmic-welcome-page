@@ -285,7 +285,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="relative py-16 px-4 text-center border-t border-white/5 z-10" data-scroll-section>
+        <footer className="relative py-16 px-4 text-center border-t border-white/5 z-10">
           <p className="text-zinc-600 text-[10px] font-black tracking-[0.8em] uppercase mb-3">
             Cosmic Explorers Guild
           </p>
