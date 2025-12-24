@@ -1,6 +1,6 @@
 "use client";
 
-import { BlackHole } from "@/components/space/BlackHole";
+import { TwinklingStars } from "@/components/space/TwinklingStars";
 import { CustomCursor } from "@/components/space/CustomCursor";
 import { Taskbar } from "@/components/space/Taskbar";
 import { motion, useScroll, useTransform } from "framer-motion";
