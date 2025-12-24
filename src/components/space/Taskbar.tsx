@@ -13,7 +13,7 @@ const sections = [
   { name: "Home", id: "hero" },
   { name: "Earth", id: "earth" },
   { name: "Story", id: "story" },
-  { name: "Solar", id: "solar" },
+  { name: "Solar", id: "solar", path: "/solar-system" },
   { name: "Explore", id: "explore" },
 ];
 
