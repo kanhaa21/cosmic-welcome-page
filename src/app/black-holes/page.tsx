@@ -100,7 +100,7 @@ export default function BlackHolePage() {
         style={{ opacity: backgroundOpacity }}
         className="fixed inset-0 z-0"
       >
-        <BlackHole />
+        <TwinklingStars />
       </motion.div>
 
       {/* Dark Overlay for Readability */}
