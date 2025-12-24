@@ -96,22 +96,6 @@ export function Taskbar() {
             }`}
           >
             {section.name}
-            {activeSection === section.id && (
-              <>
-                <motion.span
-                  layoutId="nav-glow"
-                  className="absolute inset-0 bg-white/10 rounded-full -z-10 blur-[8px]"
-                  initial={false}
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-                <motion.span
-                  layoutId="nav-border"
-                  className="absolute inset-0 border border-white/30 rounded-full -z-10 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-                  initial={false}
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              </>
-            )}
           </button>
         ))}
       </div>
