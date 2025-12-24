@@ -268,6 +268,3 @@ export function Taskbar() {
     </motion.nav>
   );
 }
-
-    );
-}
