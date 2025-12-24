@@ -41,6 +41,9 @@ export default function Home() {
     handleHashChange();
 
     const initAnimations = (q: gsap.utils.SelectorFunc) => {
+      const scroller = document.querySelector(".smooth-scroll");
+      if (!scroller) return;
+
       const rawTitles = q(".reveal-text");
       if (!rawTitles) return;
 
@@ -65,7 +68,7 @@ export default function Home() {
             ease: "expo.out",
             scrollTrigger: {
               trigger: title,
-              scroller: ".smooth-scroll",
+              scroller: scroller,
               start: "top 95%",
               toggleActions: "play none none reverse",
               invalidateOnRefresh: true,
