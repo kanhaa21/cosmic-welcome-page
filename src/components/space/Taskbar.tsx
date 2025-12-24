@@ -86,19 +86,19 @@ export function Taskbar() {
       className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-3 md:py-4 rounded-full border border-white/5 bg-[#030014]/40 backdrop-blur-2xl flex items-center gap-3 md:gap-8 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-white/10 w-[98%] md:w-auto justify-between md:justify-center"
     >
       {/* Home Navigation */}
-      <div className="flex items-center gap-2 md:gap-6">
-        {sections.map((section) => (
-          <button
-            key={section.id}
-            onClick={() => handleScroll(section.id)}
-            className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
-              activeSection === section.id ? "text-white" : "text-zinc-500 hover:text-zinc-300"
-            }`}
-          >
-            {section.name}
-          </button>
-        ))}
-      </div>
+        <div className="flex items-center gap-2 md:gap-6">
+          {sections.map((section) => (
+            <button
+              key={section.id}
+              onClick={() => handleScroll(section.id)}
+              className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
+                activeSection === section.id ? "text-white" : "text-zinc-500 hover:text-zinc-300"
+              } ${section.name === "Nexus" ? "font-[family-name:var(--font-orbitron)] font-extrabold text-[11px] md:text-[13px] tracking-[0.3em]" : ""}`}
+            >
+              {section.name}
+            </button>
+          ))}
+        </div>
       
       <div className="hidden sm:block h-4 w-px bg-white/10" />
       
