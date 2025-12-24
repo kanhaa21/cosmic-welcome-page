@@ -50,63 +50,83 @@ const vertexShader = `
     uv.x *= uResolution.x / uResolution.y;
 
     float r = length(uv);
-    float theta = atan(uv.y, uv.x);
+    
+    // THE ENGULFING HOLE
+    // Growing and pulsating hole
+    float holeExpansion = 0.5 + sin(uTime * 0.2) * 0.2;
+    float holeSize = holeExpansion;
+    
+    // Distort galaxy UVs towards the hole
+    float distortion = smoothstep(2.5, holeSize, r);
+    vec2 distortedUV = uv * (1.0 + distortion * 0.5);
+    float dr = length(distortedUV);
+    float dtheta = atan(distortedUV.y, distortedUV.x);
 
     // Revolving motion: outer stars move slower, inner move faster
-    float rotationSpeed = 0.15 / (r + 0.2);
-    float timeRotation = uTime * rotationSpeed;
+    float rotationSpeed = 0.15 / (dr + 0.2);
     
     // SPIRAL CALCULATION
-    // Arms wrap around based on radius
     float arms = 2.0;
-    float spiral = sin(theta * arms + r * 5.0 - uTime * 0.5);
+    float spiral = sin(dtheta * arms + dr * 5.0 - uTime * 0.5);
     spiral = pow(max(0.0, spiral), 3.0);
     
-    // FBM for gas/dust details that also rotates
-    float revolvingTheta = theta - uTime * 0.2;
-    vec2 rotUV = vec2(cos(revolvingTheta), sin(revolvingTheta)) * r;
-    float dust = fbm(rotUV * 3.0 + r * 2.0);
+    // FBM for gas/dust details
+    float revolvingTheta = dtheta - uTime * 0.2;
+    vec2 rotUV = vec2(cos(revolvingTheta), sin(revolvingTheta)) * dr;
+    float dust = fbm(rotUV * 3.0 + dr * 2.0);
     
-    // 2. CORE GLOW
-    float core = exp(-r * 6.0) * 1.5;
-    float glow = exp(-r * 2.0) * 0.3;
+    // CORE GLOW (Galaxy center)
+    float core = exp(-dr * 6.0) * 1.5;
+    float glow = exp(-dr * 2.0) * 0.3;
     
-    // 3. REVOLVING STARS
+    // REVOLVING STARS
     float starField = 0.0;
     for(float i = 1.0; i < 5.0; i++) {
         float scale = i * 30.0;
-        // Each layer of stars revolves at different speed
-        float sTheta = theta + uTime * (0.05 + 0.1 / i) + hash(vec2(i)) * PI;
-        vec2 sUV = vec2(cos(sTheta), sin(sTheta)) * r * scale;
+        float sTheta = dtheta + uTime * (0.05 + 0.1 / i) + hash(vec2(i)) * PI;
+        vec2 sUV = vec2(cos(sTheta), sin(sTheta)) * dr * scale;
         vec2 grid = floor(sUV);
         float h = hash(grid);
         if (h > 0.97) {
             float size = 0.08 * h;
             float dist = length(fract(sUV) - 0.5);
             float star = smoothstep(size, 0.0, dist);
-            // Twinkle based on hash and time
             starField += star * h * (sin(uTime * 3.0 + h * 60.0) * 0.5 + 0.5);
         }
     }
 
-    // 4. BRIGHT CENTER STARS
-    float centerStars = pow(hash(uv * 100.0), 500.0) * (1.0 - smoothstep(0.0, 1.5, r));
+    // BRIGHT CENTER STARS
+    float centerStars = pow(hash(distortedUV * 100.0), 500.0) * (1.0 - smoothstep(0.0, 1.5, dr));
 
     // COLORS
     vec3 col_core = vec3(1.0, 0.95, 0.85);
-    vec3 col_arms = vec3(0.5, 0.3, 0.9); // Purple/Violet
+    vec3 col_arms = vec3(0.5, 0.3, 0.9);
     vec3 col_gas = vec3(0.1, 0.05, 0.3);
     vec3 col_dust = vec3(0.05, 0.02, 0.1);
 
-    vec3 finalColor = col_dust;
-    finalColor = mix(finalColor, col_arms, spiral * 0.6);
-    finalColor = mix(finalColor, col_gas, dust * 0.4);
-    finalColor += col_core * core;
-    finalColor += col_core * glow * 0.3;
-    finalColor += vec3(1.0) * starField;
-    finalColor += vec3(0.9, 0.9, 1.0) * centerStars;
+    vec3 galaxyColor = col_dust;
+    galaxyColor = mix(galaxyColor, col_arms, spiral * 0.6);
+    galaxyColor = mix(galaxyColor, col_gas, dust * 0.4);
+    galaxyColor += col_core * core;
+    galaxyColor += col_core * glow * 0.3;
+    galaxyColor += vec3(1.0) * starField;
+    galaxyColor += vec3(0.9, 0.9, 1.0) * centerStars;
 
-    // Outer vignette-like fade
+    // THE HOLE EFFECT (Yellow/Redish)
+    float holeEdge = smoothstep(holeSize + 0.4, holeSize, r);
+    float voidMask = smoothstep(holeSize, holeSize - 0.1, r);
+    
+    vec3 holeColor = mix(vec3(1.0, 0.1, 0.0), vec3(1.0, 0.8, 0.0), noise(uv * 2.0 + uTime * 0.5));
+    float holeGlow = exp(-(r - holeSize) * 4.0) * step(holeSize, r);
+    
+    vec3 finalColor = mix(galaxyColor, vec3(0.0), voidMask);
+    finalColor += holeColor * holeGlow * 1.2;
+    
+    // Add "weird" noise to the hole edge
+    float edgeNoise = fbm(uv * 5.0 + uTime * 0.3);
+    finalColor += holeColor * edgeNoise * holeGlow * 0.5;
+
+    // Outer vignette
     finalColor *= smoothstep(2.5, 0.5, r);
 
     gl_FragColor = vec4(finalColor * uIntensity, 1.0);
