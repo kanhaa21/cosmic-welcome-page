@@ -105,7 +105,7 @@ export default function Home() {
       <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 will-change-transform">
         <CustomCursor />
         <Taskbar />
-        <GSAPStars speed={1.2} count={1500} />
+        <GSAPStars speed={starSpeed} count={1500} />
         
         <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/20 via-transparent to-[#030014] pointer-events-none" />
 
