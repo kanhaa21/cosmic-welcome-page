@@ -101,13 +101,13 @@ export function StoryTeller() {
   }, []);
 
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden py-12 bg-black">
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 z-20 text-center">
-        <h2 className="text-purple-500 text-xs font-black uppercase tracking-[1em] mb-2">Cosmic Milestones</h2>
-        <div className="text-2xl md:text-4xl font-black text-white tracking-tighter">Traversing <span className="text-zinc-700">Space-Time</span></div>
+    <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden py-8 bg-black">
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 text-center">
+        <h2 className="text-purple-500 text-[10px] font-black uppercase tracking-[1em] mb-1">Cosmic Milestones</h2>
+        <div className="text-xl md:text-3xl font-black text-white tracking-tighter">Traversing <span className="text-zinc-700">Space-Time</span></div>
       </div>
 
-      <div className="relative w-full max-w-6xl px-4 h-[450px] flex items-center justify-center">
+      <div className="relative w-full max-w-4xl px-4 h-[350px] flex items-center justify-center">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
@@ -115,63 +115,60 @@ export function StoryTeller() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -100, scale: 0.95 }}
             transition={{ duration: 0.8, ease: "anticipate" }}
-            className={`relative w-full h-full rounded-[3.5rem] overflow-hidden glass-card border-white/5 bg-gradient-to-br ${milestones[index].color} to-transparent group`}
+            className={`relative w-full h-full rounded-[2.5rem] overflow-hidden glass-card border-white/5 bg-gradient-to-br ${milestones[index].color} to-transparent group`}
           >
             <div className="absolute inset-0">
               <img 
                 src={milestones[index].image} 
                 alt={milestones[index].title}
-                className="w-full h-full object-cover opacity-40 transition-transform duration-[6000ms] ease-linear scale-100 group-hover:scale-110"
+                className="w-full h-full object-cover opacity-30 transition-transform duration-[6000ms] ease-linear scale-100 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
             </div>
             
-            <div className="relative h-full flex flex-col justify-center px-8 md:px-20 max-w-3xl">
+            <div className="relative h-full flex flex-col justify-center px-8 md:px-16 max-w-2xl">
               <motion.span 
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="text-purple-500 font-bold tracking-[0.5em] uppercase text-xs mb-6"
+                className="text-purple-500 font-bold tracking-[0.5em] uppercase text-[10px] mb-4"
               >
                 {milestones[index].year} — {milestones[index].agency}
               </motion.span>
               
               <motion.h3 
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter"
+                className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter"
               >
                 {milestones[index].title}
               </motion.h3>
               
               <motion.p 
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="text-zinc-300 text-lg md:text-2xl leading-relaxed font-light italic max-w-xl"
+                className="text-zinc-300 text-base md:text-xl leading-relaxed font-light italic max-w-lg"
               >
                 "{milestones[index].description}"
               </motion.p>
               
-              <div className="mt-12 flex items-center gap-6">
-                <div className="flex gap-2">
+              <div className="mt-8 flex items-center gap-4">
+                <div className="flex gap-1.5">
                   {milestones.map((_, i) => (
                     <button
                       key={i}
                       onClick={() => setIndex(i)}
-                      className={`h-1.5 rounded-full transition-all duration-500 ${i === index ? 'w-12 bg-purple-500' : 'w-3 bg-white/10'}`}
+                      className={`h-1 rounded-full transition-all duration-500 ${i === index ? 'w-8 bg-purple-500' : 'w-2 bg-white/10'}`}
                     />
                   ))}
                 </div>
-                <span className="text-[10px] text-zinc-500 uppercase tracking-[0.5em] font-bold">
-                  Milestone {index + 1}/10
-                </span>
               </div>
             </div>
 
             {/* Background numeral */}
-            <div className="absolute -bottom-10 -right-10 text-[30rem] font-black text-white/[0.03] select-none pointer-events-none">
+            <div className="absolute -bottom-6 -right-6 text-[15rem] font-black text-white/[0.02] select-none pointer-events-none">
               {index + 1}
             </div>
           </motion.div>
@@ -179,13 +176,13 @@ export function StoryTeller() {
       </div>
 
       {/* Progress Bar */}
-      <div className="absolute bottom-8 left-0 w-full h-1 bg-white/5">
+      <div className="absolute bottom-4 left-0 w-full h-0.5 bg-white/5">
         <motion.div
           key={index}
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
           transition={{ duration: 6, ease: "linear" }}
-          className="h-full bg-purple-500/50"
+          className="h-full bg-purple-500/30"
         />
       </div>
     </section>
