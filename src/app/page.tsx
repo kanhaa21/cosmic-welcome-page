@@ -181,7 +181,7 @@ export default function Home() {
         </div>
 
         {/* Solar System Section */}
-        <div data-scroll-section>
+        <div className="-mt-20" data-scroll-section>
           <SolarSystem />
         </div>
 
