@@ -117,14 +117,16 @@ export function StoryTeller() {
               transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
               className={`relative w-full h-full rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden glass-card border-white/5 bg-gradient-to-br ${milestones[index].color} to-transparent group`}
             >
-            <div className="absolute inset-0">
-              <img 
-                src={milestones[index].image} 
-                alt={milestones[index].title}
-                className="w-full h-full object-cover opacity-30 transition-transform duration-[6000ms] ease-linear scale-100 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
-            </div>
+              <div className="absolute inset-0">
+                <img 
+                  src={milestones[index].image} 
+                  alt={milestones[index].title}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover opacity-30 transition-transform duration-[6000ms] ease-linear scale-100 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
+              </div>
             
             <div className="relative h-full flex flex-col justify-center px-6 md:px-16 max-w-2xl">
               <motion.span 
