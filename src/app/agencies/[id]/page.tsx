@@ -1,11 +1,11 @@
 "use client";
 
-import { use, useEffect, useRef } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { MilkyWay } from "@/components/space/MilkyWay";
 import { Taskbar } from "@/components/space/Taskbar";
 import { SmoothScroll } from "@/components/space/SmoothScroll";
 import { CustomCursor } from "@/components/space/CustomCursor";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -25,6 +25,9 @@ interface AgencyData {
   color: string;
   accent: string;
   flagGradient: string;
+  founded: string;
+  hq: string;
+  stats: { label: string; value: string; suffix?: string }[];
   achievements: StoryItem[];
   projects: StoryItem[];
 }
@@ -37,6 +40,14 @@ const agencyData: Record<string, AgencyData> = {
     color: "from-blue-600",
     accent: "#2563eb",
     flagGradient: "from-[#3C3B6E] via-[#FFFFFF] to-[#B22234]",
+    founded: "1958",
+    hq: "Washington, D.C.",
+    stats: [
+      { label: "Annual Budget", value: "25.4", suffix: "B" },
+      { label: "Active Missions", value: "80", suffix: "+" },
+      { label: "Moon Landings", value: "6" },
+      { label: "Workforce", value: "18", suffix: "k" }
+    ],
     achievements: [
       {
         title: "The Apollo Era",
@@ -79,6 +90,14 @@ const agencyData: Record<string, AgencyData> = {
     color: "from-orange-500",
     accent: "#f97316",
     flagGradient: "from-[#FF9933] via-[#FFFFFF] to-[#138808]",
+    founded: "1969",
+    hq: "Bengaluru, India",
+    stats: [
+      { label: "Launch Missions", value: "120", suffix: "+" },
+      { label: "Satellites Built", value: "150", suffix: "+" },
+      { label: "Cost Efficiency", value: "90", suffix: "%" },
+      { label: "Planetary Missions", value: "4" }
+    ],
     achievements: [
       {
         title: "Mangalyaan Success",
@@ -105,10 +124,18 @@ const agencyData: Record<string, AgencyData> = {
   esa: {
     name: "ESA",
     tagline: "Shaping the development of Europe's space capability.",
-    description: "The European Space Agency is Europe's gateway to space, coordinating the financial and intellectual resources of its member states.",
+    description: "The European Space Agency is Europe's gateway to space, coordinating resources of its member states.",
     color: "from-blue-800",
     accent: "#1e3a8a",
     flagGradient: "from-[#003399] to-[#FFCC00]",
+    founded: "1975",
+    hq: "Paris, France",
+    stats: [
+      { label: "Member States", value: "22" },
+      { label: "Science Budget", value: "7.1", suffix: "B" },
+      { label: "Operational Sites", value: "8" },
+      { label: "Active Projects", value: "50", suffix: "+" }
+    ],
     achievements: [
       {
         title: "Rosetta Mission",
@@ -139,6 +166,14 @@ const agencyData: Record<string, AgencyData> = {
     color: "from-zinc-600",
     accent: "#52525b",
     flagGradient: "from-[#3C3B6E] via-[#FFFFFF] to-[#B22234]",
+    founded: "2002",
+    hq: "Hawthorne, CA",
+    stats: [
+      { label: "Successful Launches", value: "300", suffix: "+" },
+      { label: "Reused Boosters", value: "250", suffix: "+" },
+      { label: "Starlink Satellites", value: "5000", suffix: "+" },
+      { label: "Market Value", value: "180", suffix: "B" }
+    ],
     achievements: [
       {
         title: "First Landing",
@@ -168,45 +203,61 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
   const { id } = use(params);
   const data = agencyData[id as keyof typeof agencyData] || agencyData.nasa;
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll();
+  const titleY = useTransform(scrollYProgress, [0, 0.2], [0, -100]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
   useEffect(() => {
-    const sections = gsap.utils.toArray(".story-section");
     const scroller = document.querySelector(".smooth-scroll");
-    
     if (!scroller) return;
 
     const ctx = gsap.context(() => {
-      sections.forEach((section: any) => {
-        gsap.fromTo(section.querySelector(".content-box"),
-          { opacity: 0, y: 100 },
+      // Achievement scaling and reveals
+      gsap.utils.toArray(".story-section").forEach((section: any) => {
+        const content = section.querySelector(".content-box");
+        const img = section.querySelector(".bg-image");
+
+        gsap.fromTo(content,
+          { opacity: 0, scale: 0.9, y: 50 },
           {
-            opacity: 1,
-            y: 0,
-            duration: 1.5,
+            opacity: 1, scale: 1, y: 0,
+            duration: 1.2,
+            ease: "power4.out",
             scrollTrigger: {
               trigger: section,
               scroller: scroller,
-              start: "top 70%",
+              start: "top 60%",
               end: "bottom center",
               toggleActions: "play none none reverse"
             }
           }
         );
-        
-        gsap.fromTo(section.querySelector(".bg-image"),
-          { scale: 1.2, filter: "brightness(0.3)" },
-          {
-            scale: 1,
-            filter: "brightness(0.6)",
-            scrollTrigger: {
-              trigger: section,
-              scroller: scroller,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true
-            }
+
+        gsap.to(img, {
+          scale: 1.1,
+          scrollTrigger: {
+            trigger: section,
+            scroller: scroller,
+            scrub: true,
+            start: "top bottom",
+            end: "bottom top"
           }
-        );
+        });
+      });
+
+      // Stats stagger reveal
+      gsap.from(".stat-card", {
+        y: 60,
+        opacity: 0,
+        stagger: 0.2,
+        duration: 1,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: ".stats-grid",
+          scroller: scroller,
+          start: "top 80%"
+        }
       });
     }, containerRef);
 
@@ -215,93 +266,203 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
 
   return (
     <SmoothScroll>
-      <div ref={containerRef} className="relative min-h-screen bg-[#030014] selection:bg-purple-500/30">
+      <div ref={containerRef} className="relative min-h-screen bg-[#030014] selection:bg-purple-500/30 font-[family-name:var(--font-orbitron)]">
         <CustomCursor />
         <Taskbar />
         <MilkyWay />
 
-        {/* Hero Header */}
-        <section className="relative h-screen flex flex-col items-center justify-center px-4 z-20">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.5 }}
-            className="text-center"
+        {/* Dynamic Background Overlays */}
+        <div className="fixed inset-0 pointer-events-none z-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(76,29,149,0.05)_0%,transparent_70%)]" />
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+        </div>
+
+        {/* Hero Section - Advanced Editorial Layout */}
+        <section className="relative min-h-screen flex items-center justify-center px-6 pt-32 pb-20 overflow-hidden">
+          <motion.div 
+            style={{ y: titleY, opacity: titleOpacity }}
+            className="w-full max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-end z-20"
           >
-            <span className="text-zinc-500 font-bold tracking-[0.8em] uppercase text-xs mb-6 block">Agency Profile</span>
-            <h1 className={`text-8xl md:text-[14rem] font-black bg-gradient-to-br ${data.flagGradient} bg-clip-text text-transparent leading-none tracking-tighter mb-8 drop-shadow-2xl`}>
-              {data.name}
-            </h1>
-            <p className="text-zinc-400 text-xl md:text-3xl font-light italic max-w-2xl mx-auto leading-relaxed">
-              "{data.tagline}"
-            </p>
-          </motion.div>
-          
-          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-50">
-            <span className="text-[10px] text-white uppercase tracking-[0.5em] font-bold">The Journey Begins</span>
-            <div className="w-px h-20 bg-gradient-to-b from-white to-transparent" />
-          </div>
-        </section>
-
-        {/* Introduction */}
-        <section className="relative py-40 px-4 md:px-20 z-20 bg-black/50 backdrop-blur-3xl border-y border-white/5">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="flex justify-center gap-2 mb-8">
-               <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-purple-500" />
-               <div className="w-2 h-0.5 bg-purple-500" />
-               <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-purple-500" />
+            {/* Left Side: Large Technical Typography */}
+            <div className="lg:col-span-8">
+              <div className="flex items-center gap-4 mb-8 overflow-hidden">
+                <motion.div 
+                  initial={{ x: -100, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  className="h-px w-24 bg-white/20" 
+                />
+                <span className="text-zinc-500 text-xs font-bold tracking-[1em] uppercase">Sector Profile</span>
+              </div>
+              
+              <h1 className="relative">
+                <motion.span
+                  initial={{ y: 100, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.2 }}
+                  className={`block text-[15vw] lg:text-[18rem] font-black leading-[0.8] tracking-tighter bg-gradient-to-br ${data.flagGradient} bg-clip-text text-transparent drop-shadow-[0_0_50px_rgba(255,255,255,0.1)]`}
+                >
+                  {data.name}
+                </motion.span>
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 1.5, delay: 0.5 }}
+                  className="absolute -bottom-4 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent origin-left"
+                />
+              </h1>
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-12 tracking-tight uppercase tracking-widest">The Mission</h2>
-            <p className="text-zinc-400 text-xl md:text-3xl leading-relaxed font-light">
-              {data.description} Our journey through space is a testament to the indomitable human spirit and our innate curiosity to explore the unknown.
-            </p>
+
+            {/* Right Side: Quick Specs */}
+            <div className="lg:col-span-4 space-y-12 mb-8">
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="glass-card p-10 rounded-[2.5rem] border-white/5 relative group hover:border-white/10 transition-colors"
+              >
+                <div className="absolute -top-4 -left-4 w-20 h-20 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-all" />
+                <p className="text-zinc-400 text-xl md:text-2xl font-light italic leading-relaxed relative z-10">
+                  "{data.tagline}"
+                </p>
+              </motion.div>
+              
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
+                className="flex flex-col gap-6 pl-4"
+              >
+                <div className="flex justify-between items-baseline border-b border-white/5 pb-4">
+                  <span className="text-zinc-600 text-[10px] uppercase tracking-widest font-black">Est. Date</span>
+                  <span className="text-white text-xl font-bold font-mono tracking-tighter">{data.founded}</span>
+                </div>
+                <div className="flex justify-between items-baseline border-b border-white/5 pb-4">
+                  <span className="text-zinc-600 text-[10px] uppercase tracking-widest font-black">HQ Loc</span>
+                  <span className="text-white text-xl font-bold tracking-tighter">{data.hq}</span>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Background Decorative Element */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none opacity-20">
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[conic-gradient(from_0deg,transparent,rgba(168,85,247,0.1),transparent)] animate-[spin_20s_linear_infinite]" />
           </div>
         </section>
 
-        {/* Achievements Storyteller */}
-        <div className="relative z-10">
-          <div className="sticky top-20 left-20 z-30 pointer-events-none p-8">
-             <h3 className="text-purple-500 text-[10px] font-black uppercase tracking-[1em] mb-2">Historical</h3>
-             <div className="text-3xl font-bold text-white tracking-tighter">Legacy Archive</div>
+        {/* Stats Section - Data Intensive Grid */}
+        <section className="relative py-32 z-20">
+          <div className="max-w-screen-2xl mx-auto px-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stats-grid">
+              {data.stats.map((stat, i) => (
+                <div key={i} className="stat-card glass-card p-12 rounded-[3rem] border-white/5 flex flex-col items-center text-center group hover:bg-white/[0.05] transition-all duration-500">
+                  <span className="text-zinc-500 text-[10px] uppercase tracking-[0.5em] font-black mb-6 group-hover:text-purple-400 transition-colors">{stat.label}</span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-7xl font-black text-white tracking-tighter tabular-nums">{stat.value}</span>
+                    {stat.suffix && <span className="text-3xl font-black text-purple-500">{stat.suffix}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Mission Statement with Reveal */}
+        <section className="relative py-60 z-20 overflow-hidden">
+           <div className="max-w-5xl mx-auto px-6 text-center">
+             <motion.div
+               initial={{ opacity: 0, scale: 0.9 }}
+               whileInView={{ opacity: 1, scale: 1 }}
+               transition={{ duration: 1.5 }}
+               className="relative"
+             >
+                <span className="absolute -top-20 left-1/2 -translate-x-1/2 text-[15rem] font-black text-white/[0.02] tracking-tighter pointer-events-none whitespace-nowrap">MISSION</span>
+                <p className="text-4xl md:text-6xl text-white font-black leading-[1.1] tracking-tighter mb-12">
+                  Driving the frontiers of <span className="text-purple-500 italic">human knowledge</span> across the cosmic ocean.
+                </p>
+                <div className="max-w-2xl mx-auto h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent my-16 opacity-30" />
+                <p className="text-zinc-400 text-xl md:text-2xl font-light leading-relaxed max-w-3xl mx-auto">
+                  {data.description} Our work is not just about exploring space; it's about understanding our origin and securing our future.
+                </p>
+             </motion.div>
+           </div>
+        </section>
+
+        {/* Achievements - Advanced Sticky Scroller */}
+        <div className="relative z-10 bg-[#030014]">
+          <div className="sticky top-0 h-screen flex items-center overflow-hidden pointer-events-none z-0">
+             <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(168,85,247,0.05)_0%,transparent_50%)]" />
           </div>
 
           {data.achievements.map((item, i) => (
-            <section key={i} className="story-section relative h-screen flex items-center justify-center overflow-hidden">
-              <img src={item.image} alt={item.title} className="bg-image absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-              
-              <div className="content-box relative z-20 max-w-4xl px-8 text-center">
-                <span className="text-white/40 font-mono text-xs mb-4 block tracking-widest uppercase">Index // 0{i + 1} // AD {item.year}</span>
-                <h3 className="text-6xl md:text-9xl font-black text-white mb-8 tracking-tighter drop-shadow-2xl">{item.title}</h3>
-                <p className="text-zinc-200 text-lg md:text-2xl leading-relaxed font-medium bg-black/60 backdrop-blur-xl p-10 rounded-[3rem] border border-white/10 shadow-2xl">
-                  {item.description}
-                </p>
+            <section key={i} className="story-section relative min-h-screen flex items-center justify-center py-40">
+              <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                
+                {/* Visual Side */}
+                <div className="relative aspect-[4/5] lg:aspect-square overflow-hidden rounded-[4rem] group shadow-2xl">
+                   <img src={item.image} alt={item.title} className="bg-image absolute inset-0 w-full h-full object-cover transition-transform duration-[2s]" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+                   <div className="absolute bottom-12 left-12">
+                      <span className="text-white/60 font-mono text-sm tracking-widest uppercase mb-2 block">Archive Ref. // 0{i+1}</span>
+                      <h3 className="text-4xl font-black text-white tracking-tighter uppercase">{item.year}</h3>
+                   </div>
+                </div>
+
+                {/* Content Side */}
+                <div className="content-box">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="h-px w-12 bg-purple-500" />
+                    <span className="text-purple-400 font-black uppercase tracking-[0.4em] text-[10px]">Historic Milestone</span>
+                  </div>
+                  <h3 className="text-6xl md:text-8xl font-black text-white mb-10 tracking-tighter uppercase leading-none">{item.title}</h3>
+                  <div className="glass-card p-12 rounded-[3rem] border-white/5 bg-white/[0.02]">
+                    <p className="text-zinc-400 text-xl md:text-2xl leading-relaxed font-light">
+                      {item.description}
+                    </p>
+                    <div className="mt-12 flex items-center gap-6">
+                       <button className="text-white text-xs font-black uppercase tracking-widest flex items-center gap-3 group/btn">
+                          Launch Archive <span className="w-8 h-px bg-white/20 group-hover/btn:w-12 transition-all" />
+                       </button>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </section>
           ))}
         </div>
 
-        {/* Projects Section */}
-        <section className="relative py-40 bg-[#05001a] z-20 border-t border-white/5">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="mb-24 text-center">
-              <h2 className="text-purple-500 text-[10px] font-black uppercase tracking-[1em] mb-4">Frontiers</h2>
-              <div className="text-5xl md:text-8xl font-black text-white tracking-tighter italic">Active <span className="text-zinc-800">Spectrums</span></div>
+        {/* Future Spectrums Grid */}
+        <section className="relative py-60 bg-[#05001a] z-20 border-t border-white/5 overflow-hidden">
+          {/* Grid Background Pattern */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+          
+          <div className="max-w-screen-2xl mx-auto px-6">
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-32 gap-12">
+              <div className="max-w-2xl">
+                <h2 className="text-purple-500 text-[10px] font-black uppercase tracking-[1.5em] mb-8">Active Spectrums</h2>
+                <div className="text-6xl md:text-[9rem] font-black text-white tracking-tighter italic leading-none">
+                  Future <span className="text-zinc-800">Frontiers</span>
+                </div>
+              </div>
+              <p className="text-zinc-500 text-xl max-w-sm font-light italic leading-relaxed pb-6">
+                Redefining the boundaries of possible through relentless technological evolution.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               {data.projects.map((project, i) => (
-                <div key={i} className="group relative aspect-[4/5] rounded-[4rem] overflow-hidden glass-card border-white/5 p-16 flex flex-col justify-end transition-all duration-700 hover:scale-[1.02]">
-                  <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-60 transition-all duration-1000 scale-100 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#05001a] via-[#05001a]/40 to-transparent" />
+                <div key={i} className="group relative aspect-video rounded-[4rem] overflow-hidden glass-card border-white/5 transition-all duration-700 hover:scale-[1.01] hover:border-white/20">
+                  <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-50 transition-all duration-1000 scale-100 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#05001a] via-[#05001a]/20 to-transparent" />
                   
-                  <div className="relative z-10">
+                  <div className="absolute bottom-16 left-16 right-16 z-10">
                     <div className="flex items-center gap-4 mb-6">
                       <span className="h-px w-12 bg-purple-500" />
-                      <span className="text-purple-400 font-bold uppercase tracking-[0.3em] text-[10px]">{project.year}</span>
+                      <span className="text-purple-400 font-bold uppercase tracking-[0.3em] text-[11px]">{project.year}</span>
                     </div>
                     <h4 className="text-5xl font-black text-white mb-6 tracking-tighter uppercase">{project.title}</h4>
-                    <p className="text-zinc-400 text-xl leading-relaxed font-light">
+                    <p className="text-zinc-400 text-xl leading-relaxed font-light line-clamp-2 group-hover:line-clamp-none transition-all duration-500">
                       {project.description}
                     </p>
                   </div>
@@ -311,20 +472,51 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="relative py-32 px-4 text-center border-t border-white/5 z-20 bg-black">
-          <div className="max-w-xl mx-auto">
-            <p className="text-zinc-700 text-[10px] font-black tracking-[1em] uppercase mb-6">
-              Continuing the Voyage
-            </p>
-            <p className="text-zinc-500 text-lg font-light italic">
-              "The exploration of space will go ahead, whether we join in it or not, and it is one of the great adventures of all time."
-            </p>
-            <div className="mt-12 text-[10px] text-zinc-800 font-mono">
-              SYSTEM STATUS: NOMINAL // DATA STREAM: ENCRYPTED
-            </div>
+        {/* Technical Specification Footer */}
+        <footer className="relative py-40 px-6 border-t border-white/5 z-20 bg-black overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent" />
+          
+          <div className="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-20">
+             <div className="lg:col-span-8">
+                <h2 className={`text-9xl lg:text-[12rem] font-black bg-gradient-to-br ${data.flagGradient} bg-clip-text text-transparent tracking-tighter opacity-10 leading-none mb-12`}>
+                   {data.name}
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+                   <div>
+                      <span className="block text-[10px] font-black text-zinc-700 uppercase tracking-widest mb-4">Core Systems</span>
+                      <ul className="space-y-2 text-zinc-500 text-xs font-mono uppercase tracking-tight">
+                         <li>Guidance Nav</li>
+                         <li>Propulsion</li>
+                         <li>Life Support</li>
+                         <li>Avionics</li>
+                      </ul>
+                   </div>
+                   <div>
+                      <span className="block text-[10px] font-black text-zinc-700 uppercase tracking-widest mb-4">Operations</span>
+                      <ul className="space-y-2 text-zinc-500 text-xs font-mono uppercase tracking-tight">
+                         <li>Ground Ctrl</li>
+                         <li>Deep Space</li>
+                         <li>Satellite Ops</li>
+                         <li>Telemetry</li>
+                      </ul>
+                   </div>
+                </div>
+             </div>
+             
+             <div className="lg:col-span-4 flex flex-col justify-end text-right">
+                <p className="text-zinc-700 text-[10px] font-black tracking-[1em] uppercase mb-8">
+                  Voyage Protocol: Active
+                </p>
+                <p className="text-zinc-500 text-2xl font-light italic leading-snug">
+                  "The stars are not reachable by the feet, but by the mind and the heart of the curious."
+                </p>
+                <div className="mt-16 pt-8 border-t border-white/5 text-[10px] text-zinc-800 font-mono tracking-[0.2em]">
+                  ENCRYPTED DATA STREAM // {new Date().getFullYear()} // COSMOS CORE
+                </div>
+             </div>
           </div>
         </footer>
+
       </div>
     </SmoothScroll>
   );
