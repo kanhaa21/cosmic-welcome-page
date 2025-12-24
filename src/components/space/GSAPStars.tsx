@@ -10,10 +10,10 @@ interface Star {
   color: string;
   opacity: number;
   twinkleSpeed: number;
-  twinkleDelay: number;
+  twinklePhase: number;
 }
 
-export function GSAPStars({ count = 800 }: { count?: number }) {
+export function GSAPStars({ count = 1200 }: { count?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -26,17 +26,24 @@ export function GSAPStars({ count = 800 }: { count?: number }) {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    const colors = ["#ffffff", "#fff4e6", "#e6f4ff", "#fdf2ff", "#fff9db", "#9ca3af"];
+    const colors = [
+      "#ffffff", // Pure white
+      "#f0f9ff", // Blueish
+      "#fffaf0", // Warm
+      "#faf5ff", // Purplish
+      "#f5f5f5", // Greyish
+    ];
     
-    const stars: Star[] = Array.from({ length: Math.min(count, 4000) }, () => {
+    // Create static stars with random properties
+    const stars: Star[] = Array.from({ length: count }, () => {
       return {
         x: Math.random() * width,
         y: Math.random() * height,
-        size: Math.random() * 1.2 + 0.2,
+        size: Math.random() * 0.8 + 0.1, // Very small stars
         color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random(),
-        twinkleSpeed: 0.01 + Math.random() * 0.02,
-        twinkleDelay: Math.random() * Math.PI * 2
+        opacity: Math.random() * 0.5 + 0.1, // Dim opacity
+        twinkleSpeed: 0.005 + Math.random() * 0.01,
+        twinklePhase: Math.random() * Math.PI * 2
       };
     });
 
@@ -46,23 +53,25 @@ export function GSAPStars({ count = 800 }: { count?: number }) {
       ctx.clearRect(0, 0, width, height);
       
       stars.forEach((star) => {
-        const twinkle = Math.sin(frame * star.twinkleSpeed + star.twinkleDelay) * 0.5 + 0.5;
-        const currentOpacity = star.opacity * (0.3 + twinkle * 0.7);
+        // Calculate twinkling effect using sine wave
+        const twinkle = Math.sin(frame * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
+        const currentOpacity = star.opacity * (0.4 + twinkle * 0.6);
 
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
         ctx.fillStyle = star.color;
-        ctx.globalAlpha = currentOpacity * 0.6; // Dim stars
+        ctx.globalAlpha = currentOpacity;
         ctx.fill();
 
-        if (star.size > 0.8) {
+        // Optional very subtle glow for slightly larger stars
+        if (star.size > 0.6) {
           ctx.beginPath();
-          ctx.arc(star.x, star.y, star.size * 2, 0, Math.PI * 2);
-          const gradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.size * 2);
+          ctx.arc(star.x, star.y, star.size * 1.5, 0, Math.PI * 2);
+          const gradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.size * 1.5);
           gradient.addColorStop(0, star.color);
           gradient.addColorStop(1, "transparent");
           ctx.fillStyle = gradient;
-          ctx.globalAlpha = currentOpacity * 0.2;
+          ctx.globalAlpha = currentOpacity * 0.3;
           ctx.fill();
         }
       });
@@ -72,11 +81,15 @@ export function GSAPStars({ count = 800 }: { count?: number }) {
     gsap.ticker.add(ticker);
 
     const handleResize = () => {
+      const oldWidth = width;
+      const oldHeight = height;
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
+      
+      // Re-distribute stars on resize to fill the screen
       stars.forEach(star => {
-        star.x = Math.random() * width;
-        star.y = Math.random() * height;
+        star.x = (star.x / oldWidth) * width;
+        star.y = (star.y / oldHeight) * height;
       });
     };
 
@@ -92,7 +105,7 @@ export function GSAPStars({ count = 800 }: { count?: number }) {
     <canvas 
       ref={canvasRef} 
       className="fixed inset-0 pointer-events-none z-0"
-      style={{ filter: "contrast(1.1) brightness(0.8)" }}
+      style={{ filter: "blur(0.4px)" }} // Add a tiny bit of soft focus
     />
   );
 }
