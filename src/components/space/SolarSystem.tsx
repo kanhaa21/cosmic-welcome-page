@@ -160,7 +160,7 @@ export function SolarSystem() {
 
         {/* Solar System Visualization */}
         <div className="relative flex-1 h-[400px] sm:h-[600px] lg:h-[800px] flex items-center justify-center order-1 lg:order-2 w-full overflow-hidden">
-          <div className="relative w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] lg:w-[800px] lg:h-[800px] flex items-center justify-center scale-[0.5] sm:scale-75 lg:scale-100">
+          <div className="relative w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] lg:w-[800px] lg:h-[800px] flex items-center justify-center scale-[0.35] sm:scale-50 lg:scale-[0.75]">
             {/* Sun */}
             <div className="absolute w-24 h-24 bg-yellow-400 rounded-full blur-[2px] shadow-[0_0_100px_#fbbf24] z-20">
               <div className="absolute inset-0 bg-orange-500 rounded-full animate-pulse opacity-50" />
