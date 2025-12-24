@@ -211,17 +211,6 @@ export function SolarSystem() {
                         backgroundColor: planet.color,
                       }}
                     />
-
-                    <span 
-                      className={`absolute -bottom-8 text-[9px] font-black text-white uppercase tracking-[0.4em] whitespace-nowrap transition-all duration-500 ${
-                        selectedPlanet === i ? "opacity-100 scale-110" : "opacity-30"
-                      }`}
-                      style={{
-                        transform: `rotate(${-rotations[i]}deg)`
-                      }}
-                    >
-                      {planet.name}
-                    </span>
                   </div>
                 </div>
               </div>
