@@ -36,9 +36,10 @@ export function SmoothScroll({ children, fixedChildren }: { children: ReactNode,
           class: "is-reveal",
           getDirection: true,
           touchMultiplier: 2,
-          lerp: 0.1,
+          lerp: 0.08, // Slightly smoother lerp
           scrollFromAnywhere: true,
           reloadOnContextChange: false,
+          resetNativeScroll: true
         });
 
         if (!isMounted) {
@@ -48,11 +49,12 @@ export function SmoothScroll({ children, fixedChildren }: { children: ReactNode,
 
         setLocoScroll(scrollInstance);
 
+        // Tell ScrollTrigger to use these proxy methods (getter/setter) for the ".smooth-scroll" element since Locomotive Scroll is hijacking things
         ScrollTrigger.scrollerProxy(containerRef.current, {
           scrollTop(value) {
             if (scrollInstance) {
               return arguments.length
-                ? scrollInstance.scrollTo(value, { duration: 0, disableLerp: true })
+                ? scrollInstance.scrollTo(value, 0, 0)
                 : scrollInstance.scroll.instance.scroll.y;
             }
             return 0;
@@ -65,12 +67,10 @@ export function SmoothScroll({ children, fixedChildren }: { children: ReactNode,
               height: window.innerHeight,
             };
           },
-          pinType: "transform",
+          pinType: containerRef.current.style.transform ? "transform" : "fixed",
         });
 
-        scrollInstance.on("scroll", () => {
-          ScrollTrigger.update();
-        });
+        scrollInstance.on("scroll", ScrollTrigger.update);
 
         let rafId: number;
         resizeObserver = new ResizeObserver(() => {
