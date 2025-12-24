@@ -87,17 +87,19 @@ export function Taskbar() {
     >
       {/* Home Navigation */}
         <div className="flex items-center gap-2 md:gap-6">
-          {sections.map((section) => (
-            <button
-              key={section.id}
-              onClick={() => handleScroll(section.id)}
-              className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
-                activeSection === section.id ? "text-white" : "text-zinc-500 hover:text-zinc-300"
-              } ${section.name === "Nexus" ? "font-[family-name:var(--font-orbitron)] font-extrabold text-[11px] md:text-[13px] tracking-[0.3em]" : ""}`}
-            >
-              {section.name}
-            </button>
-          ))}
+            {sections.map((section) => (
+              <button
+                key={section.id}
+                onClick={() => handleScroll(section.id)}
+                className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
+                  activeSection === section.id 
+                    ? (section.name === "Nexus" ? "bg-gradient-to-r from-purple-400 via-white to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" : "text-white")
+                    : (section.name === "Nexus" ? "bg-gradient-to-r from-zinc-400 via-zinc-200 to-zinc-500 bg-clip-text text-transparent hover:from-white hover:to-white" : "text-zinc-500 hover:text-zinc-300")
+                } ${section.name === "Nexus" ? "font-[family-name:var(--font-orbitron)] font-black text-[12px] md:text-[14px] tracking-[0.4em] scale-110" : ""}`}
+              >
+                {section.name}
+              </button>
+            ))}
         </div>
       
       <div className="hidden sm:block h-4 w-px bg-white/10" />
