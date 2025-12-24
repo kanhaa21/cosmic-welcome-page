@@ -61,14 +61,14 @@ export default function BlackHolePage() {
       <div ref={contentRef} className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 text-center">
         <div className="max-w-4xl">
           <span className="text-orange-500 font-black uppercase tracking-[0.8em] text-[10px] md:text-xs mb-6 block">
-            Singularity Detected
+            Galactic Devourer Detected
           </span>
-          <h1 ref={titleRef} className="text-6xl md:text-[10rem] font-black text-white tracking-tighter mb-8 leading-none bg-gradient-to-b from-white via-orange-100 to-orange-500 bg-clip-text text-transparent drop-shadow-[0_0_50px_rgba(255,165,0,0.3)]">
-            THE VOID
+          <h1 ref={titleRef} className="text-6xl md:text-[10rem] font-black text-white tracking-tighter mb-8 leading-none bg-gradient-to-b from-white via-orange-100 to-orange-600 bg-clip-text text-transparent drop-shadow-[0_0_80px_rgba(255,69,0,0.5)]">
+            GALACTIC VOID
           </h1>
           <p className="text-zinc-400 text-lg md:text-2xl font-light leading-relaxed mb-12 max-w-2xl mx-auto backdrop-blur-sm bg-black/10 rounded-xl p-4">
-            Where time stands still and physics as we know it ceases to exist. 
-            Step into the gravitational embrace of the universe's most mysterious titan.
+            A supermassive singularity currently engulfing the Milky Way. 
+            Witness the final moments of our galaxy as stars are torn apart by the ultimate cosmic predator.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
