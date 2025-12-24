@@ -111,16 +111,16 @@ export default function Home() {
         <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/20 via-transparent to-[#030014] pointer-events-none" />
 
         {/* Hero Section */}
-        <section ref={heroRef} className="relative h-screen flex flex-col items-center justify-center px-4 overflow-hidden z-10" data-scroll-section>
+        <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden z-10" data-scroll-section>
           <motion.div
             style={{ opacity, scale }}
-            className="text-center"
+            className="text-center w-full max-w-5xl mx-auto"
           >
-            <div className="relative inline-block">
+            <div className="relative inline-block w-full">
               <div className="absolute -inset-4 bg-purple-500/20 blur-3xl rounded-full" />
               <WelcomeText />
             </div>
-            <p className="mt-8 text-zinc-300 text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-light tracking-wide drop-shadow-2xl reveal-text">
+            <p className="mt-8 text-zinc-300 text-base sm:text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-light tracking-wide drop-shadow-2xl reveal-text px-4">
               Venture into the cosmic abyss where galaxies dance and stars tell stories of eternity. 
               The universe is not just above us, it is within us.
             </p>
@@ -130,10 +130,10 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 1 }}
-            className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
+            className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
           >
-            <span className="text-zinc-500 text-xs uppercase tracking-[0.4em] font-bold">Initiate Descent</span>
-            <div className="w-px h-16 bg-gradient-to-b from-purple-500 to-transparent relative">
+            <span className="text-zinc-500 text-[8px] md:text-xs uppercase tracking-[0.4em] font-bold">Initiate Descent</span>
+            <div className="w-px h-12 md:h-16 bg-gradient-to-b from-purple-500 to-transparent relative">
               <motion.div 
                 animate={{ y: [0, 40, 0] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -144,22 +144,22 @@ export default function Home() {
         </section>
 
         {/* Milky Way Feature */}
-        <section className="relative py-12 px-4 md:px-20 z-10" data-scroll-section>
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="reveal-text">
-              <span className="text-purple-400 font-bold uppercase tracking-widest text-xs mb-3 block">Cosmic Origins</span>
-              <h2 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight tracking-tighter">
+        <section className="relative py-20 md:py-32 px-4 md:px-20 z-10" data-scroll-section>
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="reveal-text order-2 lg:order-1">
+              <span className="text-purple-400 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-3 block">Cosmic Origins</span>
+              <h2 className="text-3xl md:text-6xl font-black text-white mb-6 leading-tight tracking-tighter">
                 The Milky Way <br />
                 <span className="text-zinc-600">Our Infinite Cradle</span>
               </h2>
-              <p className="text-zinc-400 text-lg leading-relaxed mb-8 max-w-xl">
+              <p className="text-zinc-400 text-base md:text-lg leading-relaxed mb-8 max-w-xl">
                 Our galaxy is a vast spiral city of stars, spanning over 100,000 light-years. 
                 It contains at least 100 billion planets and an equal number of stars, 
                 all orbiting a supermassive black hole at its core.
               </p>
               <div className="flex gap-4">
-                <div className="h-1 w-20 bg-gradient-to-r from-purple-600 to-transparent" />
-                <div className="h-1 w-6 bg-zinc-800" />
+                <div className="h-1 w-16 md:w-20 bg-gradient-to-r from-purple-600 to-transparent" />
+                <div className="h-1 w-4 md:w-6 bg-zinc-800" />
               </div>
             </div>
             
@@ -168,18 +168,18 @@ export default function Home() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1 }}
-              className="relative group"
+              className="relative group order-1 lg:order-2"
               data-scroll
               data-scroll-speed="1"
             >
               <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000" />
               <div className="relative glass-card aspect-video rounded-3xl flex items-center justify-center overflow-hidden">
-                <div className="text-center p-8">
-                  <div className="text-7xl font-black text-white mb-3 tracking-tighter drop-shadow-2xl">13.8B</div>
-                  <div className="text-zinc-500 uppercase tracking-[0.3em] text-[10px] font-bold">Years Since the Big Bang</div>
+                <div className="text-center p-6 md:p-8">
+                  <div className="text-5xl md:text-7xl font-black text-white mb-3 tracking-tighter drop-shadow-2xl">13.8B</div>
+                  <div className="text-zinc-500 uppercase tracking-[0.3em] text-[8px] md:text-[10px] font-bold">Years Since the Big Bang</div>
                 </div>
-                <div className="absolute top-0 right-0 w-48 h-48 bg-purple-500/10 blur-[100px]" />
-                <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 blur-[100px]" />
+                <div className="absolute top-0 right-0 w-32 h-32 md:w-48 md:h-48 bg-purple-500/10 blur-[100px]" />
+                <div className="absolute bottom-0 left-0 w-32 h-32 md:w-48 md:h-48 bg-blue-500/10 blur-[100px]" />
               </div>
             </motion.div>
           </div>
