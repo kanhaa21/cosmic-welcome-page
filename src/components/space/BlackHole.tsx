@@ -45,6 +45,13 @@ const vertexShader = `
     return v;
   }
 
+  // Galaxy-like spiral noise
+  float spiral(vec2 uv, float t) {
+    float r = length(uv);
+    float a = atan(uv.y, uv.x);
+    return fbm(vec2(r * 4.0 - t * 0.2, a * 3.0 + r * 8.0));
+  }
+
   void main() {
     vec2 uv = (vUv - 0.5) * 2.0;
     uv.x *= uResolution.x / uResolution.y;
@@ -52,56 +59,70 @@ const vertexShader = `
     float r = length(uv);
     float theta = atan(uv.y, uv.x);
 
-    // Dynamic rotation speed based on radius
-    float rotation = uTime * (0.5 + 0.2 / (r + 0.1));
-    float distortedTheta = theta + rotation;
+    // EXTREME GRAVITATIONAL LENSING
+    // Pulls background coordinates towards the center
+    float lensFactor = 1.0 / (r + 0.001);
+    vec2 warpedUV = uv * (1.0 + 0.2 * pow(lensFactor, 0.8));
+    
+    // Rotation speed increases near the center
+    float rotation = uTime * (0.2 + 0.3 / (r + 0.05));
+    float distTheta = theta + rotation;
+    vec2 rotUV = vec2(cos(distTheta), sin(distTheta)) * r;
 
+    // 1. THE ENGULFED GALAXY (Background)
+    float galaxy = spiral(warpedUV * 0.5, uTime * 0.1);
+    galaxy *= smoothstep(0.35, 1.5, r); // Fade out near event horizon
+    vec3 galaxyColor = mix(vec3(0.1, 0.05, 0.2), vec3(0.6, 0.3, 0.8), galaxy);
+    galaxyColor += vec3(0.1, 0.2, 0.5) * fbm(warpedUV * 2.0 + uTime * 0.05);
+
+    // 2. THE ACCRETION DISK (Engulfing Matter)
     float disk = 0.0;
+    float diskThickness = 0.05 * (1.0 + r * 1.5);
     
-    // 1. Core Accretion Disk (High Energy)
-    float diskThickness = 0.04 * (1.0 + r * 0.5);
-    float diskH = abs(uv.y) - diskThickness;
-    if (r > 0.38 && r < 2.5) {
-      float edgeFade = smoothstep(2.5, 1.5, r) * smoothstep(0.38, 0.5, r);
-      float verticalFade = smoothstep(diskThickness * 2.0, 0.0, abs(uv.y));
+    // Main Disk
+    if (r > 0.35 && r < 4.0) {
+      float edgeFade = smoothstep(4.0, 1.0, r) * smoothstep(0.35, 0.5, r);
+      float verticalFade = smoothstep(diskThickness, 0.0, abs(uv.y));
       
-      float n = fbm(vec2(r * 4.0 - uTime * 0.3, distortedTheta * 2.0));
-      float strands = pow(fbm(vec2(distortedTheta * 5.0, r * 10.0 + uTime)), 2.0);
-      disk += (n * 1.2 + strands * 0.8) * edgeFade * verticalFade;
+      float n = fbm(vec2(r * 3.0 - uTime * 0.5, distTheta * 4.0));
+      // Spaghetti-fication streaks
+      float streaks = pow(fbm(vec2(distTheta * 10.0, r * 2.0 + uTime * 0.8)), 3.0);
+      disk += (n * 1.5 + streaks * 2.0) * edgeFade * verticalFade;
     }
 
-    // 2. Gravitational Bending (The Top/Bottom Warp)
-    float bendR = 0.65;
-    float bendDist = abs(r - bendR);
-    if (bendDist < 0.3) {
-      float bendIntensity = smoothstep(0.3, 0.0, bendDist) * pow(abs(uv.y), 1.2);
-      float n = fbm(vec2(distortedTheta * 3.0 - uTime * 0.5, r * 5.0));
-      disk += n * bendIntensity * 1.5;
+    // 3. GRAVITATIONAL WARP (Top/Bottom Arcs)
+    float arcR = 0.7;
+    float arcDist = abs(r - arcR);
+    if (arcDist < 0.4) {
+      float arcIntensity = smoothstep(0.4, 0.0, arcDist) * pow(abs(uv.y), 1.5);
+      float n = fbm(vec2(distTheta * 3.0 - uTime * 0.4, r * 4.0));
+      disk += n * arcIntensity * 2.5;
     }
 
-    // 3. Photon Sphere Glow
-    float photonSphere = smoothstep(0.42, 0.38, r) * smoothstep(0.35, 0.4, r) * 3.0;
+    // 4. THE EVENT HORIZON & PHOTON SPHERE
+    float photonSphere = smoothstep(0.4, 0.37, r) * smoothstep(0.32, 0.38, r) * 5.0;
     
-    vec3 color = vec3(0.0);
+    // COLORS
+    vec3 col_inner = vec3(1.0, 0.95, 0.8); // White-hot
+    vec3 col_mid = vec3(1.0, 0.5, 0.1);   // Orange
+    vec3 col_outer = vec3(0.5, 0.1, 0.0); // Deep red/Purple
     
-    // Intense Golden-Orange Palette from reference
-    vec3 col1 = vec3(1.0, 0.9, 0.4); // Brightest
-    vec3 col2 = vec3(1.0, 0.4, 0.0); // Mid
-    vec3 col3 = vec3(0.4, 0.1, 0.0); // Deep red
+    vec3 diskColor = mix(col_outer, col_inner, disk * 0.5);
+    diskColor = mix(diskColor, col_mid, pow(disk, 2.0));
 
-    vec3 diskColor = mix(col3, col1, disk);
-    color += diskColor * disk * uIntensity;
-    color += col1 * photonSphere * uIntensity;
+    vec3 finalColor = galaxyColor * 0.4;
+    finalColor += diskColor * disk * uIntensity;
+    finalColor += col_inner * photonSphere * uIntensity;
 
-    // Shadow
-    float shadow = smoothstep(0.36, 0.38, r);
-    color *= shadow;
+    // BLACK HOLE SHADOW
+    float shadow = smoothstep(0.35, 0.36, r);
+    finalColor *= shadow;
 
-    // Background stars/dust
-    float stars = pow(hash(uv * 500.0), 100.0) * 0.5;
-    color += stars * (1.0 - shadow);
+    // SPATIOTEMPORAL DISTORTION (Glitchy light)
+    float glitch = pow(hash(vec2(uTime * 10.0, r)), 50.0);
+    finalColor += col_mid * glitch * disk * 0.5;
 
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(finalColor, 1.0);
   }
 `;
 
