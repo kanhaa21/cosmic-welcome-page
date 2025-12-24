@@ -170,13 +170,21 @@ export function Taskbar() {
             transition={{ duration: 0.5, ease: "circOut" }}
             className="overflow-hidden flex items-center"
           >
-            <button
-              onClick={() => {
-                if (section.id !== "nexus") {
-                  if (window.location.hash === "#nexus") window.location.hash = "";
-                  handleScroll(section.id);
-                }
-              }}
+              <button
+                onClick={() => {
+                  if (section.path && pathname !== section.path) {
+                    window.location.href = section.path;
+                    return;
+                  }
+                  if (pathname !== "/" && !section.path) {
+                    window.location.href = `/#${section.id}`;
+                    return;
+                  }
+                  if (section.id !== "nexus") {
+                    if (window.location.hash === "#nexus") window.location.hash = "";
+                    handleScroll(section.id);
+                  }
+                }}
               className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
                 activeSection === section.id 
                   ? (section.name === "Nexus" ? "bg-gradient-to-r from-purple-400 via-white to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" : "text-white")
