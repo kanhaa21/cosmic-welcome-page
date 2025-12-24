@@ -213,21 +213,28 @@ export function Taskbar() {
                   activeSection === section.id ? "text-white" : "text-zinc-500 hover:text-zinc-300"
                 } ${
                   section.id === "solar" 
-                    ? "bg-purple-950/40 border border-purple-500/30 text-purple-200 shadow-[0_0_20px_rgba(168,85,247,0.15)]" 
+                    ? "bg-purple-950/40 border border-purple-500/30 text-purple-200 shadow-[0_0_30px_rgba(168,85,247,0.2)]" 
                     : ""
                 }`}
               >
                 <span className="relative z-10">{section.name}</span>
 
                 {section.id === "solar" && (
-                  <motion.div 
-                    className="absolute inset-0 rounded-full bg-purple-500/10 blur-sm -z-10"
-                    animate={{ 
-                      opacity: [0.1, 0.3, 0.1],
-                      scale: [0.95, 1.05, 0.95]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
+                  <>
+                    <motion.div 
+                      className="absolute inset-0 rounded-full bg-purple-500/20 blur-md -z-10"
+                      animate={{ 
+                        opacity: [0.1, 0.4, 0.1],
+                        scale: [0.9, 1.1, 0.9]
+                      }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    />
+                    <motion.div 
+                      className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-purple-400 rounded-full shadow-[0_0_10px_rgba(168,85,247,1)]"
+                      animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                  </>
                 )}
 
                 {activeSection === section.id && (
