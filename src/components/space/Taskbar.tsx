@@ -44,15 +44,14 @@ export function Taskbar() {
           if (section.id === "nexus") return;
           
           const element = document.querySelector(`#${section.id}`);
-          if (!element && section.id !== "hero") return;
-  
           // Check if element is valid before creating ScrollTrigger
-          const triggerElement = element || document.querySelector("#hero");
-          if (!triggerElement) return;
+          const triggerElement = element || (section.id === "hero" ? document.querySelector("#hero") : null);
+          
+          if (!triggerElement || !(triggerElement instanceof HTMLElement)) return;
 
           ScrollTrigger.create({
             trigger: triggerElement,
-            scroller: scroller,
+            scroller: ".smooth-scroll",
             start: "top 20%",
             end: "bottom 20%",
             onUpdate: (self) => {
@@ -67,6 +66,23 @@ export function Taskbar() {
             onEnter: () => setActiveSection(section.id),
             onEnterBack: () => setActiveSection(section.id),
           });
+        });
+
+        // Special case for top of page
+        const heroElement = document.querySelector("#hero");
+        if (heroElement && heroElement instanceof HTMLElement) {
+          ScrollTrigger.create({
+            trigger: heroElement,
+            scroller: ".smooth-scroll",
+            start: "top top",
+            end: "bottom 50%",
+            onToggle: (self) => {
+              if (self.isActive) setActiveSection("hero");
+            },
+            onEnterBack: () => setActiveSection("hero"),
+          });
+        }
+      });
         });
 
         // Special case for top of page
