@@ -73,18 +73,19 @@ const vertexShader = `
     
     // 3. REVOLVING STARS
     float starField = 0.0;
-    for(float i = 1.0; i < 4.0; i++) {
-        float scale = i * 20.0;
+    for(float i = 1.0; i < 5.0; i++) {
+        float scale = i * 30.0;
         // Each layer of stars revolves at different speed
-        float sTheta = theta + uTime * (0.1 / i) + hash(vec2(i)) * PI;
+        float sTheta = theta + uTime * (0.05 + 0.1 / i) + hash(vec2(i)) * PI;
         vec2 sUV = vec2(cos(sTheta), sin(sTheta)) * r * scale;
         vec2 grid = floor(sUV);
         float h = hash(grid);
-        if (h > 0.98) {
-            float size = 0.1 * h;
+        if (h > 0.97) {
+            float size = 0.08 * h;
             float dist = length(fract(sUV) - 0.5);
             float star = smoothstep(size, 0.0, dist);
-            starField += star * h * (sin(uTime * 2.0 + h * 20.0) * 0.5 + 0.5);
+            // Twinkle based on hash and time
+            starField += star * h * (sin(uTime * 3.0 + h * 60.0) * 0.5 + 0.5);
         }
     }
 
