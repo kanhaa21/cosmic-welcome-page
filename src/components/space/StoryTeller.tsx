@@ -57,13 +57,23 @@ const planets = [
 export function StoryTeller() {
   const [hoveredPlanet, setHoveredPlanet] = useState<string | null>(null);
   const [isPaused, setIsPaused] = useState(false);
-  const controls = useAnimationControls();
 
   // Duplicate planets for seamless loop
-  const displayPlanets = [...planets, ...planets, ...planets]; // Triple for smoother long-term loop
+  const displayPlanets = [...planets, ...planets, ...planets];
 
   return (
-    <section className="relative min-h-[70vh] flex flex-col items-center justify-center overflow-hidden py-20 bg-black/20">
+    <section className="relative min-h-[70vh] flex flex-col items-center justify-center overflow-hidden py-20 bg-transparent">
+      <style jsx>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-33.3333%); }
+        }
+        .marquee-content {
+          animation: marquee 60s linear infinite;
+          animation-play-state: ${isPaused ? 'paused' : 'running'};
+        }
+      `}</style>
+
       <div className="absolute top-10 text-center z-10">
         <motion.span 
           initial={{ opacity: 0, y: 10 }}
@@ -78,24 +88,20 @@ export function StoryTeller() {
           transition={{ delay: 0.1 }}
           className="text-3xl md:text-5xl font-black text-white tracking-tighter"
         >
-          Cosmic <span className="text-zinc-700">Neighborhood</span>
+          Cosmic <span className="text-zinc-700">Milestones</span>
         </motion.h2>
       </div>
 
       <div className="relative w-full mt-20">
-        <motion.div 
-          className="flex gap-8 px-4"
-          animate={{
-            x: isPaused ? undefined : ["0%", "-33.333%"],
-          }}
-          transition={{
-            duration: 60,
-            ease: "linear",
-            repeat: Infinity,
-          }}
+        {/* Fades */}
+        <div className="absolute inset-y-0 left-0 w-20 md:w-64 bg-gradient-to-r from-[#030014] via-[#030014]/80 to-transparent z-20 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-20 md:w-64 bg-gradient-to-l from-[#030014] via-[#030014]/80 to-transparent z-20 pointer-events-none" />
+
+        <div 
+          className="marquee-content flex gap-8 px-4"
           style={{ width: "fit-content" }}
-          onHoverStart={() => setIsPaused(true)}
-          onHoverEnd={() => setIsPaused(false)}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
         >
           {displayPlanets.map((planet, i) => (
             <motion.div
@@ -139,7 +145,7 @@ export function StoryTeller() {
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
 
       <div className="absolute bottom-10 flex gap-4">
