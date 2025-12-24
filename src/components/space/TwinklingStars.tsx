@@ -5,11 +5,10 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import * as THREE from "three";
 
-function Stars() {
+function Stars({ count = 15000 }: { count?: number }) {
   const ref = useRef<THREE.Points>(null!);
   
-    const stars = useMemo(() => {
-    const count = 15000;
+  const stars = useMemo(() => {
     const positions = new Float32Array(count * 3);
     const sizes = new Float32Array(count);
     
@@ -20,14 +19,13 @@ function Stars() {
       sizes[i] = Math.random();
     }
     return { positions, sizes };
-  }, []);
+  }, [count]);
 
   useFrame((state) => {
     if (ref.current) {
       ref.current.rotation.y = state.clock.getElapsedTime() * 0.01;
       ref.current.rotation.x = state.clock.getElapsedTime() * 0.005;
       
-      // Simple twinkling effect by pulsing overall opacity
       const material = ref.current.material as THREE.PointsMaterial;
       material.opacity = 0.4 + Math.sin(state.clock.getElapsedTime() * 2) * 0.2;
     }
@@ -48,11 +46,11 @@ function Stars() {
   );
 }
 
-export function TwinklingStars() {
+export function TwinklingStars({ count = 15000 }: { count?: number }) {
   return (
     <div className="fixed inset-0 -z-10 bg-[#020202]">
       <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
-        <Stars />
+        <Stars count={count} />
       </Canvas>
     </div>
   );
