@@ -3,8 +3,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
-import { MotionValue, useMotionValue } from "framer-motion";
-
 interface Star {
   x: number;
   y: number;
@@ -95,15 +93,6 @@ export function GSAPStars({ count = 800 }: { count?: number }) {
       ref={canvasRef} 
       className="fixed inset-0 pointer-events-none z-0"
       style={{ filter: "contrast(1.1) brightness(0.8)" }}
-    />
-  );
-}
-
-  return (
-    <canvas 
-      ref={canvasRef} 
-      className="fixed inset-0 pointer-events-none z-0"
-      style={{ filter: "blur(0.5px) contrast(0.9) brightness(0.6)" }}
     />
   );
 }
