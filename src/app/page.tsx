@@ -5,6 +5,9 @@ import { GSAPStars } from "@/components/space/GSAPStars";
 import { WelcomeText } from "@/components/space/WelcomeText";
 import { Taskbar } from "@/components/space/Taskbar";
 import { SmoothScroll } from "@/components/space/SmoothScroll";
+import { StoryTeller } from "@/components/space/StoryTeller";
+import { SolarSystem } from "@/components/space/SolarSystem";
+import { CustomCursor } from "@/components/space/CustomCursor";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
@@ -63,6 +66,7 @@ export default function Home() {
   return (
     <SmoothScroll>
       <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30">
+        <CustomCursor />
         <Taskbar />
         <MilkyWay />
         <GSAPStars />
