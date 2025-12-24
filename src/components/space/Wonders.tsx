@@ -35,14 +35,12 @@ export const Wonders = () => {
           <div className="w-12 h-[1px] bg-zinc-800" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {wonders.map((item, i) => (
-            <div
-              key={item.title}
-              className="group relative p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] glass-card border-white/5 transition-all duration-700 hover:bg-white/[0.04] reveal-text overflow-hidden"
-              data-scroll
-              data-scroll-speed={i * 0.1 + 0.2}
-            >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {wonders.map((item, i) => (
+              <div
+                key={item.title}
+                className="group relative p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] glass-card border-white/5 transition-all duration-700 hover:bg-white/[0.04] reveal-text overflow-hidden"
+              >
               <div className={`absolute inset-0 bg-gradient-to-br ${item.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
               
               <div className="relative z-10">
