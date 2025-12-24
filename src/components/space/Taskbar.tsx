@@ -92,11 +92,6 @@ export function Taskbar() {
       animate={{ y: 0, opacity: 1 }}
       className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-3 md:py-4 rounded-full border border-white/5 bg-[#030014]/40 backdrop-blur-2xl flex items-center gap-3 md:gap-8 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-white/10 w-[98%] md:w-auto justify-between md:justify-center overflow-hidden"
     >
-      {/* Scroll Progress Bar */}
-      <motion.div 
-        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 via-white/50 to-purple-500 origin-left z-[1]"
-        style={{ scaleX: scrollProgress }}
-      />
       {/* Home Navigation */}
         <div className="flex items-center gap-2 md:gap-6 relative z-[2]">
             {sections.map((section) => (
@@ -110,6 +105,13 @@ export function Taskbar() {
                   } ${section.name === "Nexus" ? "font-[family-name:var(--font-orbitron)] font-black text-[12px] md:text-[14px] tracking-[0.4em] scale-110" : ""}`}
                 >
                   {section.name}
+                  {activeSection === section.id && (
+                    <motion.div
+                      layoutId="nav-scroll-segment"
+                      className="absolute -bottom-[12px] md:-bottom-[16px] left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 via-white to-purple-500"
+                      transition={{ type: "spring", bounce: 0, duration: 0.6 }}
+                    />
+                  )}
                 </button>
             ))}
         </div>
