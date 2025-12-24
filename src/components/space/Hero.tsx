@@ -14,7 +14,7 @@ export const Hero = () => {
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
 
   return (
-    <section className="relative h-screen flex flex-col items-center justify-center px-4 overflow-hidden z-10" data-scroll-section>
+    <section className="relative h-screen flex flex-col items-center justify-center px-4 overflow-hidden z-10">
       <motion.div
         style={{ opacity, scale }}
         className="text-center"
