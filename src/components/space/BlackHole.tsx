@@ -45,52 +45,55 @@ const fragmentShader = `
     vec3 starColor = vec3(0.0);
 
     for(float i = 1.0; i < 8.0; i++) {
-        float inwardSpeed = 0.1 * i;
-        float rotationSpeed = 0.3 + (0.5 / (lensedR + 0.05));
+        float inwardSpeed = 0.08 * i;
+        float rotationSpeed = 0.25 + (0.4 / (lensedR + 0.05));
         
         // Dynamic radial position
         float t = uTime * inwardSpeed + i * 1.5;
         float rOffset = fract(t);
-        float virtualR = lensedR + rOffset * 2.5;
+        float virtualR = lensedR + rOffset * 2.8;
         
         // Spiral motion
-        float virtualTheta = theta + uTime * rotationSpeed + virtualR * 3.0;
+        float virtualTheta = theta + uTime * rotationSpeed + virtualR * 4.0;
         
         // Star sampling
-        vec2 starUV = vec2(virtualR, virtualTheta / (2.0 * PI)) * (20.0 + i * 2.0);
+        vec2 starUV = vec2(virtualR, virtualTheta / (2.0 * PI)) * (22.0 + i * 2.0);
         vec2 g = floor(starUV);
         vec2 f = fract(starUV);
         
         float h = hash(g + i * 9.0);
-        if (h > 0.94) {
+        if (h > 0.95) {
             float distToCenter = smoothstep(0.0, 0.4, lensedR);
-            float starSize = (0.08 + h * 0.1) * smoothstep(0.0, 0.1, lensedR);
+            float starSize = (0.06 + h * 0.08) * smoothstep(0.0, 0.1, lensedR);
             float star = smoothstep(starSize, 0.0, length(f - 0.5));
             
-            // Brighten and color shift as they get closer
-            vec3 col = mix(vec3(1.0, 0.4, 0.1), vec3(0.7, 0.8, 1.0), h);
-            float brightness = (1.0 - rOffset) * (1.5 / (lensedR + 0.5));
+            // Purple to Gold shift
+            vec3 colPurple = vec3(0.5, 0.2, 0.8);
+            vec3 colGold = vec3(1.0, 0.8, 0.3);
+            vec3 col = mix(colPurple, colGold, h);
+            
+            float brightness = (1.0 - rOffset) * (0.8 / (lensedR + 0.6));
             
             starColor += col * star * brightness * distToCenter;
         }
     }
 
     // CENTRAL SINGULARITY GLOW
-    float centerGlow = exp(-(lensedR - eventHorizon) * 20.0) * step(eventHorizon, r);
-    vec3 glowCol = mix(vec3(1.0, 0.3, 0.0), vec3(1.0, 0.8, 0.2), 0.5 + 0.5 * sin(uTime * 2.0));
+    float centerGlow = exp(-(lensedR - eventHorizon) * 22.0) * step(eventHorizon, r);
+    vec3 glowCol = mix(vec3(0.6, 0.2, 1.0), vec3(1.0, 0.8, 0.2), 0.5 + 0.5 * sin(uTime * 1.5));
     
     // ACCRETION STREAKS (Subtle flow)
-    float streaks = pow(abs(sin(theta * 2.0 - uTime * 3.0 + 1.5/lensedR)), 30.0) * exp(-lensedR * 4.0);
+    float streaks = pow(abs(sin(theta * 2.0 - uTime * 2.5 + 1.2/lensedR)), 40.0) * exp(-lensedR * 5.0);
 
-    vec3 finalColor = starColor;
-    finalColor += glowCol * centerGlow * 2.0;
-    finalColor += glowCol * streaks * 0.5;
+    vec3 finalColor = starColor * 0.7; // Dimmer stars
+    finalColor += glowCol * centerGlow * 1.2; // Dimmer core
+    finalColor += glowCol * streaks * 0.3; // Dimmer streaks
     
     // Event Horizon Shadow (The Void)
     finalColor *= smoothstep(eventHorizon, eventHorizon + 0.01, r);
     
     // Vignette
-    finalColor *= smoothstep(2.2, 0.4, r);
+    finalColor *= smoothstep(2.5, 0.3, r);
 
     gl_FragColor = vec4(finalColor, 1.0);
   }
