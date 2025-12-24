@@ -482,7 +482,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Record of Achievements */}
-          <section id="achievements" className="mb-40" data-scroll-section>
+          <section id="achievements" className="mb-40">
              <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
                 <div className="lg:col-span-4">
                    <h2 className="text-white text-3xl font-black uppercase tracking-tighter mb-8 leading-tight">
