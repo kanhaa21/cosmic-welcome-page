@@ -37,15 +37,13 @@ export const GalaxyFeature = () => {
           </div>
         </div>
         
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          className="relative group"
-          data-scroll
-          data-scroll-speed="1"
-        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            className="relative group"
+          >
           <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-[2.5rem] blur-2xl opacity-50 group-hover:opacity-100 transition duration-1000" />
           <div className="relative glass-card aspect-square md:aspect-video rounded-[2.5rem] flex items-center justify-center overflow-hidden border border-white/5">
             <div className="text-center p-12">
