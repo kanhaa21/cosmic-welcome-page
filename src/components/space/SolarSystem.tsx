@@ -79,11 +79,13 @@ export function SolarSystem() {
       const ctx = gsap.context((self) => {
         const q = self.selector!;
         planets.forEach((planet, i) => {
-          const target = q(`.planet-${i}`);
-          if (target.length === 0) return;
+          const rawTarget = q(`.planet-${i}`);
+          const targets = gsap.utils.toArray(rawTarget).filter(el => el && el instanceof HTMLElement) as HTMLElement[];
+          
+          if (targets.length === 0) return;
           
           // Orbit animation
-          gsap.to(target, {
+          gsap.to(targets, {
             rotation: 360,
             duration: 20 / planet.speed,
             repeat: -1,
