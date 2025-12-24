@@ -144,7 +144,7 @@ export default function Home() {
           </motion.div>
         </section>
 
-        {/* Milky Way Feature */}
+        {/* Earth Feature */}
         <section className="relative py-20 md:py-32 px-4 md:px-20 z-10" data-scroll-section>
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div
@@ -160,18 +160,18 @@ export default function Home() {
             </motion.div>
 
             <div className="reveal-text order-2">
-              <span className="text-purple-400 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-3 block">Cosmic Origins</span>
+              <span className="text-blue-400 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-3 block">Our Home Planet</span>
               <h2 className="text-3xl md:text-6xl font-black text-white mb-6 leading-tight tracking-tighter">
-                The Milky Way <br />
-                <span className="text-zinc-600">Our Infinite Cradle</span>
+                The Earth <br />
+                <span className="text-zinc-600">A Pale Blue Dot</span>
               </h2>
               <p className="text-zinc-400 text-base md:text-lg leading-relaxed mb-8 max-w-xl">
-                Our galaxy is a vast spiral city of stars, spanning over 100,000 light-years. 
-                It contains at least 100 billion planets and an equal number of stars, 
-                all orbiting a supermassive black hole at its core.
+                Earth is the only known world to harbor life. A fragile sanctuary protected by a thin atmosphere, 
+                it is a masterpiece of complex ecosystems and liquid oceans, suspended in the vast 
+                silence of the cosmic arena.
               </p>
               <div className="flex gap-4">
-                <div className="h-1 w-16 md:w-20 bg-gradient-to-r from-purple-600 to-transparent" />
+                <div className="h-1 w-16 md:w-20 bg-gradient-to-r from-blue-600 to-transparent" />
                 <div className="h-1 w-4 md:w-6 bg-zinc-800" />
               </div>
             </div>
