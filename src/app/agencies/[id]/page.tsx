@@ -171,36 +171,46 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
 
   useEffect(() => {
     const sections = gsap.utils.toArray(".story-section");
-    sections.forEach((section: any) => {
-      gsap.fromTo(section.querySelector(".content-box"),
-        { opacity: 0, y: 100 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.5,
-          scrollTrigger: {
-            trigger: section,
-            start: "top 70%",
-            end: "bottom center",
-            toggleActions: "play none none reverse"
+    const scroller = document.querySelector(".smooth-scroll");
+    
+    if (!scroller) return;
+
+    const ctx = gsap.context(() => {
+      sections.forEach((section: any) => {
+        gsap.fromTo(section.querySelector(".content-box"),
+          { opacity: 0, y: 100 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.5,
+            scrollTrigger: {
+              trigger: section,
+              scroller: scroller,
+              start: "top 70%",
+              end: "bottom center",
+              toggleActions: "play none none reverse"
+            }
           }
-        }
-      );
-      
-      gsap.fromTo(section.querySelector(".bg-image"),
-        { scale: 1.2, filter: "brightness(0.3)" },
-        {
-          scale: 1,
-          filter: "brightness(0.6)",
-          scrollTrigger: {
-            trigger: section,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true
+        );
+        
+        gsap.fromTo(section.querySelector(".bg-image"),
+          { scale: 1.2, filter: "brightness(0.3)" },
+          {
+            scale: 1,
+            filter: "brightness(0.6)",
+            scrollTrigger: {
+              trigger: section,
+              scroller: scroller,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true
+            }
           }
-        }
-      );
-    });
+        );
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
   }, [id]);
 
   return (
