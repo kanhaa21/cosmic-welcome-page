@@ -17,10 +17,12 @@ export function WelcomeText() {
 
     useEffect(() => {
       const ctx = gsap.context(() => {
+        if (!textRef.current) return;
+        
         const tl = gsap.timeline({
           repeat: -1,
         });
-  
+    
         tl.to(textRef.current, {
           opacity: 0,
           y: -20,
@@ -43,7 +45,7 @@ export function WelcomeText() {
           ease: "expo.out"
         });
       });
-  
+    
       return () => ctx.revert();
     }, []);
 
