@@ -84,7 +84,7 @@ export default function Home() {
               <div className="absolute -inset-4 bg-purple-500/20 blur-3xl rounded-full" />
               <WelcomeText />
             </div>
-            <p className="mt-8 text-zinc-300 text-base sm:text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-light tracking-wide drop-shadow-2xl reveal-text px-4">
+            <p className="mt-8 text-zinc-300 text-base sm:text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-light tracking-wide drop-shadow-2xl reveal-text px-4 font-[family-name:var(--font-space-grotesk)]">
               Venture into the cosmic abyss where galaxies dance and stars tell stories of eternity. 
               The universe is not just above us, it is within us.
             </p>
