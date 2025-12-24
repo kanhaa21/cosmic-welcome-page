@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
-export function GSAPStars() {
+export function GSAPStars({ speed = 1.5 }: { speed?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export function GSAPStars() {
 
     const stars: Star[] = [];
     const starCount = 800;
-    const speedMultiplier = 1.5;
+    let currentSpeed = speed;
 
     class Star {
       x: number;
@@ -47,7 +47,7 @@ export function GSAPStars() {
         this.px = ((this.x / this.z) * width) / 2 + width / 2;
         this.py = ((this.y / this.z) * height) / 2 + height / 2;
 
-        this.z -= speedMultiplier;
+        this.z -= currentSpeed;
 
         if (this.z < 1) {
           this.reset();
@@ -75,7 +75,7 @@ export function GSAPStars() {
 
         // Draw the tail if moving fast enough
         if (this.px !== 0) {
-          ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.2})`;
+          ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * (currentSpeed > 5 ? 0.5 : 0.2)})`;
           ctx.lineWidth = size / 2;
           ctx.beginPath();
           ctx.moveTo(this.px, this.py);
@@ -99,8 +99,11 @@ export function GSAPStars() {
     window.addEventListener("resize", handleResize);
 
     const animate = () => {
+      // Update speed smoothly
+      currentSpeed += (speed - currentSpeed) * 0.05;
+
       // Create a slight trail effect by not clearing completely
-      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillStyle = `rgba(0, 0, 0, ${currentSpeed > 10 ? 0.2 : 0.1})`;
       ctx.fillRect(0, 0, width, height);
       
       stars.forEach((star) => {
@@ -112,19 +115,10 @@ export function GSAPStars() {
 
     animate();
 
-    // Subtle GSAP speed fluctuation
-    gsap.to({ val: speedMultiplier }, {
-      val: speedMultiplier * 1.5,
-      duration: 10,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut"
-    });
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [speed]);
 
   return (
     <canvas
