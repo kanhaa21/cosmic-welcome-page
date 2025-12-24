@@ -1,105 +1,172 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { motion } from "framer-motion";
+import React, { useRef, useMemo } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 
-export function BlackHole() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const ring1Ref = useRef<HTMLDivElement>(null);
-  const ring2Ref = useRef<HTMLDivElement>(null);
-  const ring3Ref = useRef<HTMLDivElement>(null);
+const vertexShader = `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
 
-  useEffect(() => {
-    if (!ring1Ref.current || !ring2Ref.current || !ring3Ref.current) return;
+const fragmentShader = `
+  uniform float uTime;
+  uniform vec2 uResolution;
+  varying vec2 vUv;
 
-    // Accretion disk rotation
-    gsap.to(ring1Ref.current, {
-      rotation: 360,
-      duration: 20,
-      repeat: -1,
-      ease: "none",
-    });
+  #define PI 3.14159265359
 
-    gsap.to(ring2Ref.current, {
-      rotation: -360,
-      duration: 25,
-      repeat: -1,
-      ease: "none",
-    });
+  // Noise function for the disk texture
+  float hash(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+  }
 
-    gsap.to(ring3Ref.current, {
-      rotation: 360,
-      duration: 15,
-      repeat: -1,
-      ease: "none",
-    });
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+  }
 
-    // Subtle breathing/pulse effect
-    gsap.to(".event-horizon", {
-      scale: 1.05,
-      duration: 4,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-  }, []);
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    for (int i = 0; i < 5; i++) {
+      v += a * noise(p);
+      p *= 2.0;
+      a *= 0.5;
+    }
+    return v;
+  }
+
+  void main() {
+    // Center and scale UVs
+    vec2 uv = (vUv - 0.5) * 2.0;
+    uv.x *= uResolution.x / uResolution.y;
+
+    float r = length(uv);
+    float theta = atan(uv.y, uv.x);
+
+    // Black hole shadow
+    float shadow = smoothstep(0.38, 0.4, r);
+    
+    // Accretion disk simulation with gravitational lensing effect
+    // We simulate the Interstellar look by calculating two main regions:
+    // 1. The horizontal disk (near side)
+    // 2. The warped rings (far side bent over/under)
+
+    float disk = 0.0;
+    
+    // 1. Horizontal Disk approximation
+    float diskH = abs(uv.y) - (0.05 * (1.0 + smoothstep(0.4, 1.5, r)));
+    if (r > 0.4 && r < 1.8) {
+      float intensity = smoothstep(0.1, 0.0, abs(uv.y) / (r * 0.5));
+      intensity *= smoothstep(0.4, 0.6, r) * smoothstep(1.8, 1.2, r);
+      
+      // Texture
+      float n = fbm(vec2(r * 5.0 - uTime * 0.5, theta * 3.0));
+      disk += intensity * n * 1.5;
+    }
+
+    // 2. Gravitational Lensing (The "Halo" around the shadow)
+    // This is the far side of the disk appearing as a ring
+    float lensingRing = abs(r - 0.55) - 0.08;
+    if (lensingRing < 0.0) {
+        float intensity = smoothstep(0.08, 0.0, abs(lensingRing));
+        // Fade it where the horizontal disk is
+        intensity *= smoothstep(0.0, 0.2, abs(uv.y));
+        
+        float n = fbm(vec2(theta * 5.0 + uTime, r * 10.0));
+        disk += intensity * n * 2.0;
+    }
+    
+    // 3. The "Top" and "Bottom" arcs (Vertical bending)
+    float arcWidth = 0.15;
+    float arcR = 0.7;
+    float arcDist = abs(r - arcR);
+    if (arcDist < arcWidth) {
+        float intensity = smoothstep(arcWidth, 0.0, arcDist);
+        // Only show above and below, and far away from the horizontal center
+        intensity *= pow(abs(uv.y), 1.5); 
+        
+        float n = fbm(vec2(theta * 4.0 - uTime * 0.8, r * 8.0));
+        disk += intensity * n * 1.8;
+    }
+
+    // Colors
+    vec3 color = vec3(0.0);
+    
+    // Core glow (Photon sphere)
+    float coreGlow = smoothstep(0.45, 0.35, r) * smoothstep(0.35, 0.4, r) * 2.0;
+    color += vec3(1.0, 0.8, 0.5) * coreGlow;
+
+    // Accretion disk colors (Orange/Gold/White)
+    vec3 diskColor = mix(vec3(1.0, 0.3, 0.0), vec3(1.0, 0.9, 0.5), disk);
+    color += diskColor * disk;
+    
+    // Final shadow
+    color *= shadow;
+
+    // Atmospheric bloom/glow
+    color += vec3(0.8, 0.4, 0.1) * (0.05 / (r - 0.35)) * shadow;
+
+    gl_FragColor = vec4(color, 1.0);
+  }
+`;
+
+const BlackHoleShader = () => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+    }),
+    []
+  );
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      (meshRef.current.material as THREE.ShaderMaterial).uniforms.uTime.value = state.clock.getElapsedTime();
+      (meshRef.current.material as THREE.ShaderMaterial).uniforms.uResolution.value.set(
+        window.innerWidth,
+        window.innerHeight
+      );
+    }
+  });
 
   return (
-    <div ref={containerRef} className="fixed inset-0 flex items-center justify-center overflow-hidden bg-black z-0">
-      {/* Background Star Field (Optional, but adds depth) */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.05)_0%,_transparent_70%)] opacity-30" />
+    <mesh ref={meshRef}>
+      <planeGeometry args={[10, 10]} />
+      <shaderMaterial
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms}
+        transparent
+      />
+    </mesh>
+  );
+};
+
+export function BlackHole() {
+  return (
+    <div className="fixed inset-0 z-0 bg-black">
+      <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
+        <BlackHoleShader />
+      </Canvas>
       
-      <div className="relative w-[300px] h-[300px] md:w-[600px] md:h-[600px] flex items-center justify-center">
-        {/* Gravitational Lensing (Outer Distortion) */}
-        <div className="absolute inset-0 rounded-full border-[40px] border-white/5 blur-[100px] animate-pulse" />
-        
-        {/* Accretion Disk Layers */}
-        <div 
-          ref={ring1Ref}
-          className="absolute inset-0 rounded-full border-[1px] border-orange-500/20 blur-[2px]"
-          style={{
-            background: "conic-gradient(from 0deg, transparent, rgba(251, 146, 60, 0.4), transparent, rgba(168, 85, 247, 0.4), transparent)",
-            boxShadow: "0 0 100px rgba(251, 146, 60, 0.1)",
-          }}
-        />
-        
-        <div 
-          ref={ring2Ref}
-          className="absolute inset-[20px] rounded-full border-[1px] border-purple-500/20 blur-[5px]"
-          style={{
-            background: "conic-gradient(from 120deg, transparent, rgba(168, 85, 247, 0.3), transparent, rgba(59, 130, 246, 0.3), transparent)",
-          }}
-        />
-        
-        <div 
-          ref={ring3Ref}
-          className="absolute inset-[-40px] rounded-full opacity-30 blur-[20px]"
-          style={{
-            background: "radial-gradient(ellipse at center, transparent 40%, rgba(251, 146, 60, 0.6) 50%, transparent 60%)",
-            transform: "rotateX(75deg)",
-          }}
-        />
-
-        {/* The Photon Sphere (Bright Inner Edge) */}
-        <div className="absolute inset-[25%] rounded-full bg-transparent border-[4px] border-white/20 blur-[10px] shadow-[0_0_80px_rgba(255,255,255,0.4)]" />
-        <div className="absolute inset-[25%] rounded-full bg-transparent border-[1px] border-white/40 blur-[1px]" />
-
-        {/* The Event Horizon (The Void) */}
-        <div className="event-horizon absolute inset-[25%] rounded-full bg-black shadow-[inset_0_0_100px_rgba(0,0,0,1),0_0_40px_rgba(0,0,0,1)] z-10 overflow-hidden">
-            {/* Inner Void Glow */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-black via-transparent to-white/5 opacity-50" />
-        </div>
-
-        {/* Distortion Glow */}
-        <div className="absolute inset-0 rounded-full bg-orange-500/5 blur-[150px] mix-blend-screen pointer-events-none" />
-        <div className="absolute inset-0 rounded-full bg-purple-500/5 blur-[120px] mix-blend-screen pointer-events-none" />
-      </div>
-
-      {/* Extreme Distortion Overlay */}
-      <div className="absolute inset-0 pointer-events-none mix-blend-overlay opacity-40">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_30%,_rgba(0,0,0,0.8)_100%)]" />
-      </div>
+      {/* Post-processing-like CSS overlays for extra mood */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_transparent_30%,_black_100%)] opacity-60" />
+      <div className="absolute inset-0 pointer-events-none backdrop-blur-[1px]" />
     </div>
   );
 }
