@@ -130,7 +130,6 @@ export function MilkyWay() {
   return (
     <div className="fixed inset-0 -z-10 bg-[#030014]">
       <Canvas camera={{ position: [0, 4, 8], fov: 60 }}>
-        <MouseGlow />
         <StarField />
         <Galaxy />
       </Canvas>
