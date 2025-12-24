@@ -110,11 +110,12 @@ function Galaxy() {
   });
 
   return (
-    <group ref={ref}>
+    <group ref={ref} scale={1.6}>
       <Points positions={particles.positions} colors={particles.colors} stride={3}>
         <PointMaterial
           ref={materialRef}
           transparent
+          opacity={0.6}
           vertexColors
           size={0.012}
           sizeAttenuation={true}
