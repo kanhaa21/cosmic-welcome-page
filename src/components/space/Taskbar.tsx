@@ -37,6 +37,10 @@ export function Taskbar() {
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
+    if (pathname === "/solar-system") {
+      setActiveSection("solar");
+      return;
+    }
     if (pathname !== "/") return;
 
     const ctx = gsap.context(() => {
