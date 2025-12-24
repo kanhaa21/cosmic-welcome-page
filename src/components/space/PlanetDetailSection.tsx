@@ -135,7 +135,7 @@ const planetData: PlanetData[] = [
 
 function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
   const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: false, amount: 0.1, margin: "200px 0px" });
+  const isInView = useInView(sectionRef, { once: false, amount: 0.01, margin: "600px 0px" });
 
   return (
     <section 
