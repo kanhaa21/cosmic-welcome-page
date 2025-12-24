@@ -1,130 +1,192 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const storyChapters = [
+const milestones = [
   {
+    year: "1957",
+    title: "Sputnik 1",
+    agency: "Soviet Union",
+    description: "The dawn of the space age. The first artificial satellite to orbit Earth, changing history forever.",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200",
+    color: "from-zinc-500/20"
+  },
+  {
+    year: "1961",
+    title: "Vostok 1",
+    agency: "Soviet Union",
+    description: "Yuri Gagarin becomes the first human to journey into outer space, orbiting the Earth once.",
+    image: "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&q=80&w=1200",
+    color: "from-blue-500/20"
+  },
+  {
+    year: "1969",
+    title: "Apollo 11",
     agency: "NASA",
-    title: "The Pioneer",
-    achievement: "Artemis & Moon Missions",
-    description: "From the historic Apollo steps to the ambitious Artemis program, NASA continues to push the boundaries of human presence in the solar system, returning to the Moon and beyond.",
-    year: "1958 - Present",
-    color: "from-blue-600/20",
-    image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=1000"
+    description: "One small step for man, one giant leap for mankind. Humans walk on the lunar surface for the first time.",
+    image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=1200",
+    color: "from-blue-600/20"
   },
   {
-    agency: "ISRO",
-    title: "The Rising Force",
-    achievement: "Chandrayaan-3",
-    description: "ISRO proved that precision and resourcefulness can touch the stars. With the successful landing at the lunar south pole, India joined an elite group of spacefaring nations.",
-    year: "1969 - Present",
-    color: "from-orange-600/20",
-    image: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&q=80&w=1000"
+    year: "1977",
+    title: "Voyager 1",
+    agency: "NASA",
+    description: "The farthest human-made object. A message in a bottle cast into the cosmic ocean, carrying the Golden Record.",
+    image: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&q=80&w=1200",
+    color: "from-purple-500/20"
   },
   {
+    year: "1990",
+    title: "Hubble Telescope",
+    agency: "NASA / ESA",
+    description: "Our eye on the universe. Capturing the birth of stars and the collision of galaxies billions of light-years away.",
+    image: "https://images.unsplash.com/photo-1446776879694-90d17c71283d?auto=format&fit=crop&q=80&w=1200",
+    color: "from-emerald-500/20"
+  },
+  {
+    year: "1998",
+    title: "The ISS",
+    agency: "International",
+    description: "A symbol of global unity. The largest modular space station in low Earth orbit, permanently inhabited since 2000.",
+    image: "https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&q=80&w=1200",
+    color: "from-blue-400/20"
+  },
+  {
+    year: "2012",
+    title: "Curiosity Rover",
+    agency: "NASA",
+    description: "A nuclear-powered chemist on wheels. Searching for signs of past life and habitability in the Martian dust.",
+    image: "https://images.unsplash.com/photo-1614728423169-3f65fd722b7e?auto=format&fit=crop&q=80&w=1200",
+    color: "from-orange-600/20"
+  },
+  {
+    year: "2015",
+    title: "Falcon 9 Landing",
     agency: "SpaceX",
-    title: "The Disruptor",
-    achievement: "Starship Era",
-    description: "Revolutionizing space travel with reusability, SpaceX is building the fleet that will one day make humanity multi-planetary. The path to Mars is being paved with fire and steel.",
-    year: "2002 - Present",
-    color: "from-zinc-600/20",
-    image: "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&q=80&w=1000"
+    description: "The era of reusability begins. SpaceX successfully lands an orbital-class rocket back on Earth.",
+    image: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&q=80&w=1200",
+    color: "from-zinc-700/20"
   },
   {
-    agency: "ESA",
-    title: "The Collaborator",
-    achievement: "James Webb Support",
-    description: "European excellence in science and technology. By powering the greatest eyes we've ever put in space, ESA helps us look back in time to the very first light of the universe.",
-    year: "1975 - Present",
-    color: "from-emerald-600/20",
-    image: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&q=80&w=1000"
+    year: "2021",
+    title: "James Webb",
+    agency: "NASA / ESA / CSA",
+    description: "The most powerful space telescope ever built, peering through cosmic dust to see the first stars in existence.",
+    image: "https://images.unsplash.com/photo-1464802686167-b939a67e06a1?auto=format&fit=crop&q=80&w=1200",
+    color: "from-amber-600/20"
+  },
+  {
+    year: "2023",
+    title: "Chandrayaan-3",
+    agency: "ISRO",
+    description: "India becomes the first nation to land near the lunar south pole, proving the power of scientific resourcefulness.",
+    image: "https://images.unsplash.com/photo-1444703686981-a3abb997b724?auto=format&fit=crop&q=80&w=1200",
+    color: "from-orange-500/20"
   }
 ];
 
 export function StoryTeller() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const chapters = gsap.utils.toArray(".story-chapter");
-    
-    gsap.to(chapters, {
-      xPercent: -100 * (chapters.length - 1),
-      ease: "none",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        pin: true,
-        scrub: 1,
-        snap: 1 / (chapters.length - 1),
-        end: () => "+=" + containerRef.current?.offsetWidth,
-      }
-    });
+    timerRef.current = setInterval(() => {
+      setIndex((prev) => (prev + 1) % milestones.length);
+    }, 6000);
 
     return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
+      if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
 
   return (
-    <section ref={containerRef} className="relative overflow-hidden bg-black py-20">
-      <div className="absolute top-20 left-20 z-20">
-        <h2 className="text-zinc-500 text-xs font-black uppercase tracking-[0.8em] mb-4">Chronicles of Progress</h2>
-        <div className="text-4xl font-bold text-white tracking-tighter">Cosmic <span className="text-zinc-700">Milestones</span></div>
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden py-20 bg-black">
+      <div className="absolute top-12 left-1/2 -translate-x-1/2 z-20 text-center">
+        <h2 className="text-purple-500 text-xs font-black uppercase tracking-[1em] mb-4">Cosmic Milestones</h2>
+        <div className="text-3xl md:text-5xl font-black text-white tracking-tighter">Traversing <span className="text-zinc-700">Space-Time</span></div>
       </div>
 
-      <div className="flex w-[400%] h-[80vh] items-center">
-        {storyChapters.map((chapter, i) => (
-          <div key={chapter.agency} className="story-chapter w-screen h-full flex items-center justify-center px-20">
-            <div className={`relative w-full max-w-6xl aspect-[21/9] rounded-[3rem] overflow-hidden glass-card border-white/5 bg-gradient-to-br ${chapter.color} to-transparent group`}>
-              <div className="absolute inset-0">
-                <img 
-                  src={chapter.image} 
-                  alt={chapter.title}
-                  className="w-full h-full object-cover opacity-30 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
-              </div>
+      <div className="relative w-full max-w-7xl px-4 h-[600px] flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, x: 100, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: -100, scale: 0.95 }}
+            transition={{ duration: 0.8, ease: "anticipate" }}
+            className={`relative w-full h-full rounded-[3.5rem] overflow-hidden glass-card border-white/5 bg-gradient-to-br ${milestones[index].color} to-transparent group`}
+          >
+            <div className="absolute inset-0">
+              <img 
+                src={milestones[index].image} 
+                alt={milestones[index].title}
+                className="w-full h-full object-cover opacity-40 transition-transform duration-[6000ms] ease-linear scale-100 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
+            </div>
+            
+            <div className="relative h-full flex flex-col justify-center px-8 md:px-20 max-w-3xl">
+              <motion.span 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-purple-500 font-bold tracking-[0.5em] uppercase text-xs mb-6"
+              >
+                {milestones[index].year} — {milestones[index].agency}
+              </motion.span>
               
-              <div className="relative h-full flex flex-col justify-center px-20 max-w-2xl">
-                <span className="text-purple-500 font-bold tracking-[0.3em] uppercase text-xs mb-4">{chapter.agency} — {chapter.year}</span>
-                <h3 className="text-6xl font-black text-white mb-2 tracking-tighter">{chapter.title}</h3>
-                <h4 className="text-2xl font-bold text-zinc-400 mb-8 tracking-tight">{chapter.achievement}</h4>
-                <p className="text-zinc-300 text-xl leading-relaxed font-light italic">
-                  "{chapter.description}"
-                </p>
-                
-                <div className="mt-12 flex items-center gap-6">
-                  <div className="w-12 h-px bg-white/20" />
-                  <span className="text-[10px] text-zinc-500 uppercase tracking-[0.5em] font-bold">Chapter 0{i+1}</span>
+              <motion.h3 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter"
+              >
+                {milestones[index].title}
+              </motion.h3>
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="text-zinc-300 text-lg md:text-2xl leading-relaxed font-light italic max-w-xl"
+              >
+                "{milestones[index].description}"
+              </motion.p>
+              
+              <div className="mt-12 flex items-center gap-6">
+                <div className="flex gap-2">
+                  {milestones.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setIndex(i)}
+                      className={`h-1.5 rounded-full transition-all duration-500 ${i === index ? 'w-12 bg-purple-500' : 'w-3 bg-white/10'}`}
+                    />
+                  ))}
                 </div>
-              </div>
-
-              {/* Decorative side element */}
-              <div className="absolute top-0 right-0 h-full w-1/3 flex items-center justify-center pointer-events-none">
-                <div className="text-[20rem] font-black text-white/[0.02] rotate-90 select-none">
-                  0{i+1}
-                </div>
+                <span className="text-[10px] text-zinc-500 uppercase tracking-[0.5em] font-bold">
+                  Milestone {index + 1}/10
+                </span>
               </div>
             </div>
-          </div>
-        ))}
+
+            {/* Background numeral */}
+            <div className="absolute -bottom-10 -right-10 text-[30rem] font-black text-white/[0.03] select-none pointer-events-none">
+              {index + 1}
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
-      
-      {/* Scroll indicator for the horizontal section */}
-      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-        <div className="w-40 h-[2px] bg-white/5 relative">
-          <motion.div 
-            className="absolute h-full bg-purple-500"
-            initial={{ width: "0%" }}
-            whileInView={{ width: "100%" }}
-            transition={{ duration: 2 }}
-          />
-        </div>
-        <span className="text-[8px] text-zinc-600 uppercase tracking-[1em] font-bold">Slide to Traverse Time</span>
+
+      {/* Progress Bar */}
+      <div className="absolute bottom-8 left-0 w-full h-1 bg-white/5">
+        <motion.div
+          key={index}
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 6, ease: "linear" }}
+          className="h-full bg-purple-500/50"
+        />
       </div>
     </section>
   );
