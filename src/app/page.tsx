@@ -91,7 +91,7 @@ export default function Home() {
         <CustomCursor />
         <Taskbar />
         <MilkyWay />
-        <GSAPStars speed={isBoosted ? 80 : (isNexusActive ? 15 : 1.5)} />
+        <GSAPStars speed={1.5} />
         
         <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/20 via-transparent to-[#030014] pointer-events-none" />
 
