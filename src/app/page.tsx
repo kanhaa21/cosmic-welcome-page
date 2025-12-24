@@ -40,16 +40,20 @@ export default function Home() {
     window.addEventListener("hashchange", handleHashChange);
     handleHashChange();
 
-    const initAnimations = (q: gsap.utils.SelectorFunc, scroller: Element) => {
-      // Use a more robust selection method and filter out any non-elements
+    const initAnimations = (q: gsap.utils.SelectorFunc) => {
       const rawTitles = q(".reveal-text");
+      if (!rawTitles) return;
+
       const titles = (gsap.utils.toArray(rawTitles) as HTMLElement[]).filter(el => 
-        el && el instanceof HTMLElement && document.contains(el)
+        el && 
+        el instanceof HTMLElement && 
+        document.body.contains(el)
       );
 
       if (titles.length === 0) return;
       
       titles.forEach((title) => {
+        if (!title) return;
         gsap.fromTo(
           title,
           { opacity: 0, y: 30, filter: "blur(10px)" },
@@ -61,7 +65,7 @@ export default function Home() {
             ease: "expo.out",
             scrollTrigger: {
               trigger: title,
-              scroller: scroller,
+              scroller: ".smooth-scroll",
               start: "top 95%",
               toggleActions: "play none none reverse",
               invalidateOnRefresh: true,
@@ -74,23 +78,21 @@ export default function Home() {
 
     let ctx: gsap.Context;
     const timer = setTimeout(() => {
-      const scroller = document.querySelector(".smooth-scroll");
-      if (!containerRef.current || !scroller) return;
+      if (!containerRef.current) return;
       
       ctx = gsap.context((self) => {
         if (self.selector) {
-          initAnimations(self.selector, scroller);
+          initAnimations(self.selector);
         }
       }, containerRef);
       
       ScrollTrigger.refresh();
       window.dispatchEvent(new Event('resize'));
-    }, 1000);
+    }, 1500);
 
     return () => {
       clearTimeout(timer);
       if (ctx) ctx.revert();
-      ScrollTrigger.getAll().forEach(t => t.kill());
     };
   }, []);
 
