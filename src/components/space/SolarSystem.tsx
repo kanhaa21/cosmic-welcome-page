@@ -99,12 +99,12 @@ export function SolarSystem() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex flex-col items-center justify-center z-10 bg-[#020108] overflow-hidden">
+    <section ref={containerRef} className="relative min-h-screen flex flex-col items-center z-10 bg-[#020108] overflow-hidden pt-32 md:pt-40">
       {/* Visibility Enhancer */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none opacity-80" />
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-purple-900/5 blur-[180px] rounded-full pointer-events-none" />
       
-      <div className="absolute top-24 text-center w-full reveal-text z-20 px-4">
+      <div className="relative text-center w-full reveal-text z-20 px-4 mb-20 md:mb-32">
         <motion.span 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -130,8 +130,8 @@ export function SolarSystem() {
       </div>
 
       {/* Background Solar System Visualization */}
-      <div className="absolute inset-0 flex items-center justify-center z-0">
-        <div className="relative w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] lg:w-[1000px] lg:h-[1000px] flex items-center justify-center scale-[0.4] sm:scale-75 lg:scale-100">
+      <div className="relative flex items-center justify-center z-0 w-full flex-1 min-h-[500px]">
+        <div className="relative w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] lg:w-[1000px] lg:h-[1000px] flex items-center justify-center scale-[0.35] sm:scale-60 lg:scale-90 xl:scale-100">
           {/* Sun */}
           <div className="absolute w-32 h-32 bg-yellow-400 rounded-full blur-[1px] shadow-[0_0_120px_#fbbf24] z-20 flex items-center justify-center">
             <div className="absolute inset-0 bg-orange-500 rounded-full animate-pulse opacity-40" />
