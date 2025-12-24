@@ -101,13 +101,13 @@ export function StoryTeller() {
   }, []);
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden py-20 bg-black">
-      <div className="absolute top-12 left-1/2 -translate-x-1/2 z-20 text-center">
-        <h2 className="text-purple-500 text-xs font-black uppercase tracking-[1em] mb-4">Cosmic Milestones</h2>
-        <div className="text-3xl md:text-5xl font-black text-white tracking-tighter">Traversing <span className="text-zinc-700">Space-Time</span></div>
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden py-12 bg-black">
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 z-20 text-center">
+        <h2 className="text-purple-500 text-xs font-black uppercase tracking-[1em] mb-2">Cosmic Milestones</h2>
+        <div className="text-2xl md:text-4xl font-black text-white tracking-tighter">Traversing <span className="text-zinc-700">Space-Time</span></div>
       </div>
 
-      <div className="relative w-full max-w-7xl px-4 h-[600px] flex items-center justify-center">
+      <div className="relative w-full max-w-6xl px-4 h-[450px] flex items-center justify-center">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
