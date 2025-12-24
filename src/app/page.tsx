@@ -78,32 +78,63 @@ export default function Home() {
         <CustomCursor />
         <Taskbar />
         <MilkyWay />
-        <GSAPStars />
+        <GSAPStars speed={isNexusActive ? 40 : 1.5} />
         
         <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/20 via-transparent to-[#030014] pointer-events-none" />
 
         {/* Hero Section */}
         <section id="hero" ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden z-10" data-scroll-section>
-          <motion.div
-            style={{ opacity, scale }}
-            className="text-center w-full max-w-5xl mx-auto"
-          >
-            <div className="relative inline-block w-full">
-              <div className="absolute -inset-4 bg-purple-500/20 blur-3xl rounded-full" />
-              <WelcomeText />
-            </div>
-            <p className="mt-8 text-zinc-300 text-base sm:text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-light tracking-wide drop-shadow-2xl reveal-text px-4 font-[family-name:var(--font-space-grotesk)]">
-              Venture into the cosmic abyss where galaxies dance and stars tell stories of eternity. 
-              The universe is not just above us, it is within us.
-            </p>
-          </motion.div>
+          <AnimatePresence mode="wait">
+            {!isNexusActive ? (
+              <motion.div
+                key="hero-content"
+                initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 1.1, filter: "blur(40px)" }}
+                transition={{ duration: 1, ease: "circOut" }}
+                style={{ opacity, scale }}
+                className="text-center w-full max-w-5xl mx-auto"
+              >
+                <div className="relative inline-block w-full">
+                  <div className="absolute -inset-4 bg-purple-500/20 blur-3xl rounded-full" />
+                  <WelcomeText />
+                </div>
+                <p className="mt-8 text-zinc-300 text-base sm:text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-light tracking-wide drop-shadow-2xl reveal-text px-4 font-[family-name:var(--font-space-grotesk)]">
+                  Venture into the cosmic abyss where galaxies dance and stars tell stories of eternity. 
+                  The universe is not just above us, it is within us.
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="nexus-content"
+                initial={{ opacity: 0, scale: 0.5, filter: "blur(100px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 1.5, filter: "blur(100px)" }}
+                transition={{ duration: 1.5, ease: "expoOut" }}
+                className="relative"
+              >
+                <h1 className="text-[15vw] font-black text-white tracking-[0.5em] uppercase font-[family-name:var(--font-orbitron)] bg-gradient-to-b from-white via-purple-300 to-zinc-500 bg-clip-text text-transparent drop-shadow-[0_0_80px_rgba(168,85,247,0.5)]">
+                  Nexus
+                </h1>
+                <motion.div
+                  initial={{ width: 0, opacity: 0 }}
+                  animate={{ width: "80%", opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 1 }}
+                  className="h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent mx-auto mt-4"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
           
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
-          >
+          <AnimatePresence>
+            {!isNexusActive && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 1, duration: 1 }}
+                className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
+              >
             <span className="text-zinc-500 text-[8px] md:text-xs uppercase tracking-[0.4em] font-bold">Initiate Descent</span>
             <div className="w-px h-12 md:h-16 bg-gradient-to-b from-purple-500 to-transparent relative">
               <motion.div 
