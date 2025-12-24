@@ -56,10 +56,11 @@ const planets = [
 
 export function StoryTeller() {
   const [hoveredPlanet, setHoveredPlanet] = useState<string | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
   const controls = useAnimationControls();
 
   // Duplicate planets for seamless loop
-  const displayPlanets = [...planets, ...planets];
+  const displayPlanets = [...planets, ...planets, ...planets]; // Triple for smoother long-term loop
 
   return (
     <section className="relative min-h-[70vh] flex flex-col items-center justify-center overflow-hidden py-20 bg-black/20">
@@ -85,17 +86,16 @@ export function StoryTeller() {
         <motion.div 
           className="flex gap-8 px-4"
           animate={{
-            x: ["0%", "-50%"],
+            x: isPaused ? undefined : ["0%", "-33.333%"],
           }}
           transition={{
-            duration: 40,
+            duration: 60,
             ease: "linear",
             repeat: Infinity,
           }}
           style={{ width: "fit-content" }}
-          onHoverStart={() => {
-            // Optional: slow down or pause on hover
-          }}
+          onHoverStart={() => setIsPaused(true)}
+          onHoverEnd={() => setIsPaused(false)}
         >
           {displayPlanets.map((planet, i) => (
             <motion.div
