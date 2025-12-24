@@ -4,42 +4,41 @@ import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 
 export function CustomCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null);
   const sparklesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const cursor = cursorRef.current;
     const container = sparklesContainerRef.current;
-    if (!cursor || !container) return;
+    if (!container) return;
 
     const onMouseMove = (e: MouseEvent) => {
-      gsap.to(cursor, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.1,
-        ease: "power2.out",
-      });
-
       // Create sparkle
       createSparkle(e.clientX, e.clientY);
     };
 
     const createSparkle = (x: number, y: number) => {
       const sparkle = document.createElement("div");
-      sparkle.className = "absolute pointer-events-none w-1 h-1 rounded-full bg-amber-400";
+      
+      // Randomize between different purplish/star colors
+      const colors = ["bg-purple-400", "bg-indigo-400", "bg-fuchsia-400", "bg-white"];
+      const colorClass = colors[Math.floor(Math.random() * colors.length)];
+      
+      const size = Math.random() > 0.8 ? "w-1.5 h-1.5" : "w-1 h-1";
+      sparkle.className = `absolute pointer-events-none ${size} rounded-full ${colorClass} blur-[0.5px]`;
       sparkle.style.left = `${x}px`;
       sparkle.style.top = `${y}px`;
       container.appendChild(sparkle);
 
-      const destinationX = x + (Math.random() - 0.5) * 40;
-      const destinationY = y + (Math.random() - 0.5) * 40;
+      const angle = Math.random() * Math.PI * 2;
+      const distance = Math.random() * 50;
+      const destinationX = Math.cos(angle) * distance;
+      const destinationY = Math.sin(angle) * distance;
 
       gsap.to(sparkle, {
-        x: destinationX - x,
-        y: destinationY - y,
+        x: destinationX,
+        y: destinationY,
         opacity: 0,
         scale: 0,
-        duration: 0.6 + Math.random() * 0.4,
+        duration: 0.8 + Math.random() * 0.6,
         ease: "power2.out",
         onComplete: () => {
           sparkle.remove();
@@ -55,12 +54,6 @@ export function CustomCursor() {
   }, []);
 
   return (
-    <>
-      <div
-        ref={cursorRef}
-        className="fixed top-0 left-0 w-4 h-4 -ml-2 -mt-2 bg-white rounded-full mix-blend-difference pointer-events-none z-[9999]"
-      />
-      <div ref={sparklesContainerRef} className="fixed inset-0 pointer-events-none z-[9998]" />
-    </>
+    <div ref={sparklesContainerRef} className="fixed inset-0 pointer-events-none z-[9998]" />
   );
 }
