@@ -159,49 +159,50 @@ export function SolarSystem() {
 
             {/* Planets and Orbits */}
             {planets.map((planet, i) => (
-              <div key={planet.name} className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                {/* Orbit Ring */}
-                <div 
-                  className={`absolute border rounded-full transition-all duration-700 ${
-                    selectedPlanet === i ? "border-purple-500/40 border-2" : "border-white/5"
-                  }`}
-                  style={{
-                    width: planet.distance * 2,
-                    height: planet.distance * 2,
-                  }}
-                />
-                
-                {/* Planet Container (Rotated by GSAP) */}
-                <div 
-                  className={`planet-${i} absolute`}
-                  style={{
-                    width: planet.distance * 2,
-                    height: planet.distance * 2,
-                  }}
-                >
-                  {/* Actual Planet */}
+                <div key={planet.name} className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  {/* Orbit Ring */}
                   <div 
-                    className="absolute flex flex-col items-center group cursor-pointer pointer-events-auto"
+                    className={`absolute border rounded-full transition-all duration-700 ${
+                      selectedPlanet === i ? "border-purple-500/40 border-2" : "border-white/5"
+                    } will-change-[border-color,border-width]`}
                     style={{
-                      top: "50%",
-                      left: "100%",
-                      transform: "translate(-50%, -50%)",
+                      width: planet.distance * 2,
+                      height: planet.distance * 2,
                     }}
-                    onClick={() => setSelectedPlanet(i)}
+                  />
+                  
+                  {/* Planet Container (Rotated by GSAP) */}
+                  <div 
+                    className={`planet-${i} absolute will-change-transform`}
+                    style={{
+                      width: planet.distance * 2,
+                      height: planet.distance * 2,
+                    }}
                   >
-                    <motion.div 
-                      animate={{ 
-                        scale: selectedPlanet === i ? 2.8 : 1,
-                        boxShadow: selectedPlanet === i ? `0 0 40px ${planet.color}` : `0 0 20px ${planet.color}33`
-                      }}
-                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                      className="rounded-full shadow-lg transition-colors z-30"
+                    {/* Actual Planet */}
+                    <div 
+                      className="absolute flex flex-col items-center group cursor-pointer pointer-events-auto"
                       style={{
-                        width: planet.size,
-                        height: planet.size,
-                        backgroundColor: planet.color,
+                        top: "50%",
+                        left: "100%",
+                        transform: "translate(-50%, -50%)",
                       }}
-                    />
+                      onClick={() => setSelectedPlanet(i)}
+                    >
+                      <motion.div 
+                        animate={{ 
+                          scale: selectedPlanet === i ? 2.8 : 1,
+                          boxShadow: selectedPlanet === i ? `0 0 40px ${planet.color}` : `0 0 20px ${planet.color}33`
+                        }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        style={{ willChange: "transform, box-shadow" }}
+                        className="rounded-full shadow-lg transition-colors z-30"
+                        style={{
+                          width: planet.size,
+                          height: planet.size,
+                          backgroundColor: planet.color,
+                        }}
+                      />
                   </div>
                 </div>
               </div>
