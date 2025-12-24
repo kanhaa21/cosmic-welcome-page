@@ -250,11 +250,6 @@ export default function Home() {
           <StoryTeller />
         </div>
 
-        {/* Solar System Section */}
-        <div id="solar" className="min-h-screen flex items-center">
-          <SolarSystem />
-        </div>
-
         {/* Infinite Wonders */}
         <section id="explore" className="relative min-h-screen flex items-center py-24 px-4 md:px-20 z-10 bg-black/40 backdrop-blur-sm border-y border-white/5">
           <div className="max-w-6xl mx-auto w-full">
