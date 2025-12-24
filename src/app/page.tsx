@@ -34,17 +34,17 @@ export default function Home() {
       titles.forEach((title) => {
         gsap.fromTo(
           title,
-          { opacity: 0, y: 50, skewY: 7 },
+          { opacity: 0, y: 30, filter: "blur(10px)" },
           {
             opacity: 1,
             y: 0,
-            skewY: 0,
-            duration: 1.5,
-            ease: "power4.out",
+            filter: "blur(0px)",
+            duration: 2,
+            ease: "expo.out",
             scrollTrigger: {
               trigger: title,
               scroller: ".smooth-scroll",
-              start: "top 90%",
+              start: "top 95%",
               toggleActions: "play none none reverse",
               invalidateOnRefresh: true,
             },
