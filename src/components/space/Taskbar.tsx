@@ -30,55 +30,63 @@ export function Taskbar() {
 
   const [sectionProgress, setSectionProgress] = useState(0);
 
-  useEffect(() => {
-    // Only run on home page
-    if (window.location.pathname !== "/") return;
+    useEffect(() => {
+      // Only run on home page
+      if (window.location.pathname !== "/") return;
+  
+      const ctx = gsap.context(() => {
+        // Ensure scroller exists
+        const scroller = document.querySelector(".smooth-scroll");
+        if (!scroller) return;
 
-    const ctx = gsap.context(() => {
-      // Use a cleaner ScrollTrigger approach for active state
-      sections.forEach((section) => {
-        if (section.id === "nexus") return;
-        
-        const element = document.querySelector(`#${section.id}`);
-        if (!element) return;
+        // Use a cleaner ScrollTrigger approach for active state
+        sections.forEach((section) => {
+          if (section.id === "nexus") return;
+          
+          const element = document.querySelector(`#${section.id}`);
+          if (!element && section.id !== "hero") return;
+  
+          // Check if element is valid before creating ScrollTrigger
+          const triggerElement = element || document.querySelector("#hero");
+          if (!triggerElement) return;
 
-        ScrollTrigger.create({
-          trigger: element,
-          scroller: ".smooth-scroll",
-          start: "top 20%",
-          end: "bottom 20%",
-          onUpdate: (self) => {
-            if (self.isActive) {
-              setActiveSection(section.id);
-              setSectionProgress(self.progress);
-            }
-          },
-          onToggle: (self) => {
-            if (self.isActive) setActiveSection(section.id);
-          },
-          onEnter: () => setActiveSection(section.id),
-          onEnterBack: () => setActiveSection(section.id),
+          ScrollTrigger.create({
+            trigger: triggerElement,
+            scroller: ".smooth-scroll",
+            start: "top 20%",
+            end: "bottom 20%",
+            onUpdate: (self) => {
+              if (self.isActive) {
+                setActiveSection(section.id);
+                setSectionProgress(self.progress);
+              }
+            },
+            onToggle: (self) => {
+              if (self.isActive) setActiveSection(section.id);
+            },
+            onEnter: () => setActiveSection(section.id),
+            onEnterBack: () => setActiveSection(section.id),
+          });
         });
+
+        // Special case for top of page
+        const heroElement = document.querySelector("#hero");
+        if (heroElement) {
+          ScrollTrigger.create({
+            trigger: heroElement,
+            scroller: ".smooth-scroll",
+            start: "top top",
+            end: "bottom 50%",
+            onToggle: (self) => {
+              if (self.isActive) setActiveSection("hero");
+            },
+            onEnterBack: () => setActiveSection("hero"),
+          });
+        }
       });
-
-      // Special case for top of page
-      const heroElement = document.querySelector("#hero");
-      if (heroElement) {
-        ScrollTrigger.create({
-          trigger: heroElement,
-          scroller: ".smooth-scroll",
-          start: "top top",
-          end: "bottom 50%",
-          onToggle: (self) => {
-            if (self.isActive) setActiveSection("hero");
-          },
-          onEnterBack: () => setActiveSection("hero"),
-        });
-      }
-    });
-
-    return () => ctx.revert();
-  }, [scroll]);
+  
+      return () => ctx.revert();
+    }, [scroll]);
 
   const handleScroll = (id: string) => {
     if (scroll) {
