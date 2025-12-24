@@ -63,12 +63,12 @@ export default function BlackHolePage() {
           <span className="text-purple-500 font-black uppercase tracking-[0.8em] text-[10px] md:text-xs mb-6 block">
             Celestial Observation Active
           </span>
-          <h1 ref={titleRef} className="text-6xl md:text-[10rem] font-black text-white tracking-tighter mb-8 leading-none bg-gradient-to-b from-white via-purple-100 to-purple-500 bg-clip-text text-transparent drop-shadow-[0_0_80px_rgba(147,51,234,0.5)]">
-            MILKY WAY
+          <h1 ref={titleRef} className="text-6xl md:text-[10rem] font-black text-white tracking-tighter mb-8 leading-none bg-gradient-to-b from-white via-orange-100 to-red-500 bg-clip-text text-transparent drop-shadow-[0_0_80px_rgba(239,68,68,0.5)]">
+            THE VOID
           </h1>
           <p className="text-zinc-400 text-lg md:text-2xl font-light leading-relaxed mb-12 max-w-2xl mx-auto backdrop-blur-sm bg-black/10 rounded-xl p-4">
-            A breathtaking revolving view of our home galaxy. 
-            Journey through billions of stars, nebulae, and cosmic dust in a mesmerizing dance of light and gravity.
+            A celestial anomaly is consuming the Milky Way. 
+            Witness the terrifying beauty of the Great Void as it engulfs billions of stars in a fiery, distorted embrace.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
