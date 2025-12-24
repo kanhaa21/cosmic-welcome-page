@@ -108,7 +108,7 @@ export function Taskbar() {
           <Link
             key={agency.name}
             href={agency.path}
-            className="text-zinc-500 text-[11px] font-bold uppercase tracking-[0.3em] hover:text-purple-400 transition-all relative group whitespace-nowrap"
+            className="text-zinc-500 text-[13px] font-black uppercase tracking-[0.3em] hover:text-purple-400 transition-all relative group whitespace-nowrap"
           >
             {agency.name}
           </Link>
