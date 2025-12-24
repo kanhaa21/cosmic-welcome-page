@@ -601,7 +601,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </footer>
 
         </div>
-      </div>
-    </SmoothScroll>
+      </SmoothScroll>
+    </div>
   );
 }
