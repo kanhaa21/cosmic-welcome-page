@@ -41,12 +41,15 @@ export default function Home() {
     handleHashChange();
 
     const initAnimations = (q: gsap.utils.SelectorFunc) => {
-      const titles = gsap.utils.toArray(q(".reveal-text")) as HTMLElement[];
+      // Use a more robust selection method and filter out any non-elements
+      const rawTitles = q(".reveal-text");
+      const titles = (gsap.utils.toArray(rawTitles) as HTMLElement[]).filter(el => 
+        el && el instanceof HTMLElement && document.contains(el)
+      );
+
       if (titles.length === 0) return;
       
       titles.forEach((title) => {
-        if (!title) return;
-        
         gsap.fromTo(
           title,
           { opacity: 0, y: 30, filter: "blur(10px)" },
