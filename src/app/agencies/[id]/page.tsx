@@ -549,7 +549,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Operational Infrastructure */}
-          <section id="infrastructure" className="mb-40" data-scroll-section>
+          <section id="infrastructure" className="mb-40">
              <div className="flex items-center gap-6 mb-16">
                <h2 className="text-white text-3xl font-black uppercase tracking-tighter">Global Infrastructure</h2>
                <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
