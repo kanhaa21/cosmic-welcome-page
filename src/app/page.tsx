@@ -11,6 +11,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
+import { useSmoothScroll } from "@/components/space/SmoothScroll";
+
 const GSAPStars = dynamic(() => import("@/components/space/GSAPStars").then(mod => mod.GSAPStars), { ssr: false });
 const StoryTeller = dynamic(() => import("@/components/space/StoryTeller").then(mod => mod.StoryTeller), { ssr: false });
 const SolarSystem = dynamic(() => import("@/components/space/SolarSystem").then(mod => mod.SolarSystem), { ssr: false });
@@ -22,6 +24,10 @@ export default function Home() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
   const [isNexusActive, setIsNexusActive] = useState(false);
+  const { scroll: locoScroll } = useSmoothScroll();
+  const lastScrollTime = useRef(0);
+  const currentSectionIndex = useRef(0);
+  const sectionIds = ["hero", "earth", "story", "solar", "explore", "footer"];
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -31,6 +37,33 @@ export default function Home() {
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
   const starSpeed = useTransform(scrollYProgress, [0, 1], [1.5, 10]);
+
+  useEffect(() => {
+    if (!locoScroll) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      const now = Date.now();
+      if (now - lastScrollTime.current < 1500) return;
+      if (Math.abs(e.deltaY) < 30) return; // Threshold
+
+      const direction = e.deltaY > 0 ? 1 : -1;
+      const nextIndex = Math.max(0, Math.min(sectionIds.length - 1, currentSectionIndex.current + direction));
+      
+      if (nextIndex !== currentSectionIndex.current) {
+        lastScrollTime.current = now;
+        currentSectionIndex.current = nextIndex;
+        
+        const target = sectionIds[nextIndex] === "footer" ? "footer" : `#${sectionIds[nextIndex]}`;
+        locoScroll.scrollTo(target, {
+          duration: 1200,
+          easing: [0.22, 1, 0.36, 1]
+        });
+      }
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => window.removeEventListener("wheel", handleWheel);
+  }, [locoScroll]);
 
   useEffect(() => {
     const handleHashChange = () => {
