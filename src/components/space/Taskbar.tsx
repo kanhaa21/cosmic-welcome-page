@@ -98,16 +98,14 @@ export function Taskbar() {
       {/* Home Navigation */}
         <div className="flex items-center gap-2 md:gap-6 relative z-[2]">
             {sections.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => {
-                    if (section.id === "nexus") {
-                      window.location.hash = "nexus";
-                    } else {
-                      if (window.location.hash === "#nexus") window.location.hash = "";
-                      handleScroll(section.id);
-                    }
-                  }}
+                  <button
+                    key={section.id}
+                    onClick={() => {
+                      if (section.id !== "nexus") {
+                        if (window.location.hash === "#nexus") window.location.hash = "";
+                        handleScroll(section.id);
+                      }
+                    }}
                   className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
                     activeSection === section.id 
                       ? (section.name === "Nexus" ? "bg-gradient-to-r from-purple-400 via-white to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" : "text-white")
