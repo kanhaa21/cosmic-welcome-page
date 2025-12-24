@@ -254,14 +254,12 @@ export default function Home() {
                   color: "border-emerald-500/30",
                   link: null
                 }
-              ].map((item, i) => {
-                const CardContent = (
-                  <div
-                    className={`group relative p-8 rounded-[2rem] glass-card ${item.color} transition-all duration-500 hover:bg-white/[0.06] reveal-text h-full`}
-                    data-scroll
-                    data-scroll-speed={i * 0.1 + 0.3}
-                  >
-                    <div className="text-3xl mb-5 opacity-50 group-hover:opacity-100 transition-opacity">{item.icon}</div>
+                ].map((item, i) => {
+                  const CardContent = (
+                    <div
+                      className={`group relative p-8 rounded-[2rem] glass-card ${item.color} transition-all duration-500 hover:bg-white/[0.06] reveal-text h-full`}
+                    >
+                      <div className="text-3xl mb-5 opacity-50 group-hover:opacity-100 transition-opacity">{item.icon}</div>
                     <h3 className="text-xl font-bold text-white mb-4 group-hover:text-purple-400 transition-colors">{item.title}</h3>
                     <p className="text-zinc-400 text-base leading-relaxed font-medium group-hover:text-zinc-200 transition-colors">
                       {item.desc}
