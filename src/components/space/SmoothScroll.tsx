@@ -20,6 +20,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let scrollInstance: any = null;
+    let resizeObserver: ResizeObserver | null = null;
 
     (async () => {
       try {
@@ -33,13 +34,13 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
           multiplier: 1,
           class: "is-reveal",
           getDirection: true,
-          reloadOnContextChange: true
+          reloadOnContextChange: true,
+          touchMultiplier: 2,
+          lerp: 0.1,
+          scrollFromAnywhere: true,
         });
 
         setLocoScroll(scrollInstance);
-
-        // Each time Locomotive Scroll updates, tell ScrollTrigger to update too (sync positioning)
-        scrollInstance.on("scroll", ScrollTrigger.update);
 
         // Tell ScrollTrigger to use these proxy methods for the ".smooth-scroll" element
         ScrollTrigger.scrollerProxy(containerRef.current, {
@@ -62,18 +63,34 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
           pinType: containerRef.current?.style.transform ? "transform" : "fixed",
         });
 
-        // Each time the window updates, we should refresh ScrollTrigger and then update LocomotiveScroll. 
+        // Sync ScrollTrigger with Locomotive Scroll
+        scrollInstance.on("scroll", ScrollTrigger.update);
+
+        // Resize Observer to handle dynamic content height changes accurately
+        resizeObserver = new ResizeObserver(() => {
+          scrollInstance.update();
+          ScrollTrigger.refresh();
+        });
+        resizeObserver.observe(containerRef.current);
+
+        // Refresh on all ScrollTrigger refreshes
         ScrollTrigger.addEventListener("refresh", () => scrollInstance?.update());
 
-        // After everything is set up, refresh() ScrollTrigger and update LocomotiveScroll
+        // Final refresh
         ScrollTrigger.refresh();
+        
       } catch (error) {
         console.error("Locomotive Scroll initialization failed:", error);
       }
     })();
 
     return () => {
-      if (scrollInstance) scrollInstance.destroy();
+      if (scrollInstance) {
+        scrollInstance.destroy();
+      }
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
     };
   }, []);
 
