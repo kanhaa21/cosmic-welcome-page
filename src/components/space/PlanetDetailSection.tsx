@@ -26,11 +26,10 @@ const planetData: PlanetData[] = [
   {
     name: "Mercury",
     tagline: "The Swift Planet",
-    description: "The smallest and innermost planet in the Solar System. It orbits the Sun every 88 Earth days, the quickest of all the Sun's planets. Mercury is a rocky world, with a surface scarred by craters from impacts by comets and asteroids.",
+    description: "The smallest and innermost planet in the Solar System. It orbits the Sun every 88 Earth days, the quickest of all the Sun's planets.",
     details: [
       { label: "Diameter", value: "4,879 km" },
-      { label: "Distance from Sun", value: "57.9M km" },
-      { label: "Day Length", value: "59 Earth days" },
+      { label: "Distance", value: "57.9M km" },
       { label: "Gravity", value: "3.7 m/s²" }
     ],
     color: "#9ca3af",
@@ -40,11 +39,10 @@ const planetData: PlanetData[] = [
   {
     name: "Venus",
     tagline: "The Veiled Planet",
-    description: "Second planet from the Sun and Earth's closest planetary neighbor. It is one of the four inner, terrestrial planets, and it's often called Earth's twin because it's similar in size and density. These are not identical twins, however – there are radical differences between the two worlds.",
+    description: "Second planet from the Sun and Earth's closest planetary neighbor. Often called Earth's twin because it's similar in size and density.",
     details: [
       { label: "Diameter", value: "12,104 km" },
-      { label: "Distance from Sun", value: "108.2M km" },
-      { label: "Day Length", value: "243 Earth days" },
+      { label: "Distance", value: "108.2M km" },
       { label: "Gravity", value: "8.87 m/s²" }
     ],
     color: "#fbbf24",
@@ -54,11 +52,10 @@ const planetData: PlanetData[] = [
   {
     name: "Earth",
     tagline: "Our Blue Marble",
-    description: "The third planet from the Sun and the only astronomical object known to harbor life. While large amounts of water can be found throughout the Solar System, only Earth sustains liquid surface water. About 71% of Earth's surface is made up of the ocean.",
+    description: "The third planet from the Sun and the only astronomical object known to harbor life. About 71% of Earth's surface is made up of the ocean.",
     details: [
       { label: "Diameter", value: "12,742 km" },
-      { label: "Distance from Sun", value: "149.6M km" },
-      { label: "Day Length", value: "24 hours" },
+      { label: "Distance", value: "149.6M km" },
       { label: "Gravity", value: "9.8 m/s²" }
     ],
     color: "#3b82f6",
@@ -69,11 +66,10 @@ const planetData: PlanetData[] = [
   {
     name: "Mars",
     tagline: "The Red Planet",
-    description: "Mars is a dusty, cold, desert world with a very thin atmosphere. There is strong evidence Mars was – billions of years ago – much wetter and warmer, with a thicker atmosphere. Today, it is a frozen desert where life as we know it would struggle.",
+    description: "Mars is a dusty, cold, desert world with a very thin atmosphere. It is a frozen desert where life as we know it would struggle.",
     details: [
       { label: "Diameter", value: "6,779 km" },
-      { label: "Distance from Sun", value: "227.9M km" },
-      { label: "Day Length", value: "24.6 hours" },
+      { label: "Distance", value: "227.9M km" },
       { label: "Gravity", value: "3.71 m/s²" }
     ],
     color: "#ef4444",
@@ -83,11 +79,10 @@ const planetData: PlanetData[] = [
   {
     name: "Jupiter",
     tagline: "King of Planets",
-    description: "The largest planet in our solar system – more than twice as massive as all the other planets combined. The giant planet's Great Red spot is a centuries-old storm bigger than Earth. It is a gas giant and lacks an Earth-like surface.",
+    description: "The largest planet in our solar system – more than twice as massive as all the other planets combined. It is a massive gas giant.",
     details: [
       { label: "Diameter", value: "139,820 km" },
-      { label: "Distance from Sun", value: "778.6M km" },
-      { label: "Day Length", value: "9.9 hours" },
+      { label: "Distance", value: "778.6M km" },
       { label: "Gravity", value: "24.79 m/s²" }
     ],
     color: "#d97706",
@@ -97,11 +92,10 @@ const planetData: PlanetData[] = [
   {
     name: "Saturn",
     tagline: "The Jewel of the Solar System",
-    description: "Adorned with a dazzling, complex system of icy rings, Saturn is unique in our solar system. The other giant planets have rings, but none are as spectacular as Saturn's. It is a gas giant composed mostly of hydrogen and helium.",
+    description: "Adorned with a dazzling, complex system of icy rings, Saturn is unique in our solar system. It is a giant composed mostly of hydrogen.",
     details: [
       { label: "Diameter", value: "116,460 km" },
-      { label: "Distance from Sun", value: "1.4B km" },
-      { label: "Day Length", value: "10.7 hours" },
+      { label: "Distance", value: "1.4B km" },
       { label: "Gravity", value: "10.44 m/s²" }
     ],
     color: "#eab308",
@@ -111,11 +105,10 @@ const planetData: PlanetData[] = [
   {
     name: "Uranus",
     tagline: "The Sideways Planet",
-    description: "Uranus is the seventh planet from the Sun, and has the third-largest diameter in our solar system. It was the first planet found with the aid of a telescope. Uranus is very cold and windy, often referred to as an 'ice giant'.",
+    description: "Uranus is the seventh planet from the Sun, and has the third-largest diameter. It orbits at a nearly 90-degree angle from the plane of its orbit.",
     details: [
       { label: "Diameter", value: "50,724 km" },
-      { label: "Distance from Sun", value: "2.9B km" },
-      { label: "Day Length", value: "17.2 hours" },
+      { label: "Distance", value: "2.9B km" },
       { label: "Gravity", value: "8.69 m/s²" }
     ],
     color: "#22d3ee",
@@ -125,11 +118,10 @@ const planetData: PlanetData[] = [
   {
     name: "Neptune",
     tagline: "The Windiest World",
-    description: "Dark, cold and whipped by supersonic winds, ice giant Neptune is the eighth and most distant major planet orbiting our Sun. More than 30 times as far from the Sun as Earth, Neptune is the only planet in our solar system not visible to the naked eye.",
+    description: "Dark, cold and whipped by supersonic winds, ice giant Neptune is the eighth and most distant major planet orbiting our Sun.",
     details: [
       { label: "Diameter", value: "49,244 km" },
-      { label: "Distance from Sun", value: "4.5B km" },
-      { label: "Day Length", value: "16.1 hours" },
+      { label: "Distance", value: "4.5B km" },
       { label: "Gravity", value: "11.15 m/s²" }
     ],
     color: "#6366f1",
@@ -140,75 +132,65 @@ const planetData: PlanetData[] = [
 
 function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
   const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: false, amount: 0.01, margin: "600px 0px" });
+  const isInView = useInView(sectionRef, { once: false, amount: 0.1, margin: "200px 0px" });
 
   return (
     <section 
       ref={sectionRef}
-      key={planet.name} 
-      className="planet-section min-h-screen flex items-center justify-center px-4 py-24 md:py-0"
+      className="planet-section min-h-screen flex items-center justify-center px-6 py-32"
     >
-        <div className={`max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
-          {/* Info Box */}
-          <div className={`planet-info order-2 ${idx % 2 === 1 ? 'lg:order-2 lg:ml-auto' : 'lg:order-1'} w-full max-w-xl p-8 md:p-14 rounded-[3rem] border border-white/10 bg-white/[0.01] backdrop-blur-[40px] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.7),inset_0_0_20px_rgba(255,255,255,0.02)] relative group overflow-hidden`}>
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-50" />
-            
-            <div className="flex items-center gap-4 mb-8">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-white/10" />
-              <span className="text-[10px] font-black uppercase tracking-[0.8em] text-white/40 whitespace-nowrap">
-                Terran Designation
-              </span>
-              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-white/10" />
-            </div>
-
-            <h3 className="text-6xl md:text-8xl font-black text-white tracking-tighter mb-4 uppercase italic">
-              {planet.name}
-            </h3>
-            <p className="text-[11px] font-black text-purple-400/80 uppercase tracking-[0.4em] mb-8 flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
-              {planet.tagline}
-            </p>
-            
-            <p className="text-lg md:text-xl text-zinc-400 font-medium leading-relaxed mb-12 first-letter:text-4xl first-letter:font-black first-letter:text-white first-letter:mr-2">
-              {planet.description}
-            </p>
-
-            <div className="grid grid-cols-2 gap-10 pt-10 border-t border-white/5">
-              {planet.details.map((detail) => (
-                <div key={detail.label} className="group/detail">
-                  <span className="text-[9px] uppercase tracking-[0.4em] text-zinc-500 font-black mb-2 block group-hover/detail:text-purple-400 transition-colors">
-                    {detail.label}
-                  </span>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-white font-mono text-xl md:text-3xl font-light tracking-tight">
-                      {detail.value.split(' ')[0]}
-                    </span>
-                    <span className="text-zinc-600 font-black text-[10px] uppercase">
-                      {detail.value.split(' ').slice(1).join(' ')}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Decorative Elements */}
-            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-500/5 blur-[80px] rounded-full pointer-events-none" />
+      <div className={`max-w-7xl w-full flex flex-col lg:flex-row gap-16 lg:gap-32 items-center justify-between ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+        {/* Info Box */}
+        <div className="planet-info w-full max-w-xl p-10 md:p-16 rounded-[4rem] border border-white/5 bg-white/[0.01] backdrop-blur-[60px] relative group overflow-hidden">
+          <div className="flex items-center gap-6 mb-12 opacity-50">
+            <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-white whitespace-nowrap">
+              Designation // {planet.name.substring(0, 3)}
+            </span>
+            <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
           </div>
 
+          <h3 className="text-7xl md:text-9xl font-bold text-white tracking-[-0.05em] mb-6 font-[family-name:var(--font-orbitron)]">
+            {planet.name}
+          </h3>
+          <p className="text-[11px] font-bold text-purple-400 uppercase tracking-[0.5em] mb-12 flex items-center gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,1)]" />
+            {planet.tagline}
+          </p>
+          
+          <p className="text-xl text-zinc-400 font-light leading-relaxed mb-16 tracking-wide">
+            {planet.description}
+          </p>
 
-        {/* Revolving Sphere */}
-        <div className={`planet-sphere-container order-1 ${idx % 2 === 1 ? 'lg:order-1' : 'lg:order-2'} flex justify-center items-center min-h-[300px] md:min-h-[500px]`}>
+          <div className="grid grid-cols-3 gap-8 pt-12 border-t border-white/5">
+            {planet.details.map((detail) => (
+              <div key={detail.label} className="flex flex-col gap-2">
+                <span className="text-[9px] uppercase tracking-[0.4em] text-zinc-600 font-bold">
+                  {detail.label}
+                </span>
+                <span className="text-white font-medium text-lg tracking-tight">
+                  {detail.value}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Revolving Sphere Container */}
+        <div className="planet-sphere-container relative flex justify-center items-center flex-1 min-h-[400px]">
           {isInView ? (
             <PlanetSphere 
               textureUrl={planet.textureUrl} 
               cloudUrl={planet.cloudUrl}
               color={planet.color}
               rotationDuration={planet.rotationDuration}
-              size="w-[300px] md:w-[450px] lg:w-[500px]"
+              size="w-[350px] md:w-[500px] lg:w-[600px]"
             />
           ) : (
-            <div className="w-[300px] md:w-[450px] lg:w-[500px] aspect-square rounded-full bg-white/5 animate-pulse" />
+            <div className="w-[350px] md:w-[500px] lg:w-[600px] aspect-square rounded-full bg-white/5 animate-pulse" />
           )}
+          
+          {/* Subtle Ring for aesthetic */}
+          <div className="absolute inset-0 border border-white/5 rounded-full scale-125 opacity-20 pointer-events-none" />
         </div>
       </div>
     </section>
@@ -219,7 +201,7 @@ export function PlanetDetailSection() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Preload textures
+    // Texture preloading for smoother scrolling
     planetData.forEach(planet => {
       const img = new Image();
       img.src = planet.textureUrl;
@@ -229,8 +211,6 @@ export function PlanetDetailSection() {
       }
     });
 
-    if (!containerRef.current) return;
-
     const ctx = gsap.context(() => {
       const sections = gsap.utils.toArray(".planet-section");
       
@@ -239,35 +219,30 @@ export function PlanetDetailSection() {
         const sphere = section.querySelector(".planet-sphere-container");
         
         gsap.fromTo(info, 
-          { opacity: 0, x: -100, scale: 0.9 },
+          { opacity: 0, y: 50 },
           { 
             opacity: 1, 
-            x: 0, 
-            scale: 1,
-            duration: 1.2,
-            ease: "power4.out",
+            y: 0, 
+            duration: 1,
             scrollTrigger: {
               trigger: section,
-              start: "top 70%",
-              end: "top 30%",
-              scrub: 1,
+              start: "top 80%",
+              toggleActions: "play none none reverse"
             }
           }
         );
 
         gsap.fromTo(sphere,
-          { opacity: 0, x: 100, rotate: 20 },
+          { opacity: 0, scale: 0.8 },
           {
             opacity: 1,
-            x: 0,
-            rotate: 0,
+            scale: 1,
             duration: 1.5,
-            ease: "power3.out",
+            ease: "expo.out",
             scrollTrigger: {
               trigger: section,
-              start: "top 70%",
-              end: "top 30%",
-              scrub: 1,
+              start: "top 80%",
+              toggleActions: "play none none reverse"
             }
           }
         );
