@@ -71,7 +71,7 @@ export default function Home() {
   }, []);
 
   return (
-    <SmoothScroll>
+    <div className="smooth-scroll-wrapper">
       <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30">
         <CustomCursor />
         <Taskbar />
@@ -250,6 +250,6 @@ export default function Home() {
           </p>
         </footer>
       </div>
-    </SmoothScroll>
+    </div>
   );
 }
