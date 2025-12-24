@@ -185,8 +185,6 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 1 }}
               className="relative group order-1"
-              data-scroll
-              data-scroll-speed="1"
             >
               <RealisticEarth />
             </motion.div>
