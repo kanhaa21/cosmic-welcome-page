@@ -30,21 +30,36 @@ export function Taskbar() {
     // Only run on home page
     if (window.location.pathname !== "/") return;
 
+    // Use a cleaner ScrollTrigger approach for active state
     sections.forEach((section) => {
       ScrollTrigger.create({
         trigger: `#${section.id}`,
         scroller: ".smooth-scroll",
-        start: "top center",
-        end: "bottom center",
+        start: "top 20%",
+        end: "bottom 20%",
         onToggle: (self) => {
           if (self.isActive) setActiveSection(section.id);
         },
+        onEnter: () => setActiveSection(section.id),
+        onEnterBack: () => setActiveSection(section.id),
       });
+    });
+
+    // Special case for top of page
+    ScrollTrigger.create({
+      trigger: "#hero",
+      scroller: ".smooth-scroll",
+      start: "top top",
+      end: "bottom 50%",
+      onToggle: (self) => {
+        if (self.isActive) setActiveSection("hero");
+      },
+      onEnterBack: () => setActiveSection("hero"),
     });
 
     return () => {
       ScrollTrigger.getAll().forEach(st => {
-        if (sections.some(s => st.vars.trigger === `#${s.id}`)) {
+        if (st.vars.trigger && typeof st.vars.trigger === 'string' && sections.some(s => st.vars.trigger === `#${s.id}`)) {
           st.kill();
         }
       });
@@ -76,7 +91,7 @@ export function Taskbar() {
           <button
             key={section.id}
             onClick={() => handleScroll(section.id)}
-            className={`text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all relative px-2 py-1 rounded-full whitespace-nowrap ${
+            className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
               activeSection === section.id ? "text-white" : "text-zinc-500 hover:text-zinc-300"
             }`}
           >
@@ -85,13 +100,13 @@ export function Taskbar() {
               <>
                 <motion.span
                   layoutId="nav-glow"
-                  className="absolute inset-0 bg-white/10 rounded-full -z-10 blur-[4px]"
+                  className="absolute inset-0 bg-white/10 rounded-full -z-10 blur-[8px]"
                   initial={false}
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
                 <motion.span
                   layoutId="nav-border"
-                  className="absolute inset-0 border border-white/20 rounded-full -z-10 shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                  className="absolute inset-0 border border-white/30 rounded-full -z-10 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
                   initial={false}
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
@@ -104,30 +119,17 @@ export function Taskbar() {
       <div className="hidden sm:block h-4 w-px bg-white/10" />
       
       {/* Agency Links */}
-      <div className="hidden lg:flex items-center gap-6">
+      <div className="hidden lg:flex items-center gap-8">
         {agencies.map((agency) => (
           <Link
             key={agency.name}
             href={agency.path}
-            className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.3em] hover:text-purple-400 transition-all relative group whitespace-nowrap"
+            className="text-zinc-500 text-[11px] font-bold uppercase tracking-[0.3em] hover:text-purple-400 transition-all relative group whitespace-nowrap"
           >
             {agency.name}
           </Link>
         ))}
       </div>
-      
-      <div className="hidden sm:block h-4 w-px bg-white/10" />
-      
-      <Link 
-        href="#terminal" 
-        onClick={(e) => {
-          e.preventDefault();
-          handleScroll("explore");
-        }}
-        className="text-zinc-400 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] hover:text-white transition-all whitespace-nowrap"
-      >
-        Terminal
-      </Link>
     </motion.nav>
   );
 }
