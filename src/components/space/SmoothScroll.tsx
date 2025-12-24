@@ -1,16 +1,25 @@
 "use client";
 
-import { useEffect, useRef, ReactNode } from "react";
+import { useEffect, useRef, ReactNode, createContext, useContext, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+interface SmoothScrollContextType {
+  scroll: any | null;
+}
+
+const SmoothScrollContext = createContext<SmoothScrollContextType>({ scroll: null });
+
+export const useSmoothScroll = () => useContext(SmoothScrollContext);
+
 export function SmoothScroll({ children }: { children: ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [locoScroll, setLocoScroll] = useState<any>(null);
 
   useEffect(() => {
-    let locoScroll: any = null;
+    let scrollInstance: any = null;
 
     (async () => {
       try {
@@ -18,7 +27,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
         
         if (!containerRef.current) return;
 
-        locoScroll = new LocomotiveScroll({
+        scrollInstance = new LocomotiveScroll({
           el: containerRef.current,
           smooth: true,
           multiplier: 1,
@@ -27,16 +36,18 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
           reloadOnContextChange: true
         });
 
+        setLocoScroll(scrollInstance);
+
         // Each time Locomotive Scroll updates, tell ScrollTrigger to update too (sync positioning)
-        locoScroll.on("scroll", ScrollTrigger.update);
+        scrollInstance.on("scroll", ScrollTrigger.update);
 
         // Tell ScrollTrigger to use these proxy methods for the ".smooth-scroll" element
         ScrollTrigger.scrollerProxy(containerRef.current, {
           scrollTop(value) {
-            if (locoScroll) {
+            if (scrollInstance) {
               return arguments.length
-                ? locoScroll.scrollTo(value, 0, 0)
-                : locoScroll.scroll.instance.scroll.y;
+                ? scrollInstance.scrollTo(value, 0, 0)
+                : scrollInstance.scroll.instance.scroll.y;
             }
             return 0;
           },
@@ -52,7 +63,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
         });
 
         // Each time the window updates, we should refresh ScrollTrigger and then update LocomotiveScroll. 
-        ScrollTrigger.addEventListener("refresh", () => locoScroll?.update());
+        ScrollTrigger.addEventListener("refresh", () => scrollInstance?.update());
 
         // After everything is set up, refresh() ScrollTrigger and update LocomotiveScroll
         ScrollTrigger.refresh();
@@ -62,13 +73,15 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     })();
 
     return () => {
-      if (locoScroll) locoScroll.destroy();
+      if (scrollInstance) scrollInstance.destroy();
     };
   }, []);
 
   return (
-    <main ref={containerRef} data-scroll-container className="smooth-scroll">
-      {children}
-    </main>
+    <SmoothScrollContext.Provider value={{ scroll: locoScroll }}>
+      <main ref={containerRef} data-scroll-container className="smooth-scroll">
+        {children}
+      </main>
+    </SmoothScrollContext.Provider>
   );
 }
