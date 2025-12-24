@@ -41,10 +41,10 @@ export default function Home() {
     handleHashChange();
 
     const initAnimations = (q: gsap.utils.SelectorFunc) => {
-      const titles = q(".reveal-text");
+      const titles = gsap.utils.toArray(q(".reveal-text")) as HTMLElement[];
       if (titles.length === 0) return;
       
-      titles.forEach((title: Element) => {
+      titles.forEach((title) => {
         if (!title) return;
         
         gsap.fromTo(
