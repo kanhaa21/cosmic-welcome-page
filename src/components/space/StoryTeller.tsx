@@ -107,7 +107,7 @@ export function StoryTeller() {
         <div className="text-xl md:text-3xl font-black text-white tracking-tighter">Traversing <span className="text-zinc-700">Space-Time</span></div>
       </div>
 
-      <div className="relative w-full max-w-4xl px-4 h-[350px] flex items-center justify-center">
+      <div className="relative w-full max-w-4xl px-4 h-[450px] md:h-[350px] flex items-center justify-center">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
@@ -115,7 +115,7 @@ export function StoryTeller() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -100, scale: 0.95 }}
             transition={{ duration: 0.8, ease: "anticipate" }}
-            className={`relative w-full h-full rounded-[2.5rem] overflow-hidden glass-card border-white/5 bg-gradient-to-br ${milestones[index].color} to-transparent group`}
+            className={`relative w-full h-full rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden glass-card border-white/5 bg-gradient-to-br ${milestones[index].color} to-transparent group`}
           >
             <div className="absolute inset-0">
               <img 
@@ -126,12 +126,12 @@ export function StoryTeller() {
               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
             </div>
             
-            <div className="relative h-full flex flex-col justify-center px-8 md:px-16 max-w-2xl">
+            <div className="relative h-full flex flex-col justify-center px-6 md:px-16 max-w-2xl">
               <motion.span 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="text-purple-500 font-bold tracking-[0.5em] uppercase text-[10px] mb-4"
+                className="text-purple-500 font-bold tracking-[0.3em] md:tracking-[0.5em] uppercase text-[8px] md:text-[10px] mb-2 md:mb-4"
               >
                 {milestones[index].year} — {milestones[index].agency}
               </motion.span>
@@ -140,7 +140,7 @@ export function StoryTeller() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter"
+                className="text-3xl md:text-6xl font-black text-white mb-2 md:mb-4 tracking-tighter"
               >
                 {milestones[index].title}
               </motion.h3>
@@ -149,18 +149,18 @@ export function StoryTeller() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="text-zinc-300 text-base md:text-xl leading-relaxed font-light italic max-w-lg"
+                className="text-zinc-300 text-sm md:text-xl leading-relaxed font-light italic max-w-lg"
               >
                 "{milestones[index].description}"
               </motion.p>
               
-              <div className="mt-8 flex items-center gap-4">
-                <div className="flex gap-1.5">
+              <div className="mt-6 md:mt-8 flex items-center gap-4">
+                <div className="flex gap-1 md:gap-1.5 flex-wrap">
                   {milestones.map((_, i) => (
                     <button
                       key={i}
                       onClick={() => setIndex(i)}
-                      className={`h-1 rounded-full transition-all duration-500 ${i === index ? 'w-8 bg-purple-500' : 'w-2 bg-white/10'}`}
+                      className={`h-1 rounded-full transition-all duration-500 ${i === index ? 'w-4 md:w-8 bg-purple-500' : 'w-1 md:w-2 bg-white/10'}`}
                     />
                   ))}
                 </div>
@@ -168,7 +168,7 @@ export function StoryTeller() {
             </div>
 
             {/* Background numeral */}
-            <div className="absolute -bottom-6 -right-6 text-[15rem] font-black text-white/[0.02] select-none pointer-events-none">
+            <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 text-[8rem] md:text-[15rem] font-black text-white/[0.02] select-none pointer-events-none">
               {index + 1}
             </div>
           </motion.div>
