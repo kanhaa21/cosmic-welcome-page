@@ -223,7 +223,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
   const data = agencyData[id as keyof typeof agencyData] || agencyData.nasa;
 
   return (
-    <SmoothScroll>
+    <SmoothScroll key={id}>
       <div className="relative min-h-screen bg-[#020205] text-zinc-300 font-sans selection:bg-blue-500/30">
         <CustomCursor />
         <Taskbar />
@@ -238,7 +238,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
            <a href="#active" className="hover:text-white transition-colors">05 Active</a>
         </div>
 
-        <main className="max-w-7xl mx-auto px-6 pt-32 pb-40 relative z-10">
+        <div className="max-w-7xl mx-auto px-6 pt-32 pb-40 relative z-10" data-scroll-section>
           
           {/* Header Section - Informative & Clean */}
           <header className="border-b border-zinc-800 pb-12 mb-20">
@@ -405,7 +405,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
              </div>
           </footer>
 
-        </main>
+        </div>
       </div>
     </SmoothScroll>
   );
