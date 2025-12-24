@@ -73,7 +73,7 @@ const planets = [
 
 export function SolarSystem() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [selectedPlanet, setSelectedPlanet] = useState<number | null>(0);
+  const [hoveredPlanet, setHoveredPlanet] = useState<number | null>(null);
 
     useEffect(() => {
       const ctx = gsap.context((self) => {
@@ -104,17 +104,38 @@ export function SolarSystem() {
       <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none opacity-80" />
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-purple-900/5 blur-[180px] rounded-full pointer-events-none" />
       
-      <div className="absolute top-20 text-center w-full reveal-text z-20">
-        <span className="text-purple-500 font-black uppercase tracking-[0.6em] text-[10px] mb-4 block">Planetary System</span>
-        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase">Cosmic <span className="text-zinc-800 tracking-[0.2em]">Navigator</span></h2>
+      <div className="absolute top-24 text-center w-full reveal-text z-20 px-4">
+        <motion.span 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          className="text-purple-500 font-black uppercase tracking-[0.8em] text-[10px] mb-4 block"
+        >
+          Planetary Orbits
+        </motion.span>
+        <motion.h2 
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase leading-none"
+        >
+          Solar <span className="text-zinc-800 tracking-[0.1em]">System</span>
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="text-zinc-500 text-[11px] font-bold uppercase tracking-[0.4em] mt-6 max-w-sm mx-auto leading-relaxed"
+        >
+          Scroll to explore the celestial bodies of our neighborhood
+        </motion.p>
       </div>
 
       {/* Background Solar System Visualization */}
-      <div className="absolute inset-0 flex items-center justify-center z-0 opacity-40 lg:opacity-60">
-        <div className="relative w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] lg:w-[1000px] lg:h-[1000px] flex items-center justify-center scale-[0.35] sm:scale-50 lg:scale-[0.85]">
+      <div className="absolute inset-0 flex items-center justify-center z-0">
+        <div className="relative w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] lg:w-[1000px] lg:h-[1000px] flex items-center justify-center scale-[0.4] sm:scale-75 lg:scale-100">
           {/* Sun */}
-          <div className="absolute w-24 h-24 bg-yellow-400 rounded-full blur-[2px] shadow-[0_0_100px_#fbbf24] z-20">
-            <div className="absolute inset-0 bg-orange-500 rounded-full animate-pulse opacity-50" />
+          <div className="absolute w-32 h-32 bg-yellow-400 rounded-full blur-[1px] shadow-[0_0_120px_#fbbf24] z-20 flex items-center justify-center">
+            <div className="absolute inset-0 bg-orange-500 rounded-full animate-pulse opacity-40" />
+            <div className="w-28 h-28 bg-gradient-to-br from-yellow-200 to-orange-600 rounded-full blur-[1px]" />
           </div>
 
           {/* Planets and Orbits */}
@@ -122,8 +143,8 @@ export function SolarSystem() {
               <div key={planet.name} className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 {/* Orbit Ring */}
                 <div 
-                  className={`absolute border rounded-full transition-all duration-700 ${
-                    selectedPlanet === i ? "border-purple-500/40 border-2" : "border-white/5"
+                  className={`absolute border rounded-full transition-all duration-1000 ${
+                    hoveredPlanet === i ? "border-purple-500/40 border-2" : "border-white/5"
                   } will-change-[border-color,border-width]`}
                   style={{
                     width: planet.distance * 2,
@@ -147,99 +168,49 @@ export function SolarSystem() {
                       left: "100%",
                       transform: "translate(-50%, -50%)",
                     }}
-                    onClick={() => setSelectedPlanet(i)}
+                    onMouseEnter={() => setHoveredPlanet(i)}
+                    onMouseLeave={() => setHoveredPlanet(null)}
                   >
                     <motion.div 
                       animate={{ 
-                        scale: selectedPlanet === i ? 2.8 : 1,
-                        boxShadow: selectedPlanet === i ? `0 0 40px ${planet.color}` : `0 0 20px ${planet.color}33`
+                        scale: hoveredPlanet === i ? 2.5 : 1,
+                        boxShadow: hoveredPlanet === i ? `0 0 40px ${planet.color}` : `0 0 20px ${planet.color}33`
                       }}
                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
                       style={{ willChange: "transform, box-shadow" }}
-                      className="rounded-full shadow-lg transition-colors z-30"
+                      className="rounded-full shadow-lg transition-colors z-30 relative"
                       style={{
                         width: planet.size,
                         height: planet.size,
                         backgroundColor: planet.color,
                       }}
-                    />
+                    >
+                      {hoveredPlanet === i && (
+                        <div className="absolute top-full mt-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-white bg-black/80 px-2 py-1 rounded border border-white/10 backdrop-blur-md">
+                            {planet.name}
+                          </span>
+                        </div>
+                      )}
+                    </motion.div>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Foreground Interactive UI */}
-      <div className="relative z-30 w-full max-w-7xl px-6 flex flex-col items-center gap-12 mt-12">
-        {/* Glass Info Box */}
-        <AnimatePresence mode="wait">
-          {selectedPlanet !== null && (
-            <motion.div
-              key={planets[selectedPlanet].name}
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -40, scale: 0.95 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full max-w-xl p-8 md:p-12 rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] flex flex-col items-center text-center group"
-            >
-              <motion.div 
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="w-20 h-20 rounded-full mb-8 relative"
-                style={{ backgroundColor: planets[selectedPlanet].color, boxShadow: `0 0 60px ${planets[selectedPlanet].color}44` }}
-              >
-                <div className="absolute inset-0 rounded-full bg-white/20 animate-pulse" />
-              </motion.div>
-
-              <h3 className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-4 uppercase italic">
-                {planets[selectedPlanet].name}
-              </h3>
-              
-              <div className="h-px w-24 bg-gradient-to-r from-transparent via-white/20 to-transparent mb-8" />
-              
-              <p className="text-lg md:text-xl text-zinc-300 font-medium leading-relaxed max-w-md">
-                {planets[selectedPlanet].description}
-              </p>
-
-              <div className="mt-10 grid grid-cols-2 gap-8 w-full border-t border-white/5 pt-10">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-black">Orbit Velocity</span>
-                  <span className="text-white font-mono text-xl">{(planets[selectedPlanet].speed * 47.4).toFixed(1)} km/s</span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-black">Relative Size</span>
-                  <span className="text-white font-mono text-xl">{planets[selectedPlanet].size * 100} units</span>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Planet Selector Strip */}
-        <div className="flex flex-wrap justify-center gap-3">
-          {planets.map((planet, i) => (
-            <button
-              key={planet.name}
-              onClick={() => setSelectedPlanet(i)}
-              className={`px-4 py-2 rounded-full border transition-all duration-300 flex items-center gap-3 ${
-                selectedPlanet === i 
-                  ? "bg-white/10 border-white/20 text-white scale-110 shadow-[0_0_20px_rgba(255,255,255,0.1)]" 
-                  : "bg-black/20 border-white/5 text-zinc-500 hover:text-zinc-300 hover:border-white/10"
-              }`}
-            >
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: planet.color }} />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]">{planet.name}</span>
-            </button>
-          ))}
-        </div>
-      </div>
       
-      <div className="absolute bottom-10 w-full text-center reveal-text px-4 opacity-50">
-        <p className="text-zinc-500 text-[10px] uppercase tracking-[0.4em] font-bold">
-          Interactive Orbital Mapping Interface v2.0
-        </p>
-      </div>
+      <motion.div 
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-12 flex flex-col items-center gap-4"
+      >
+        <div className="w-px h-12 bg-gradient-to-b from-purple-500 to-transparent" />
+        <span className="text-[9px] uppercase tracking-[0.5em] text-zinc-500 font-bold">Scroll Down</span>
+      </motion.div>
     </section>
+  );
+}
+
   );
 }
