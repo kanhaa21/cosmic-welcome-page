@@ -191,38 +191,53 @@ export function PlanetDetailSection() {
           key={planet.name} 
           className="planet-section min-h-screen flex items-center justify-center px-4 py-24 md:py-0"
         >
-          <div className={`max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
-            {/* Info Box */}
-            <div className={`planet-info order-2 ${idx % 2 === 1 ? 'lg:order-2 lg:ml-auto' : 'lg:order-1'} w-full max-w-xl p-8 md:p-12 rounded-[2.5rem] border border-white/10 bg-white/[0.02] backdrop-blur-2xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]`}>
-              <span className="text-xs font-black uppercase tracking-[0.6em] mb-4 block" style={{ color: planet.color }}>
-                Planetary Profile
-              </span>
-              <h3 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-2 uppercase">
-                {planet.name}
-              </h3>
-              <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-6 italic">
-                {planet.tagline}
-              </p>
-              
-              <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8" />
-              
-              <p className="text-lg text-zinc-300 font-medium leading-relaxed mb-10">
-                {planet.description}
-              </p>
+            <div className={`max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+              {/* Info Box */}
+              <div className={`planet-info order-2 ${idx % 2 === 1 ? 'lg:order-2 lg:ml-auto' : 'lg:order-1'} w-full max-w-xl p-8 md:p-14 rounded-[3rem] border border-white/10 bg-white/[0.01] backdrop-blur-[40px] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.7),inset_0_0_20px_rgba(255,255,255,0.02)] relative group overflow-hidden`}>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-50" />
+                
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-white/10" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.8em] text-white/40 whitespace-nowrap">
+                    Terran Designation
+                  </span>
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent to-white/10" />
+                </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                {planet.details.map((detail) => (
-                  <div key={detail.label} className="group">
-                    <span className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-black mb-1 block group-hover:text-white transition-colors">
-                      {detail.label}
-                    </span>
-                    <span className="text-white font-mono text-lg md:text-xl border-l-2 border-white/5 pl-3 block group-hover:border-purple-500 transition-all">
-                      {detail.value}
-                    </span>
-                  </div>
-                ))}
+                <h3 className="text-6xl md:text-8xl font-black text-white tracking-tighter mb-4 uppercase italic">
+                  {planet.name}
+                </h3>
+                <p className="text-[11px] font-black text-purple-400/80 uppercase tracking-[0.4em] mb-8 flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
+                  {planet.tagline}
+                </p>
+                
+                <p className="text-lg md:text-xl text-zinc-400 font-medium leading-relaxed mb-12 first-letter:text-4xl first-letter:font-black first-letter:text-white first-letter:mr-2">
+                  {planet.description}
+                </p>
+  
+                <div className="grid grid-cols-2 gap-10 pt-10 border-t border-white/5">
+                  {planet.details.map((detail) => (
+                    <div key={detail.label} className="group/detail">
+                      <span className="text-[9px] uppercase tracking-[0.4em] text-zinc-500 font-black mb-2 block group-hover/detail:text-purple-400 transition-colors">
+                        {detail.label}
+                      </span>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-white font-mono text-xl md:text-3xl font-light tracking-tight">
+                          {detail.value.split(' ')[0]}
+                        </span>
+                        <span className="text-zinc-600 font-black text-[10px] uppercase">
+                          {detail.value.split(' ').slice(1).join(' ')}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Decorative Elements */}
+                <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-500/5 blur-[80px] rounded-full pointer-events-none" />
               </div>
-            </div>
+
 
             {/* Revolving Sphere */}
             <div className={`planet-sphere-container order-1 ${idx % 2 === 1 ? 'lg:order-1' : 'lg:order-2'} flex justify-center items-center`}>
