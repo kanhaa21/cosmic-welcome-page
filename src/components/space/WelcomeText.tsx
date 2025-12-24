@@ -44,10 +44,10 @@ export function WelcomeText() {
   }, []);
 
   return (
-    <div className="h-24 flex items-center justify-center overflow-hidden">
+    <div className="h-16 md:h-24 flex items-center justify-center overflow-hidden">
       <h1
         ref={textRef}
-        className="text-5xl md:text-7xl font-bold text-white tracking-tighter"
+        className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter"
       >
         {phrases[index]}
       </h1>
