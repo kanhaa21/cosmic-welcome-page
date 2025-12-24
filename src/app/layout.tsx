@@ -3,6 +3,7 @@ import { Orbitron, Space_Grotesk, Syncopate } from "next/font/google";
 import "./globals.css";
 import VisualEditsMessenger from "../visual-edits/VisualEditsMessenger";
 import ErrorReporter from "@/components/ErrorReporter";
+import { PageTransition } from "@/components/space/PageTransition";
 import Script from "next/script";
 
 const orbitron = Orbitron({
