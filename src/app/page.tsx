@@ -26,7 +26,7 @@ export default function Home() {
   const { scroll: locoScroll } = useSmoothScroll();
   const lastScrollTime = useRef(0);
   const currentSectionIndex = useRef(0);
-  const sectionIds = ["hero", "earth", "story", "solar", "explore", "footer"];
+  const sectionIds = ["hero", "earth", "story", "explore", "footer"];
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
