@@ -13,30 +13,30 @@ interface Star {
   glow: boolean;
 }
 
-export function GSAPStars({ count = 2000 }: { count?: number }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-
-    const colors = ["#ffffff", "#fff4e6", "#e6f4ff", "#fdf2ff", "#fff9db"];
-    
-    const stars: Star[] = Array.from({ length: Math.min(count, 5000) }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      size: Math.random() * 1.5 + 0.5,
-      opacity: Math.random() * 0.8 + 0.2,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      twinkleSpeed: 1 + Math.random() * 3,
-      glow: Math.random() > 0.8,
-    }));
+export function GSAPStars({ count = 2000, speed = 1 }: { count?: number, speed?: number }) {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+    useEffect(() => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+  
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+  
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+  
+      const colors = ["#ffffff", "#fff4e6", "#e6f4ff", "#fdf2ff", "#fff9db"];
+      
+      const stars: Star[] = Array.from({ length: Math.min(count, 5000) }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 1.5 + 0.5,
+        opacity: Math.random() * 0.8 + 0.2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        twinkleSpeed: (1 + Math.random() * 3) * speed,
+        glow: Math.random() > 0.8,
+      }));
 
     const render = (time: number) => {
       ctx.clearRect(0, 0, width, height);
