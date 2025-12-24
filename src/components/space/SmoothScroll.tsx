@@ -23,7 +23,8 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     let resizeObserver: ResizeObserver | null = null;
     let isMounted = true;
 
-    const init = async () => {
+    // Small delay to ensure Next.js has finished initial hydration
+    const timeoutId = setTimeout(async () => {
       try {
         const LocomotiveScroll = (await import("locomotive-scroll")).default;
         
@@ -38,6 +39,8 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
           touchMultiplier: 2,
           lerp: 0.1,
           scrollFromAnywhere: true,
+          // Disable reloadOnContextChange as it can cause issues in React
+          reloadOnContextChange: false,
         });
 
         if (!isMounted) {
@@ -65,34 +68,28 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
               height: window.innerHeight,
             };
           },
-          // We don't need to specify pinType if we're not pinning, 
-          // but if we do, "transform" is generally better for Locomotive Scroll
           pinType: containerRef.current?.style.transform ? "transform" : "fixed",
         });
 
         // Sync ScrollTrigger with Locomotive Scroll
         scrollInstance.on("scroll", ScrollTrigger.update);
 
-        // Resize Observer to handle dynamic content height changes accurately
+        // Resize Observer with debounced RAF
         let rafId: number;
         resizeObserver = new ResizeObserver(() => {
           if (rafId) cancelAnimationFrame(rafId);
           rafId = requestAnimationFrame(() => {
             if (scrollInstance && isMounted) {
-              scrollInstance.update();
-              ScrollTrigger.refresh();
+              try {
+                scrollInstance.update();
+                ScrollTrigger.refresh();
+              } catch (e) {
+                // Silently handle errors during update if the DOM is in a weird state
+              }
             }
           });
         });
         resizeObserver.observe(containerRef.current);
-
-        // Refresh on all ScrollTrigger refreshes
-        const refreshHandler = () => {
-          if (scrollInstance && isMounted) {
-            scrollInstance.update();
-          }
-        };
-        ScrollTrigger.addEventListener("refresh", refreshHandler);
 
         // Initial refresh
         ScrollTrigger.refresh();
@@ -100,19 +97,21 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       } catch (error) {
         console.error("Locomotive Scroll initialization failed:", error);
       }
-    };
-
-    init();
+    }, 100);
 
     return () => {
       isMounted = false;
+      clearTimeout(timeoutId);
       if (scrollInstance) {
         scrollInstance.destroy();
       }
       if (resizeObserver) {
         resizeObserver.disconnect();
       }
-      ScrollTrigger.removeEventListener("refresh", () => {});
+      // Clean up ScrollTrigger proxy
+      if (containerRef.current) {
+        ScrollTrigger.scrollerProxy(containerRef.current, null);
+      }
     };
   }, []);
 
