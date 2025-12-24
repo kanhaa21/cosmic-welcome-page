@@ -26,17 +26,21 @@ export function WelcomeText() {
 
       tl.to(textRef.current, {
         opacity: 0,
-        y: -20,
-        duration: 0.5,
-        delay: 2.5,
-        ease: "power2.in"
+        y: -10,
+        filter: "blur(10px)",
+        scale: 0.95,
+        duration: 0.8,
+        delay: 3,
+        ease: "power3.in"
       })
-      .set(textRef.current, { y: 20 })
+      .set(textRef.current, { y: 10, scale: 1.05, filter: "blur(10px)" })
       .to(textRef.current, {
         opacity: 1,
         y: 0,
-        duration: 0.5,
-        ease: "power2.out"
+        scale: 1,
+        filter: "blur(0px)",
+        duration: 1.2,
+        ease: "power4.out"
       });
     });
 
