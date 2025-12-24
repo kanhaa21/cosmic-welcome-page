@@ -20,7 +20,6 @@ export default function Home() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
   const [isNexusActive, setIsNexusActive] = useState(false);
-  const [isBoosted, setIsBoosted] = useState(false);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
