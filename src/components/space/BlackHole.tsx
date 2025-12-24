@@ -45,13 +45,6 @@ const vertexShader = `
     return v;
   }
 
-  // Galaxy-like spiral noise
-  float spiral(vec2 uv, float t) {
-    float r = length(uv);
-    float a = atan(uv.y, uv.x);
-    return fbm(vec2(r * 4.0 - t * 0.2, a * 3.0 + r * 8.0));
-  }
-
   void main() {
     vec2 uv = (vUv - 0.5) * 2.0;
     uv.x *= uResolution.x / uResolution.y;
@@ -59,70 +52,44 @@ const vertexShader = `
     float r = length(uv);
     float theta = atan(uv.y, uv.x);
 
-    // EXTREME GRAVITATIONAL LENSING
-    // Pulls background coordinates towards the center
-    float lensFactor = 1.0 / (r + 0.001);
-    vec2 warpedUV = uv * (1.0 + 0.2 * pow(lensFactor, 0.8));
+    // Revolving motion
+    float rotation = uTime * 0.1;
+    float distTheta = theta + rotation + r * 2.0; // Spiral effect
     
-    // Rotation speed increases near the center
-    float rotation = uTime * (0.2 + 0.3 / (r + 0.05));
-    float distTheta = theta + rotation;
     vec2 rotUV = vec2(cos(distTheta), sin(distTheta)) * r;
 
-    // 1. THE ENGULFED GALAXY (Background)
-    float galaxy = spiral(warpedUV * 0.5, uTime * 0.1);
-    galaxy *= smoothstep(0.35, 1.5, r); // Fade out near event horizon
-    vec3 galaxyColor = mix(vec3(0.1, 0.05, 0.2), vec3(0.6, 0.3, 0.8), galaxy);
-    galaxyColor += vec3(0.1, 0.2, 0.5) * fbm(warpedUV * 2.0 + uTime * 0.05);
-
-    // 2. THE ACCRETION DISK (Engulfing Matter)
-    float disk = 0.0;
-    float diskThickness = 0.05 * (1.0 + r * 1.5);
+    // 1. GALAXY SPIRAL ARMS
+    float spiral = fbm(vec2(r * 3.0, distTheta * 1.5));
+    spiral *= exp(-r * 1.5); // Fade towards edges
     
-    // Main Disk
-    if (r > 0.35 && r < 4.0) {
-      float edgeFade = smoothstep(4.0, 1.0, r) * smoothstep(0.35, 0.5, r);
-      float verticalFade = smoothstep(diskThickness, 0.0, abs(uv.y));
-      
-      float n = fbm(vec2(r * 3.0 - uTime * 0.5, distTheta * 4.0));
-      // Spaghetti-fication streaks
-      float streaks = pow(fbm(vec2(distTheta * 10.0, r * 2.0 + uTime * 0.8)), 3.0);
-      disk += (n * 1.5 + streaks * 2.0) * edgeFade * verticalFade;
-    }
-
-    // 3. GRAVITATIONAL WARP (Top/Bottom Arcs)
-    float arcR = 0.7;
-    float arcDist = abs(r - arcR);
-    if (arcDist < 0.4) {
-      float arcIntensity = smoothstep(0.4, 0.0, arcDist) * pow(abs(uv.y), 1.5);
-      float n = fbm(vec2(distTheta * 3.0 - uTime * 0.4, r * 4.0));
-      disk += n * arcIntensity * 2.5;
-    }
-
-    // 4. THE EVENT HORIZON & PHOTON SPHERE
-    float photonSphere = smoothstep(0.4, 0.37, r) * smoothstep(0.32, 0.38, r) * 5.0;
+    // 2. CORE GLOW
+    float core = exp(-r * 5.0) * 1.5;
     
+    // 3. ANIMATED STAR FIELD
+    vec2 starUV = uv * 10.0;
+    float stars = pow(hash(floor(starUV + uTime * 0.05)), 50.0) * 0.5;
+    stars *= fbm(starUV * 0.5 + uTime * 0.1); // Twinkle
+
+    // Random bright stars
+    float brightStars = pow(hash(uv * 500.0), 1000.0) * 2.0;
+    brightStars *= sin(uTime * 2.0 + hash(uv) * 10.0) * 0.5 + 0.5;
+
     // COLORS
-    vec3 col_inner = vec3(1.0, 0.95, 0.8); // White-hot
-    vec3 col_mid = vec3(1.0, 0.5, 0.1);   // Orange
-    vec3 col_outer = vec3(0.5, 0.1, 0.0); // Deep red/Purple
-    
-    vec3 diskColor = mix(col_outer, col_inner, disk * 0.5);
-    diskColor = mix(diskColor, col_mid, pow(disk, 2.0));
+    vec3 col_core = vec3(1.0, 0.9, 0.7);
+    vec3 col_arms = vec3(0.4, 0.2, 0.8);
+    vec3 col_dust = vec3(0.1, 0.05, 0.2);
 
-    vec3 finalColor = galaxyColor * 0.4;
-    finalColor += diskColor * disk * uIntensity;
-    finalColor += col_inner * photonSphere * uIntensity;
+    vec3 finalColor = col_dust * (1.0 - spiral);
+    finalColor += col_arms * spiral * 1.5;
+    finalColor += col_core * core;
+    finalColor += vec3(1.0) * stars;
+    finalColor += vec3(0.9, 0.9, 1.0) * brightStars;
 
-    // BLACK HOLE SHADOW
-    float shadow = smoothstep(0.35, 0.36, r);
-    finalColor *= shadow;
+    // Add some nebulosity
+    float nebula = fbm(uv * 1.5 + uTime * 0.05);
+    finalColor += vec3(0.2, 0.1, 0.4) * nebula * exp(-r * 0.8);
 
-    // SPATIOTEMPORAL DISTORTION (Glitchy light)
-    float glitch = pow(hash(vec2(uTime * 10.0, r)), 50.0);
-    finalColor += col_mid * glitch * disk * 0.5;
-
-    gl_FragColor = vec4(finalColor, 1.0);
+    gl_FragColor = vec4(finalColor * uIntensity, 1.0);
   }
 `;
 
