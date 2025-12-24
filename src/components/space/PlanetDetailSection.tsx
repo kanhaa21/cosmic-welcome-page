@@ -3,8 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { PlanetSphere } from "./PlanetSphere";
-import { useInView } from "framer-motion";
+import dynamic from "next/dynamic";
+
+const PlanetSphere = dynamic(() => import("./PlanetSphere").then(mod => mod.PlanetSphere), { 
+  ssr: false,
+  loading: () => <div className="w-[300px] md:w-[450px] lg:w-[500px] aspect-square rounded-full bg-white/5 animate-pulse" />
+});
 
 interface PlanetData {
   name: string;
