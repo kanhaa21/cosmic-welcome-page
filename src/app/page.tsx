@@ -40,7 +40,7 @@ export default function Home() {
     window.addEventListener("hashchange", handleHashChange);
     handleHashChange();
 
-    const initAnimations = (q: gsap.utils.SelectorFunc) => {
+    const initAnimations = (q: gsap.utils.SelectorFunc, scroller: Element) => {
       // Use a more robust selection method and filter out any non-elements
       const rawTitles = q(".reveal-text");
       const titles = (gsap.utils.toArray(rawTitles) as HTMLElement[]).filter(el => 
@@ -61,7 +61,7 @@ export default function Home() {
             ease: "expo.out",
             scrollTrigger: {
               trigger: title,
-              scroller: ".smooth-scroll",
+              scroller: scroller,
               start: "top 95%",
               toggleActions: "play none none reverse",
               invalidateOnRefresh: true,
@@ -74,11 +74,12 @@ export default function Home() {
 
     let ctx: gsap.Context;
     const timer = setTimeout(() => {
-      if (!containerRef.current) return;
+      const scroller = document.querySelector(".smooth-scroll");
+      if (!containerRef.current || !scroller) return;
       
       ctx = gsap.context((self) => {
         if (self.selector) {
-          initAnimations(self.selector);
+          initAnimations(self.selector, scroller);
         }
       }, containerRef);
       
