@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
+import { MotionValue, useMotionValue } from "framer-motion";
+
 interface Star {
   x: number;
   y: number;
@@ -12,7 +14,7 @@ interface Star {
   color: string;
 }
 
-export function GSAPStars({ count = 800, speed = 1.5 }: { count?: number, speed?: number }) {
+export function GSAPStars({ count = 800, speed = 1.5 }: { count?: number, speed?: number | MotionValue<number> }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -49,10 +51,12 @@ export function GSAPStars({ count = 800, speed = 1.5 }: { count?: number, speed?
       
       ctx.globalCompositeOperation = "lighter";
       
+      const currentSpeed = typeof speed === "number" ? speed : speed.get();
+      
       stars.forEach((star) => {
         // Move star closer to the viewer
         star.prevZ = star.z;
-        star.z -= speed * 2;
+        star.z -= currentSpeed * 2;
 
         // Reset star if it passes the viewer
         if (star.z <= 0) {
