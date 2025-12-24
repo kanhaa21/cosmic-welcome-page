@@ -143,9 +143,76 @@ html.has-scroll-smooth {
   overflow: hidden;
 }
 
-.has-scroll-smooth body {
-  overflow: hidden;
+  .has-scroll-smooth body {
+    @apply overflow-hidden selection:bg-purple-500/30;
+  }
+  
+  /* Hide native scrollbar when smooth scroll is active */
+  .has-scroll-smooth {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .has-scroll-smooth::-webkit-scrollbar {
+    display: none;
+  }
 }
+
+.text-glow {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.glass-card {
+  @apply bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)];
+}
+
+.cosmic-gradient {
+  background: radial-gradient(circle at 50% 50%, rgba(76, 29, 149, 0.1) 0%, transparent 80%);
+}
+
+/* Custom Locomotive Scrollbar */
+.c-scrollbar {
+  position: fixed !important;
+  right: 2px !important;
+  top: 0;
+  width: 10px !important;
+  height: 100vh;
+  background-color: transparent;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s, background-color 0.3s;
+}
+
+.c-scrollbar:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  opacity: 1 !important;
+}
+
+.has-scroll-scrolling .c-scrollbar,
+.has-scroll-dragging .c-scrollbar {
+  opacity: 1;
+}
+
+.c-scrollbar_thumb {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(168, 85, 247, 0.5) !important;
+  width: 6px !important;
+  border-radius: 10px;
+  margin: 2px;
+  cursor: grab;
+  transition: background-color 0.3s, width 0.3s, right 0.3s;
+}
+
+.c-scrollbar_thumb:hover {
+  background-color: rgba(168, 85, 247, 0.9) !important;
+  width: 8px !important;
+}
+
+.c-scrollbar_thumb:active {
+  cursor: grabbing;
+}
+
 
 .has-scroll-smooth [data-scroll-container] {
   min-height: 100vh;
