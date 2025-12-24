@@ -38,11 +38,11 @@ export function CustomCursor() {
     <>
       <div 
         ref={cursorRef} 
-        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 mix-blend-difference shadow-[0_0_10px_white]"
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 shadow-[0_0_15px_rgba(255,255,255,0.8)]"
       />
       <div 
         ref={glowRef} 
-        className="fixed top-0 left-0 w-12 h-12 bg-purple-500/20 rounded-full pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 blur-xl"
+        className="fixed top-0 left-0 w-8 h-8 bg-purple-500/30 rounded-full pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 blur-lg"
       />
     </>
   );
