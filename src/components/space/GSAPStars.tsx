@@ -5,7 +5,6 @@ import gsap from "gsap";
 
 export function GSAPStars() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -20,60 +19,75 @@ export function GSAPStars() {
     canvas.height = height;
 
     const stars: Star[] = [];
-    const starCount = 400;
+    const starCount = 800;
+    const speedMultiplier = 1.5;
 
     class Star {
       x: number;
       y: number;
-      size: number;
-      baseOpacity: number;
-      opacity: number;
-      speed: number;
+      z: number;
+      px: number;
+      py: number;
 
       constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.size = Math.random() * 1.5;
-        this.baseOpacity = Math.random() * 0.3 + 0.05;
-        this.opacity = this.baseOpacity;
-        this.speed = Math.random() * 0.05;
+        this.reset();
+        // Distribute stars initially along the Z axis
+        this.z = Math.random() * width;
       }
 
-      update(mx: number, my: number) {
-        this.y -= this.speed;
-        if (this.y < 0) this.y = height;
+      reset() {
+        this.x = (Math.random() - 0.5) * width * 2;
+        this.y = (Math.random() - 0.5) * height * 2;
+        this.z = width;
+        this.px = 0;
+        this.py = 0;
+      }
 
-        // Mouse interaction: glow around mouse
-        const dx = mx - this.x;
-        const dy = my - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        if (distance < 150) {
-          const glow = (1 - distance / 150) * 0.8;
-          this.opacity = Math.min(1, this.baseOpacity + glow);
-          this.size = Math.random() * 2 + 1;
-        } else {
-          this.opacity = this.baseOpacity;
-          this.size = Math.max(0.5, this.size * 0.99);
+      update() {
+        this.px = ((this.x / this.z) * width) / 2 + width / 2;
+        this.py = ((this.y / this.z) * height) / 2 + height / 2;
+
+        this.z -= speedMultiplier;
+
+        if (this.z < 1) {
+          this.reset();
         }
       }
 
       draw() {
         if (!ctx) return;
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        
+        const sx = ((this.x / this.z) * width) / 2 + width / 2;
+        const sy = ((this.y / this.z) * height) / 2 + height / 2;
+
+        // Only draw if within bounds
+        if (sx < 0 || sx > width || sy < 0 || sy > height) return;
+
+        const size = (1 - this.z / width) * 2;
+        const opacity = (1 - this.z / width);
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+        
+        // Draw the star head
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.arc(sx, sy, size, 0, Math.PI * 2);
         ctx.fill();
+
+        // Draw the tail if moving fast enough
+        if (this.px !== 0) {
+          ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.2})`;
+          ctx.lineWidth = size / 2;
+          ctx.beginPath();
+          ctx.moveTo(this.px, this.py);
+          ctx.lineTo(sx, sy);
+          ctx.stroke();
+        }
       }
     }
 
     for (let i = 0; i < starCount; i++) {
       stars.push(new Star());
     }
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
-    };
 
     const handleResize = () => {
       width = window.innerWidth;
@@ -82,13 +96,15 @@ export function GSAPStars() {
       canvas.height = height;
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("resize", handleResize);
 
     const animate = () => {
-      ctx.clearRect(0, 0, width, height);
+      // Create a slight trail effect by not clearing completely
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, width, height);
+      
       stars.forEach((star) => {
-        star.update(mouseRef.current.x, mouseRef.current.y);
+        star.update();
         star.draw();
       });
       requestAnimationFrame(animate);
@@ -96,21 +112,16 @@ export function GSAPStars() {
 
     animate();
 
-    // GSAP twinkle effect for all stars
-    gsap.to({}, {
-      duration: 2,
+    // Subtle GSAP speed fluctuation
+    gsap.to({ val: speedMultiplier }, {
+      val: speedMultiplier * 1.5,
+      duration: 10,
       repeat: -1,
-      onUpdate: () => {
-        stars.forEach(star => {
-          if (Math.random() > 0.98) {
-            star.opacity = 1;
-          }
-        });
-      }
+      yoyo: true,
+      ease: "sine.inOut"
     });
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
@@ -118,8 +129,7 @@ export function GSAPStars() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-[-5]"
-      style={{ filter: "blur(0.5px)" }}
+      className="fixed inset-0 pointer-events-none z-[-5] bg-transparent"
     />
   );
 }
