@@ -307,34 +307,34 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
   const data = agencyData[id as keyof typeof agencyData] || agencyData.nasa;
 
   return (
-    <SmoothScroll key={id}>
-      <div className="relative min-h-screen bg-[#020205] text-zinc-300 font-sans selection:bg-blue-500/30">
-        <CustomCursor />
-        <Taskbar />
-        <MilkyWay />
+    <div className="bg-[#020205] text-zinc-300 font-sans selection:bg-blue-500/30 min-h-screen">
+      <CustomCursor />
+      <Taskbar />
+      <MilkyWay />
 
-        {/* Sidebar Navigation - Fixed */}
-        <div className="hidden xl:flex fixed left-8 top-1/2 -translate-y-1/2 flex-col gap-6 z-50 text-[10px] uppercase tracking-[0.2em] font-black text-zinc-600">
-           <a href="#overview" className="hover:text-white transition-colors flex items-center gap-4 group">
-             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 01 Overview
-           </a>
-           <a href="#capabilities" className="hover:text-white transition-colors flex items-center gap-4 group">
-             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 02 Arsenal
-           </a>
-           <a href="#projects" className="hover:text-white transition-colors flex items-center gap-4 group">
-             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 03 Projects
-           </a>
-           <a href="#achievements" className="hover:text-white transition-colors flex items-center gap-4 group">
-             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 04 Record
-           </a>
-           <a href="#roadmap" className="hover:text-white transition-colors flex items-center gap-4 group">
-             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 05 Horizon
-           </a>
-           <a href="#infrastructure" className="hover:text-white transition-colors flex items-center gap-4 group">
-             <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 06 Network
-           </a>
-        </div>
+      {/* Sidebar Navigation - Fixed - Outside SmoothScroll to maintain position */}
+      <div className="hidden xl:flex fixed left-8 top-1/2 -translate-y-1/2 flex-col gap-6 z-50 text-[10px] uppercase tracking-[0.2em] font-black text-zinc-600">
+         <a href="#overview" className="hover:text-white transition-colors flex items-center gap-4 group">
+           <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 01 Overview
+         </a>
+         <a href="#capabilities" className="hover:text-white transition-colors flex items-center gap-4 group">
+           <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 02 Arsenal
+         </a>
+         <a href="#projects" className="hover:text-white transition-colors flex items-center gap-4 group">
+           <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 03 Projects
+         </a>
+         <a href="#achievements" className="hover:text-white transition-colors flex items-center gap-4 group">
+           <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 04 Record
+         </a>
+         <a href="#roadmap" className="hover:text-white transition-colors flex items-center gap-4 group">
+           <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 05 Horizon
+         </a>
+         <a href="#infrastructure" className="hover:text-white transition-colors flex items-center gap-4 group">
+           <span className="w-4 h-px bg-zinc-800 group-hover:w-8 group-hover:bg-blue-500 transition-all" /> 06 Network
+         </a>
+      </div>
 
+      <SmoothScroll key={id}>
         <div className="max-w-7xl mx-auto px-6 pt-32 pb-40 relative z-10" data-scroll-section>
           
           {/* Header Section - High Impact Dossier Style */}
