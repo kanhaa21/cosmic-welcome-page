@@ -121,7 +121,7 @@ export function GSAPStars({ count = 800, speed = 1.5 }: { count?: number, speed?
     <canvas 
       ref={canvasRef} 
       className="fixed inset-0 pointer-events-none z-0"
-      style={{ filter: "blur(0.5px) contrast(1.1) brightness(1.2)" }}
+      style={{ filter: "blur(0.5px) contrast(0.9) brightness(0.6)" }}
     />
   );
 }
