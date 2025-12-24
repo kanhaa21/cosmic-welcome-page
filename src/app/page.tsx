@@ -19,7 +19,6 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Home() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
-  const [stars, setStars] = useState<{ top: string; left: string; size: string; opacity: number }[]>([]);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -30,13 +29,6 @@ export default function Home() {
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
 
   useEffect(() => {
-    setStars([...Array(50)].map(() => ({
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      size: `${Math.random() * 2 + 1}px`,
-      opacity: Math.random() * 0.5 + 0.3
-    })));
-
     const initAnimations = () => {
       const titles = document.querySelectorAll(".reveal-text");
       titles.forEach((title) => {
@@ -59,19 +51,6 @@ export default function Home() {
           }
         );
       });
-
-      gsap.to(".star-layer", {
-        y: (i, target) => -ScrollTrigger.maxScroll(".smooth-scroll") * (target.dataset.speed || 0.1),
-        ease: "none",
-        scrollTrigger: {
-          trigger: "body",
-          scroller: ".smooth-scroll",
-          start: "top top",
-          end: "bottom bottom",
-          scrub: true,
-          invalidateOnRefresh: true,
-        }
-      });
     };
 
     // Refresh ScrollTrigger after a delay to ensure proxy is ready
@@ -93,22 +72,6 @@ export default function Home() {
         <MilkyWay />
         <GSAPStars />
         
-        <div className="star-layer fixed inset-0 z-[-1] pointer-events-none opacity-40" data-speed="0.05">
-          {stars.map((star, i) => (
-            <div 
-              key={i} 
-              className="absolute bg-white rounded-full blur-[1px]" 
-              style={{
-                top: star.top,
-                left: star.left,
-                width: star.size,
-                height: star.size,
-                opacity: star.opacity
-              }}
-            />
-          ))}
-        </div>
-
         <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/20 via-transparent to-[#030014] pointer-events-none" />
 
         {/* Hero Section */}
