@@ -29,7 +29,6 @@ export default function Home() {
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
 
   useEffect(() => {
-    // Generate stars only on client to avoid hydration mismatch
     setStars([...Array(50)].map(() => ({
       top: `${Math.random() * 100}%`,
       left: `${Math.random() * 100}%`,
@@ -37,7 +36,6 @@ export default function Home() {
       opacity: Math.random() * 0.5 + 0.3
     })));
 
-    // GSAP Font Animations
     const titles = document.querySelectorAll(".reveal-text");
     titles.forEach((title) => {
       gsap.fromTo(
@@ -58,7 +56,6 @@ export default function Home() {
       );
     });
 
-    // Parallax effect for stars using ScrollTrigger
     gsap.to(".star-layer", {
       y: (i, target) => -ScrollTrigger.maxScroll(window) * (target.dataset.speed || 0.1),
       ease: "none",
@@ -79,7 +76,6 @@ export default function Home() {
         <MilkyWay />
         <GSAPStars />
         
-        {/* Parallax Star Layers for "all around" feel */}
         <div className="star-layer fixed inset-0 z-[-1] pointer-events-none opacity-40" data-speed="0.05">
           {stars.map((star, i) => (
             <div 
@@ -96,7 +92,6 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Deep background overlay for readability */}
         <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/20 via-transparent to-[#030014] pointer-events-none" />
 
         {/* Hero Section */}
@@ -133,22 +128,22 @@ export default function Home() {
         </section>
 
         {/* Milky Way Feature */}
-        <section className="relative py-20 px-4 md:px-20 z-10" data-scroll-section>
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+        <section className="relative py-12 px-4 md:px-20 z-10" data-scroll-section>
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="reveal-text">
-              <span className="text-purple-400 font-bold uppercase tracking-widest text-sm mb-4 block">Cosmic Origins</span>
-              <h2 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight tracking-tighter">
+              <span className="text-purple-400 font-bold uppercase tracking-widest text-xs mb-3 block">Cosmic Origins</span>
+              <h2 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight tracking-tighter">
                 The Milky Way <br />
                 <span className="text-zinc-600">Our Infinite Cradle</span>
               </h2>
-              <p className="text-zinc-400 text-xl leading-relaxed mb-10 max-w-xl">
+              <p className="text-zinc-400 text-lg leading-relaxed mb-8 max-w-xl">
                 Our galaxy is a vast spiral city of stars, spanning over 100,000 light-years. 
                 It contains at least 100 billion planets and an equal number of stars, 
                 all orbiting a supermassive black hole at its core.
               </p>
               <div className="flex gap-4">
-                <div className="h-1 w-24 bg-gradient-to-r from-purple-600 to-transparent" />
-                <div className="h-1 w-8 bg-zinc-800" />
+                <div className="h-1 w-20 bg-gradient-to-r from-purple-600 to-transparent" />
+                <div className="h-1 w-6 bg-zinc-800" />
               </div>
             </div>
             
@@ -163,13 +158,12 @@ export default function Home() {
             >
               <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000" />
               <div className="relative glass-card aspect-video rounded-3xl flex items-center justify-center overflow-hidden">
-                <div className="text-center p-12">
-                  <div className="text-8xl font-black text-white mb-4 tracking-tighter drop-shadow-2xl">13.8B</div>
-                  <div className="text-zinc-500 uppercase tracking-[0.3em] text-xs font-bold">Years Since the Big Bang</div>
+                <div className="text-center p-8">
+                  <div className="text-7xl font-black text-white mb-3 tracking-tighter drop-shadow-2xl">13.8B</div>
+                  <div className="text-zinc-500 uppercase tracking-[0.3em] text-[10px] font-bold">Years Since the Big Bang</div>
                 </div>
-                {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 blur-[100px]" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 blur-[100px]" />
+                <div className="absolute top-0 right-0 w-48 h-48 bg-purple-500/10 blur-[100px]" />
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 blur-[100px]" />
               </div>
             </motion.div>
           </div>
@@ -181,24 +175,24 @@ export default function Home() {
         </div>
 
         {/* Solar System Section */}
-        <div className="-mt-20" data-scroll-section>
+        <div className="-mt-12" data-scroll-section>
           <SolarSystem />
         </div>
 
         {/* Infinite Wonders */}
-        <section className="relative py-40 px-4 md:px-20 z-10 bg-black/40 backdrop-blur-sm border-y border-white/5" data-scroll-section>
+        <section className="relative py-24 px-4 md:px-20 z-10 bg-black/40 backdrop-blur-sm border-y border-white/5" data-scroll-section>
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-24 reveal-text">
-              <span className="text-purple-500 font-black uppercase tracking-[0.5em] text-xs mb-4 block">
+            <div className="text-center mb-16 reveal-text">
+              <span className="text-purple-500 font-black uppercase tracking-[0.5em] text-[10px] mb-3 block">
                 Exploration
               </span>
-              <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter mb-8">
+              <h2 className="text-4xl md:text-7xl font-black text-white tracking-tighter mb-6">
                 Infinite Wonders <span className="text-zinc-700">Await</span>
               </h2>
-              <div className="w-24 h-1 bg-purple-500 mx-auto rounded-full" />
+              <div className="w-20 h-1 bg-purple-500 mx-auto rounded-full" />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 { 
                   title: "Nebulae", 
@@ -221,31 +215,26 @@ export default function Home() {
               ].map((item, i) => (
                 <div
                   key={item.title}
-                  className={`group relative p-10 rounded-[2.5rem] glass-card ${item.color} transition-all duration-500 hover:bg-white/[0.06] reveal-text`}
+                  className={`group relative p-8 rounded-[2rem] glass-card ${item.color} transition-all duration-500 hover:bg-white/[0.06] reveal-text`}
                   data-scroll
-                  data-scroll-speed={i * 0.2 + 0.5}
+                  data-scroll-speed={i * 0.1 + 0.3}
                 >
-                  <div className="text-4xl mb-6 opacity-50 group-hover:opacity-100 transition-opacity">{item.icon}</div>
-                  <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-purple-400 transition-colors">{item.title}</h3>
-                  <p className="text-zinc-400 text-lg leading-relaxed font-medium group-hover:text-zinc-200 transition-colors">
+                  <div className="text-3xl mb-5 opacity-50 group-hover:opacity-100 transition-opacity">{item.icon}</div>
+                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-purple-400 transition-colors">{item.title}</h3>
+                  <p className="text-zinc-400 text-base leading-relaxed font-medium group-hover:text-zinc-200 transition-colors">
                     {item.desc}
                   </p>
-                  
-                  {/* Hover Decoration */}
-                  <div className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-ping" />
-                  </div>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <footer className="relative py-24 px-4 text-center border-t border-white/5 z-10" data-scroll-section>
-          <p className="text-zinc-600 text-xs font-black tracking-[0.8em] uppercase mb-4">
+        <footer className="relative py-16 px-4 text-center border-t border-white/5 z-10" data-scroll-section>
+          <p className="text-zinc-600 text-[10px] font-black tracking-[0.8em] uppercase mb-3">
             Cosmic Explorers Guild
           </p>
-          <p className="text-zinc-500 text-sm italic">
+          <p className="text-zinc-500 text-xs italic">
             "The cosmos is within us. We are made of star-stuff." — Carl Sagan
           </p>
         </footer>
