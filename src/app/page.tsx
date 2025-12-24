@@ -1,18 +1,20 @@
 "use client";
 
-import { GSAPStars } from "@/components/space/GSAPStars";
 import { WelcomeText } from "@/components/space/WelcomeText";
 import { Taskbar } from "@/components/space/Taskbar";
 import { SmoothScroll } from "@/components/space/SmoothScroll";
-import { StoryTeller } from "@/components/space/StoryTeller";
-import { SolarSystem } from "@/components/space/SolarSystem";
-import { RealisticEarth } from "@/components/space/RealisticEarth";
 import { CustomCursor } from "@/components/space/CustomCursor";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const GSAPStars = dynamic(() => import("@/components/space/GSAPStars").then(mod => mod.GSAPStars), { ssr: false });
+const StoryTeller = dynamic(() => import("@/components/space/StoryTeller").then(mod => mod.StoryTeller), { ssr: false });
+const SolarSystem = dynamic(() => import("@/components/space/SolarSystem").then(mod => mod.SolarSystem), { ssr: false });
+const RealisticEarth = dynamic(() => import("@/components/space/RealisticEarth").then(mod => mod.RealisticEarth), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger);
 
