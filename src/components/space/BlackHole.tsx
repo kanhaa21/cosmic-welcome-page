@@ -12,14 +12,14 @@ const vertexShader = `
   }
 `;
 
-  const fragmentShader = `
+const fragmentShader = `
   uniform float uTime;
   uniform vec2 uResolution;
-  uniform float uIntensity;
   varying vec2 vUv;
 
   #define PI 3.14159265359
 
+  // Noise functions for accretion disk
   float hash(vec2 p) {
     p = fract(p * vec2(123.34, 456.21));
     p += dot(p, p + 45.32);
@@ -50,86 +50,83 @@ const vertexShader = `
     uv.x *= uResolution.x / uResolution.y;
 
     float r = length(uv);
-    
-    // THE ENGULFING HOLE
-    // Growing and pulsating hole
-    float holeExpansion = 0.5 + sin(uTime * 0.2) * 0.2;
-    float holeSize = holeExpansion;
-    
-    // Distort galaxy UVs towards the hole
-    float distortion = smoothstep(2.5, holeSize, r);
-    vec2 distortedUV = uv * (1.0 + distortion * 0.5);
-    float dr = length(distortedUV);
-    float dtheta = atan(distortedUV.y, distortedUV.x);
+    float theta = atan(uv.y, uv.x);
 
-    // Revolving motion: outer stars move slower, inner move faster
-    float rotationSpeed = 0.15 / (dr + 0.2);
+    // BLACK HOLE PARAMETERS
+    float eventHorizon = 0.4;
+    float photonSphere = 0.55;
     
-    // SPIRAL CALCULATION
-    float arms = 2.0;
-    float spiral = sin(dtheta * arms + dr * 5.0 - uTime * 0.5);
-    spiral = pow(max(0.0, spiral), 3.0);
+    // GRAVITATIONAL LENSING
+    // Light bends near the mass. We simulate this by warping UVs.
+    float lensing = 0.0;
+    if (r > eventHorizon) {
+        lensing = eventHorizon / (r * 1.5);
+    }
+    vec2 lUv = uv * (1.0 - lensing);
+    float lr = length(lUv);
+    float ltheta = atan(lUv.y, lUv.x);
+
+    // ACCRETION DISK
+    // Rotating hot gas around the event horizon
+    float diskInner = 0.6;
+    float diskOuter = 1.8;
     
-    // FBM for gas/dust details
-    float revolvingTheta = dtheta - uTime * 0.2;
-    vec2 rotUV = vec2(cos(revolvingTheta), sin(revolvingTheta)) * dr;
-    float dust = fbm(rotUV * 3.0 + dr * 2.0);
+    float diskMask = smoothstep(diskInner, diskInner + 0.1, lr) * (1.0 - smoothstep(diskOuter - 0.4, diskOuter, lr));
     
-    // CORE GLOW (Galaxy center)
-    float core = exp(-dr * 6.0) * 1.5;
-    float glow = exp(-dr * 2.0) * 0.3;
+    // Animate the disk
+    float diskSpeed = 1.5 / (lr + 0.1);
+    float diskPattern = fbm(vec2(ltheta * 3.0 + uTime * diskSpeed, lr * 5.0 - uTime * 0.2));
+    diskPattern *= fbm(vec2(ltheta * 1.0 - uTime * diskSpeed * 0.5, lr * 10.0));
     
-    // REVOLVING STARS
+    // Colors for the accretion disk (high energy white to orange/red)
+    vec3 colHot = vec3(1.0, 1.0, 0.9);
+    vec3 colWarm = vec3(1.0, 0.5, 0.1);
+    vec3 colCool = vec3(0.5, 0.1, 0.0);
+    
+    vec3 diskColor = mix(colCool, colWarm, diskPattern);
+    diskColor = mix(diskColor, colHot, pow(diskPattern, 3.0));
+    
+    // Add glow near the inner edge (Doppler boosting simulation)
+    float innerGlow = exp(-(lr - diskInner) * 10.0) * diskMask;
+    diskColor += colHot * innerGlow * 0.5;
+
+    // PHOTON SPHERE GLOW
+    float sphereGlow = exp(-(r - photonSphere) * 15.0) * step(eventHorizon, r);
+    vec3 sphereColor = vec3(1.0, 0.8, 0.4) * sphereGlow * 0.8;
+
+    // BACKGROUND STARS (Lensed)
     float starField = 0.0;
-    for(float i = 1.0; i < 5.0; i++) {
-        float scale = i * 30.0;
-        float sTheta = dtheta + uTime * (0.05 + 0.1 / i) + hash(vec2(i)) * PI;
-        vec2 sUV = vec2(cos(sTheta), sin(sTheta)) * dr * scale;
-        vec2 grid = floor(sUV);
+    for(float i = 1.0; i < 4.0; i++) {
+        vec2 sUv = lUv * (10.0 + i * 15.0);
+        vec2 grid = floor(sUv);
         float h = hash(grid);
-        if (h > 0.97) {
-            float size = 0.08 * h;
-            float dist = length(fract(sUV) - 0.5);
-            float star = smoothstep(size, 0.0, dist);
-            starField += star * h * (sin(uTime * 3.0 + h * 60.0) * 0.5 + 0.5);
+        if (h > 0.98) {
+            float star = smoothstep(0.1, 0.0, length(fract(sUv) - 0.5));
+            starField += star * h;
         }
     }
 
-    // BRIGHT CENTER STARS
-    float centerStars = pow(hash(distortedUV * 100.0), 500.0) * (1.0 - smoothstep(0.0, 1.5, dr));
-
-    // COLORS
-    vec3 col_core = vec3(1.0, 0.95, 0.85);
-    vec3 col_arms = vec3(0.5, 0.3, 0.9);
-    vec3 col_gas = vec3(0.1, 0.05, 0.3);
-    vec3 col_dust = vec3(0.05, 0.02, 0.1);
-
-    vec3 galaxyColor = col_dust;
-    galaxyColor = mix(galaxyColor, col_arms, spiral * 0.6);
-    galaxyColor = mix(galaxyColor, col_gas, dust * 0.4);
-    galaxyColor += col_core * core;
-    galaxyColor += col_core * glow * 0.3;
-    galaxyColor += vec3(1.0) * starField;
-    galaxyColor += vec3(0.9, 0.9, 1.0) * centerStars;
-
-    // THE HOLE EFFECT (Yellow/Redish)
-    float holeEdge = smoothstep(holeSize + 0.4, holeSize, r);
-    float voidMask = smoothstep(holeSize, holeSize - 0.1, r);
+    // FINAL COMPOSITION
+    vec3 finalColor = vec3(0.0);
     
-    vec3 holeColor = mix(vec3(1.0, 0.1, 0.0), vec3(1.0, 0.8, 0.0), noise(uv * 2.0 + uTime * 0.5));
-    float holeGlow = exp(-(r - holeSize) * 4.0) * step(holeSize, r);
+    // 1. Add lensed stars
+    finalColor += vec3(0.8, 0.8, 1.0) * starField * (1.0 - step(eventHorizon, r)); // Block stars behind EH
+    finalColor *= smoothstep(eventHorizon, eventHorizon + 0.01, r); // Clean EH edge
     
-    vec3 finalColor = mix(galaxyColor, vec3(0.0), voidMask);
-    finalColor += holeColor * holeGlow * 1.2;
+    // 2. Add Accretion Disk
+    finalColor += diskColor * diskMask * 1.5;
     
-    // Add "weird" noise to the hole edge
-    float edgeNoise = fbm(uv * 5.0 + uTime * 0.3);
-    finalColor += holeColor * edgeNoise * holeGlow * 0.5;
+    // 3. Add Photon Sphere
+    finalColor += sphereColor;
+    
+    // 4. Shadow/Darkness of the Event Horizon
+    float ehMask = 1.0 - smoothstep(eventHorizon - 0.05, eventHorizon, r);
+    finalColor = mix(finalColor, vec3(0.0), ehMask);
 
-    // Outer vignette
-    finalColor *= smoothstep(2.5, 0.5, r);
+    // Atmospheric haze
+    finalColor += vec3(0.1, 0.05, 0.0) * exp(-r * 2.0) * 0.3;
 
-    gl_FragColor = vec4(finalColor * uIntensity, 1.0);
+    gl_FragColor = vec4(finalColor, 1.0);
   }
 `;
 
@@ -139,8 +136,7 @@ const BlackHoleShader = () => {
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uResolution: { value: new THREE.Vector2(typeof window !== "undefined" ? window.innerWidth : 1000, typeof window !== "undefined" ? window.innerHeight : 1000) },
-      uIntensity: { value: 0.5 },
+      uResolution: { value: new THREE.Vector2(1000, 1000) },
     }),
     []
   );
@@ -168,14 +164,17 @@ const BlackHoleShader = () => {
 
 export function BlackHole() {
   return (
-    <div className="fixed inset-0 z-0 bg-black">
+    <div className="fixed inset-0 z-0 bg-[#020202]">
       <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
         <BlackHoleShader />
       </Canvas>
       
-      {/* Post-processing-like CSS overlays for extra mood */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_transparent_30%,_black_100%)] opacity-60" />
-      <div className="absolute inset-0 pointer-events-none backdrop-blur-[1px]" />
+      {/* Cinematic overlays */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_transparent_20%,_black_90%)] opacity-80" />
+      <div className="absolute inset-0 pointer-events-none backdrop-blur-[0.5px] opacity-50" />
+      
+      {/* Film grain effect */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
     </div>
   );
 }
