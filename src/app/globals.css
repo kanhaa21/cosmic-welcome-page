@@ -114,9 +114,37 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  :root {
+    --cosmic-glow: rgba(147, 51, 234, 0.5);
   }
+  * {
+    @apply border-white/5 outline-ring/50;
+  }
+  body {
+    @apply bg-[#030014] text-zinc-100 antialiased selection:bg-purple-500/30 selection:text-white;
+  }
+}
+
+.text-glow {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.glass-card {
+  @apply bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)];
+}
+
+.cosmic-gradient {
+  background: radial-gradient(circle at 50% 50%, rgba(76, 29, 149, 0.1) 0%, transparent 80%);
+}
+
+html.has-scroll-smooth {
+  overflow: hidden;
+}
+
+.has-scroll-smooth [data-scroll-container] {
+  min-height: 100vh;
+}
+
   body {
     @apply bg-black text-foreground antialiased selection:bg-white selection:text-black;
   }
