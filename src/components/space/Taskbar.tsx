@@ -90,7 +90,7 @@ export function Taskbar() {
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-3 md:py-4 rounded-full border border-white/5 bg-[#030014]/40 backdrop-blur-2xl flex items-center gap-3 md:gap-8 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-white/10 w-[98%] md:w-auto justify-between md:justify-center overflow-hidden"
+      className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 px-4 md:px-6 py-3 md:py-4 rounded-full border border-white/5 bg-[#030014]/40 backdrop-blur-2xl flex items-center gap-3 md:gap-8 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-white/10 w-[98%] md:w-auto justify-between md:justify-center"
     >
       {/* Home Navigation */}
         <div className="flex items-center gap-2 md:gap-6 relative z-[2]">
@@ -108,7 +108,7 @@ export function Taskbar() {
                   {activeSection === section.id && (
                     <motion.div
                       layoutId="scroll-thumb"
-                      className="absolute -bottom-[12px] left-0 right-0 h-[4px] bg-gradient-to-r from-purple-600 via-purple-400 to-purple-600 rounded-full shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+                      className="absolute top-[calc(100%+8px)] left-0 right-0 h-[4px] bg-gradient-to-r from-purple-600 via-purple-400 to-purple-600 rounded-full shadow-[0_0_20px_rgba(168,85,247,0.4)]"
                       transition={{ type: "spring", bounce: 0.15, duration: 0.6 }}
                     />
                   )}
