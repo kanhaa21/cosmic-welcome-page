@@ -80,8 +80,11 @@ const agencyData: Record<string, AgencyData> = {
   }
 };
 
-export default function AgencyPage({ params }: { params: { id: string } }) {
-  const data = agencyData[params.id as keyof typeof agencyData];
+import { use } from "react";
+
+export default function AgencyPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const data = agencyData[id as keyof typeof agencyData];
 
   if (!data) return <div className="text-white p-20">Agency not found.</div>;
 
