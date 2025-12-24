@@ -1,21 +1,79 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { motion, AnimatePresence } from "framer-motion";
 
 const planets = [
-  { name: "Mercury", color: "#A5A5A5", size: 4, distance: 80, speed: 1.5 },
-  { name: "Venus", color: "#E3BB76", size: 8, distance: 120, speed: 1.2 },
-  { name: "Earth", color: "#2271B3", size: 9, distance: 170, speed: 1.0 },
-  { name: "Mars", color: "#E27B58", size: 6, distance: 220, speed: 0.8 },
-  { name: "Jupiter", color: "#D39C7E", size: 22, distance: 300, speed: 0.5 },
-  { name: "Saturn", color: "#C5AB6E", size: 18, distance: 380, speed: 0.4 },
-  { name: "Uranus", color: "#BBE1E4", size: 12, distance: 440, speed: 0.3 },
-  { name: "Neptune", color: "#6081FF", size: 12, distance: 500, speed: 0.2 },
+  { 
+    name: "Mercury", 
+    color: "#A5A5A5", 
+    size: 6, 
+    distance: 80, 
+    speed: 1.5,
+    description: "The smallest planet and closest to the Sun. A scarred rock of extreme temperatures."
+  },
+  { 
+    name: "Venus", 
+    color: "#E3BB76", 
+    size: 10, 
+    distance: 120, 
+    speed: 1.2,
+    description: "Earth's toxic twin. Hidden beneath thick sulfuric clouds with a crushing atmosphere."
+  },
+  { 
+    name: "Earth", 
+    color: "#2271B3", 
+    size: 11, 
+    distance: 170, 
+    speed: 1.0,
+    description: "Our blue sanctuary. The only known world teeming with life and liquid oceans."
+  },
+  { 
+    name: "Mars", 
+    color: "#E27B58", 
+    size: 8, 
+    distance: 220, 
+    speed: 0.8,
+    description: "The Red Planet. A dusty, cold desert world with a thin atmosphere and vast canyons."
+  },
+  { 
+    name: "Jupiter", 
+    color: "#D39C7E", 
+    size: 26, 
+    distance: 300, 
+    speed: 0.5,
+    description: "King of the planets. A massive gas giant with a Great Red Spot twice the size of Earth."
+  },
+  { 
+    name: "Saturn", 
+    color: "#C5AB6E", 
+    size: 22, 
+    distance: 380, 
+    speed: 0.4,
+    description: "The jewel of the solar system. Adorned with a spectacular and complex system of rings."
+  },
+  { 
+    name: "Uranus", 
+    color: "#BBE1E4", 
+    size: 15, 
+    distance: 440, 
+    speed: 0.3,
+    description: "The ice giant. An odd world that rotates on its side, tilted nearly 90 degrees."
+  },
+  { 
+    name: "Neptune", 
+    color: "#6081FF", 
+    size: 15, 
+    distance: 500, 
+    speed: 0.2,
+    description: "The dark, cold, and whipped by supersonic winds. The most distant major planet."
+  },
 ];
 
 export function SolarSystem() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [hoveredPlanet, setHoveredPlanet] = useState<number | null>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -29,7 +87,7 @@ export function SolarSystem() {
           transformOrigin: "center center",
         });
 
-        // Hover effect for planet name
+        // Initial entry animation for names
         gsap.fromTo(`.name-${i}`, 
           { opacity: 0, scale: 0.5 },
           {
@@ -60,7 +118,7 @@ export function SolarSystem() {
         <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">Celestial <span className="text-zinc-700">Harmony</span></h2>
       </div>
 
-      <div className="relative w-[1000px] h-[1000px] flex items-center justify-center">
+      <div className="relative w-[1000px] h-[1000px] flex items-center justify-center scale-75 md:scale-100">
         {/* Sun */}
         <div className="absolute w-20 h-20 bg-yellow-400 rounded-full blur-[2px] shadow-[0_0_100px_#fbbf24] z-20">
           <div className="absolute inset-0 bg-orange-500 rounded-full animate-pulse opacity-50" />
@@ -94,17 +152,43 @@ export function SolarSystem() {
                   left: "100%",
                   transform: "translate(-50%, -50%)",
                 }}
+                onMouseEnter={() => setHoveredPlanet(i)}
+                onMouseLeave={() => setHoveredPlanet(null)}
               >
-                <div 
-                  className="rounded-full shadow-lg transition-transform group-hover:scale-150"
+                <motion.div 
+                  animate={{ 
+                    scale: hoveredPlanet === i ? 2.5 : 1,
+                    boxShadow: hoveredPlanet === i ? `0 0 30px ${planet.color}` : `0 0 20px ${planet.color}44`
+                  }}
+                  className="rounded-full shadow-lg transition-colors z-30"
                   style={{
                     width: planet.size,
                     height: planet.size,
                     backgroundColor: planet.color,
-                    boxShadow: `0 0 20px ${planet.color}44`,
                   }}
                 />
-                <span className={`name-${i} absolute -bottom-6 text-[10px] font-bold text-white uppercase tracking-widest whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100`}>
+
+                <AnimatePresence>
+                  {hoveredPlanet === i && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.8 }}
+                      className="absolute bottom-full mb-8 z-50 pointer-events-none"
+                    >
+                      <div className="bg-black/80 backdrop-blur-xl border border-white/10 p-4 rounded-2xl w-64 shadow-2xl relative">
+                        <div className="text-purple-400 font-black text-xs uppercase tracking-[0.2em] mb-1">{planet.name}</div>
+                        <div className="text-zinc-300 text-xs leading-relaxed font-medium">
+                          {planet.description}
+                        </div>
+                        {/* Little tail for the speech bubble */}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-black/80" />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <span className={`name-${i} absolute -bottom-6 text-[10px] font-bold text-white uppercase tracking-widest whitespace-nowrap opacity-40 transition-opacity group-hover:opacity-100`}>
                   {planet.name}
                 </span>
               </div>
