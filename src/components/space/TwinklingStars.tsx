@@ -8,15 +8,15 @@ import * as THREE from "three";
 function Stars() {
   const ref = useRef<THREE.Points>(null!);
   
-  const stars = useMemo(() => {
-    const count = 3000;
+    const stars = useMemo(() => {
+    const count = 15000;
     const positions = new Float32Array(count * 3);
     const sizes = new Float32Array(count);
     
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 20;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+      positions[i * 3] = (Math.random() - 0.5) * 40;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 40;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
       sizes[i] = Math.random();
     }
     return { positions, sizes };
@@ -24,8 +24,12 @@ function Stars() {
 
   useFrame((state) => {
     if (ref.current) {
-      ref.current.rotation.y = state.clock.getElapsedTime() * 0.02;
-      ref.current.rotation.x = state.clock.getElapsedTime() * 0.01;
+      ref.current.rotation.y = state.clock.getElapsedTime() * 0.01;
+      ref.current.rotation.x = state.clock.getElapsedTime() * 0.005;
+      
+      // Simple twinkling effect by pulsing overall opacity
+      const material = ref.current.material as THREE.PointsMaterial;
+      material.opacity = 0.4 + Math.sin(state.clock.getElapsedTime() * 2) * 0.2;
     }
   });
 
