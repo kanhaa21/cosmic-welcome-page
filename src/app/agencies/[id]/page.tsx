@@ -519,7 +519,7 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Future Horizon - Roadmap */}
-          <section id="roadmap" className="mb-40 py-24 px-8 md:px-16 rounded-[3rem] bg-gradient-to-br from-blue-600/10 via-transparent to-transparent border border-white/5 relative overflow-hidden" data-scroll-section>
+          <section id="roadmap" className="mb-40 py-24 px-8 md:px-16 rounded-[3rem] bg-gradient-to-br from-blue-600/10 via-transparent to-transparent border border-white/5 relative overflow-hidden">
              <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
              
              <div className="relative z-10">
