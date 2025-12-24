@@ -5,196 +5,215 @@ import { MilkyWay } from "@/components/space/MilkyWay";
 import { Taskbar } from "@/components/space/Taskbar";
 import { SmoothScroll } from "@/components/space/SmoothScroll";
 import { CustomCursor } from "@/components/space/CustomCursor";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion } from "framer-motion";
 
-gsap.registerPlugin(ScrollTrigger);
-
-interface StoryItem {
-  title: string;
+interface TimelineItem {
   year: string;
-  description: string;
-  image: string;
+  event: string;
+  detail: string;
+}
+
+interface Facility {
+  name: string;
+  location: string;
+  role: string;
+}
+
+interface Vehicle {
+  name: string;
+  type: string;
+  status: string;
+  payload: string;
 }
 
 interface AgencyData {
   name: string;
-  tagline: string;
-  description: string;
-  color: string;
-  accent: string;
-  flagGradient: string;
+  fullname: string;
   founded: string;
   hq: string;
-  stats: { label: string; value: string; suffix?: string }[];
-  achievements: StoryItem[];
-  projects: StoryItem[];
+  leadership: string;
+  budget: string;
+  workforce: string;
+  description: string;
+  motto: string;
+  technicalOverview: string;
+  facilities: Facility[];
+  vehicles: Vehicle[];
+  timeline: TimelineItem[];
+  activeMissions: string[];
+  capabilities: string[];
 }
 
 const agencyData: Record<string, AgencyData> = {
   nasa: {
     name: "NASA",
-    tagline: "Exploring the secrets of the universe for the benefit of all.",
-    description: "The National Aeronautics and Space Administration is America's civil space program and the global leader in space exploration.",
-    color: "from-blue-600",
-    accent: "#2563eb",
-    flagGradient: "from-[#3C3B6E] via-[#FFFFFF] to-[#B22234]",
-    founded: "1958",
-    hq: "Washington, D.C.",
-    stats: [
-      { label: "Annual Budget", value: "25.4", suffix: "B" },
-      { label: "Active Missions", value: "80", suffix: "+" },
-      { label: "Moon Landings", value: "6" },
-      { label: "Workforce", value: "18", suffix: "k" }
+    fullname: "National Aeronautics and Space Administration",
+    founded: "July 29, 1958",
+    hq: "Washington, D.C., U.S.",
+    leadership: "Bill Nelson (Administrator)",
+    budget: "$25.4 Billion (FY2024)",
+    workforce: "18,000+ Civil Servants",
+    motto: "For the Benefit of All",
+    description: "NASA is an independent agency of the U.S. federal government responsible for the civil space program, aeronautics research, and space research.",
+    technicalOverview: "NASA operates a vast network of research centers and launch facilities. Its technical expertise spans deep space communication (DSN), reusable launch systems, and advanced robotics.",
+    facilities: [
+      { name: "Kennedy Space Center", location: "Florida", role: "Primary Launch Site" },
+      { name: "Jet Propulsion Laboratory", location: "California", role: "Robotic Exploration" },
+      { name: "Johnson Space Center", location: "Texas", role: "Human Spaceflight & Mission Control" },
+      { name: "Goddard Space Flight Center", location: "Maryland", role: "Communications & Science" }
     ],
-    achievements: [
-      {
-        title: "The Apollo Era",
-        year: "1969",
-        description: "A moment that unified the world. Humans walked on the Moon for the first time, proving that no goal is out of reach.",
-        image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=1200"
-      },
-      {
-        title: "Voyager Interstellar",
-        year: "1977",
-        description: "Two spacecraft carrying the sounds and sights of Earth, traveling beyond the sun's influence into the great unknown.",
-        image: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&q=80&w=1200"
-      },
-      {
-        title: "Hubble's Vision",
-        year: "1990",
-        description: "Rewriting textbooks with every image. Hubble revealed the age of the universe and the beauty of nebulae.",
-        image: "https://images.unsplash.com/photo-1446776879694-90d17c71283d?auto=format&fit=crop&q=80&w=1200"
-      }
+    vehicles: [
+      { name: "Space Launch System (SLS)", type: "Super Heavy-lift", status: "Active", payload: "95t to LEO" },
+      { name: "Orion", type: "Crew Capsule", status: "Active", payload: "4-6 Crew" },
+      { name: "James Webb Space Telescope", type: "Space Observatory", status: "Operational", payload: "N/A" }
     ],
-    projects: [
-      {
-        title: "Artemis Program",
-        year: "Current",
-        description: "Returning to the Moon with the first woman and first person of color, establishing a long-term presence.",
-        image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
-      },
-      {
-        title: "Mars Sample Return",
-        year: "Future",
-        description: "A complex multi-mission campaign to bring pieces of the Red Planet back to Earth for study.",
-        image: "https://images.unsplash.com/photo-1614728423169-3f65fd722b7e?auto=format&fit=crop&q=80&w=1200"
-      }
+    timeline: [
+      { year: "1958", event: "Establishment", detail: "NASA founded in response to Sputnik launch." },
+      { year: "1969", event: "Apollo 11", detail: "First successful human moon landing." },
+      { year: "1981", event: "Space Shuttle", detail: "Launch of STS-1, first orbital flight of the Shuttle." },
+      { year: "1990", event: "Hubble Launch", detail: "Deployment of the first major optical space telescope." },
+      { year: "2022", event: "Artemis I", detail: "First flight of SLS/Orion in lunar orbit mission." }
+    ],
+    activeMissions: [
+      "Artemis Program (Lunar)",
+      "Mars Perseverance Rover",
+      "Parker Solar Probe",
+      "International Space Station Ops",
+      "Europa Clipper (In transit)"
+    ],
+    capabilities: [
+      "Deep Space Communication",
+      "Human Life Support Systems",
+      "Planetary Entry & Descent",
+      "Aeronautical Research",
+      "Earth Science Monitoring"
     ]
   },
   isro: {
     name: "ISRO",
-    tagline: "Space technology in the service of humankind.",
-    description: "India's premier space agency, known for its cost-effective and innovative approach to planetary exploration.",
-    color: "from-orange-500",
-    accent: "#f97316",
-    flagGradient: "from-[#FF9933] via-[#FFFFFF] to-[#138808]",
-    founded: "1969",
+    fullname: "Indian Space Research Organisation",
+    founded: "August 15, 1969",
     hq: "Bengaluru, India",
-    stats: [
-      { label: "Launch Missions", value: "120", suffix: "+" },
-      { label: "Satellites Built", value: "150", suffix: "+" },
-      { label: "Cost Efficiency", value: "90", suffix: "%" },
-      { label: "Planetary Missions", value: "4" }
+    leadership: "S. Somanath (Chairman)",
+    budget: "₹13,000 Crore (approx $1.6B)",
+    workforce: "17,000+ Employees",
+    motto: "Space technology in the service of humankind",
+    description: "ISRO is the national space agency of India. It has developed cost-effective technologies for space exploration and satellite launch.",
+    technicalOverview: "ISRO is a world leader in cost-efficient launch systems and remote sensing. It maintains one of the largest fleets of communication and earth observation satellites.",
+    facilities: [
+      { name: "Satish Dhawan Space Centre", location: "Sriharikota", role: "Primary Launch Port" },
+      { name: "U R Rao Satellite Centre", location: "Bengaluru", role: "Satellite Design & Dev" },
+      { name: "Vikram Sarabhai Space Centre", location: "Thiruvananthapuram", role: "Rocket & Launch Vehicle Dev" }
     ],
-    achievements: [
-      {
-        title: "Mangalyaan Success",
-        year: "2014",
-        description: "India becomes the first nation to reach Martian orbit in its first attempt, at a fraction of the usual cost.",
-        image: "https://images.unsplash.com/photo-1614728423169-3f65fd722b7e?auto=format&fit=crop&q=80&w=1200"
-      },
-      {
-        title: "Lunar South Pole",
-        year: "2023",
-        description: "Chandrayaan-3 successfully soft-lands near the Moon's south pole, a historic first for humanity.",
-        image: "https://images.unsplash.com/photo-1444703686981-a3abb997b724?auto=format&fit=crop&q=80&w=1200"
-      }
+    vehicles: [
+      { name: "LVM3", type: "Heavy-lift", status: "Active", payload: "10t to LEO" },
+      { name: "PSLV", type: "Medium-lift", status: "Active", payload: "3.8t to LEO" },
+      { name: "SSLV", type: "Small-lift", status: "Active", payload: "500kg to LEO" }
     ],
-    projects: [
-      {
-        title: "Gaganyaan",
-        year: "Upcoming",
-        description: "India's first human spaceflight mission, carrying three astronauts to low Earth orbit.",
-        image: "https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&q=80&w=1200"
-      }
+    timeline: [
+      { year: "1969", event: "Formation", detail: "Founded by Dr. Vikram Sarabhai." },
+      { year: "1975", event: "Aryabhata", detail: "India's first satellite launched via USSR." },
+      { year: "2008", event: "Chandrayaan-1", detail: "India's first lunar probe discovers water on Moon." },
+      { year: "2014", event: "Mars Orbiter Mission", detail: "First nation to reach Mars on first attempt." },
+      { year: "2023", event: "Chandrayaan-3", detail: "First soft landing near Moon's South Pole." }
+    ],
+    activeMissions: [
+      "Aditya-L1 (Solar Observation)",
+      "Gaganyaan (Uncrewed testing)",
+      "RISAT Series",
+      "GSAT Communication fleet",
+      "EOS (Earth Observation)"
+    ],
+    capabilities: [
+      "Cryogenic Engine Tech",
+      "Remote Sensing",
+      "Interplanetary Navigation",
+      "Indigenous Navigation (NavIC)"
     ]
   },
   esa: {
     name: "ESA",
-    tagline: "Shaping the development of Europe's space capability.",
-    description: "The European Space Agency is Europe's gateway to space, coordinating resources of its member states.",
-    color: "from-blue-800",
-    accent: "#1e3a8a",
-    flagGradient: "from-[#003399] to-[#FFCC00]",
-    founded: "1975",
+    fullname: "European Space Agency",
+    founded: "May 30, 1975",
     hq: "Paris, France",
-    stats: [
-      { label: "Member States", value: "22" },
-      { label: "Science Budget", value: "7.1", suffix: "B" },
-      { label: "Operational Sites", value: "8" },
-      { label: "Active Projects", value: "50", suffix: "+" }
+    leadership: "Josef Aschbacher (Director General)",
+    budget: "€7.8 Billion (2024)",
+    workforce: "2,200+ (Direct), 10,000+ (Contracted)",
+    motto: "Exploration and Discovery",
+    description: "An intergovernmental organization of 22 member states dedicated to the exploration of space.",
+    technicalOverview: "ESA coordinates the financial and intellectual resources of its members to undertake programs far beyond the scope of any single European country.",
+    facilities: [
+      { name: "Guiana Space Centre", location: "Kourou, French Guiana", role: "Main Launch Site" },
+      { name: "ESTEC", location: "Noordwijk, Netherlands", role: "Technical Heart" },
+      { name: "ESOC", location: "Darmstadt, Germany", role: "Operations Control" }
     ],
-    achievements: [
-      {
-        title: "Rosetta Mission",
-        year: "2014",
-        description: "The first mission to orbit and land on a comet, unlocking secrets of the solar system's origins.",
-        image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=1200"
-      },
-      {
-        title: "Ariane Rockets",
-        year: "Ongoing",
-        description: "Providing Europe with independent access to space through highly reliable launch vehicles.",
-        image: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&q=80&w=1200"
-      }
+    vehicles: [
+      { name: "Ariane 6", type: "Heavy-lift", status: "Active/Testing", payload: "21.6t to LEO" },
+      { name: "Vega-C", type: "Small-lift", status: "Active", payload: "2.3t to LEO" }
     ],
-    projects: [
-      {
-        title: "JUICE",
-        year: "Current",
-        description: "Exploring Jupiter's icy moons to determine if they could harbor life in their hidden oceans.",
-        image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
-      }
+    timeline: [
+      { year: "1975", event: "ESA Convention", detail: "Merging ELDO and ESRO to form ESA." },
+      { year: "2004", event: "Rosetta Launch", detail: "Mission to orbit and land on Comet 67P." },
+      { year: "2016", event: "Galileo Ops", detail: "European GNSS becomes operational." },
+      { year: "2023", event: "JUICE Launch", detail: "Mission to explore Jupiter's icy moons." }
+    ],
+    activeMissions: [
+      "Galileo Constellation",
+      "Copernicus Program",
+      "ExoMars TGO",
+      "BepiColombo (Mercury)",
+      "Solar Orbiter"
+    ],
+    capabilities: [
+      "International Cooperation",
+      "Advanced Robotics",
+      "Global Navigation Systems",
+      "Earth Environment Monitoring"
     ]
   },
   spacex: {
     name: "SpaceX",
-    tagline: "Making humanity multi-planetary.",
-    description: "Revolutionizing space transportation through reusable rocketry and visionary engineering.",
-    color: "from-zinc-600",
-    accent: "#52525b",
-    flagGradient: "from-[#3C3B6E] via-[#FFFFFF] to-[#B22234]",
-    founded: "2002",
-    hq: "Hawthorne, CA",
-    stats: [
-      { label: "Successful Launches", value: "300", suffix: "+" },
-      { label: "Reused Boosters", value: "250", suffix: "+" },
-      { label: "Starlink Satellites", value: "5000", suffix: "+" },
-      { label: "Market Value", value: "180", suffix: "B" }
+    fullname: "Space Exploration Technologies Corp.",
+    founded: "March 14, 2002",
+    hq: "Hawthorne, California, U.S.",
+    leadership: "Elon Musk (CEO & CTO)",
+    budget: "Private (~$180B Valuation)",
+    workforce: "13,000+ Employees",
+    motto: "Making Humanity Multiplanetary",
+    description: "SpaceX is an American aerospace manufacturer and space transport services company.",
+    technicalOverview: "SpaceX pioneered the use of vertical landing and reuse of orbital-class rocket boosters, dramatically reducing the cost of access to space.",
+    facilities: [
+      { name: "Starbase", location: "Boca Chica, Texas", role: "Starship Dev & Launch" },
+      { name: "LC-39A (KSC)", location: "Florida", role: "Crew & Heavy Launch" },
+      { name: "SLC-40", location: "Florida", role: "Falcon 9 Operations" },
+      { name: "McGregor", location: "Texas", role: "Rocket Testing" }
     ],
-    achievements: [
-      {
-        title: "First Landing",
-        year: "2015",
-        description: "The moment that changed everything. An orbital-class rocket booster returns to Earth and lands vertically.",
-        image: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&q=80&w=1200"
-      },
-      {
-        title: "Crew Dragon",
-        year: "2020",
-        description: "Restoring human spaceflight capability to the US with the first commercial mission to the ISS.",
-        image: "https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&q=80&w=1200"
-      }
+    vehicles: [
+      { name: "Falcon 9", type: "Medium-lift / Reusable", status: "Active", payload: "22.8t to LEO" },
+      { name: "Falcon Heavy", type: "Heavy-lift / Reusable", status: "Active", payload: "63.8t to LEO" },
+      { name: "Starship", type: "Super Heavy-lift / Fully Reusable", status: "Development/Flight Testing", payload: "100t-150t to LEO" },
+      { name: "Dragon 2", type: "Crew/Cargo Capsule", status: "Active", payload: "7 Crew" }
     ],
-    projects: [
-      {
-        title: "Starship",
-        year: "Current",
-        description: "The most powerful rocket ever built, designed to carry humans and cargo to the Moon, Mars, and beyond.",
-        image: "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&q=80&w=1200"
-      }
+    timeline: [
+      { year: "2008", event: "Falcon 1 Orbit", detail: "First private liquid-fuel rocket to reach orbit." },
+      { year: "2012", event: "Dragon ISS Dock", detail: "First private craft to dock with the ISS." },
+      { year: "2015", event: "First Landing", detail: "First vertical landing of an orbital booster." },
+      { year: "2020", event: "Demo-2", detail: "First crewed flight from US soil since 2011." },
+      { year: "2024", event: "Starship Flight 3/4", detail: "Major milestones in ship recovery and orbit." }
+    ],
+    activeMissions: [
+      "Starlink Constellation Deployment",
+      "ISS Commercial Resupply (CRS)",
+      "Commercial Crew Program",
+      "Transporter Rideshare Missions",
+      "Starship Development"
+    ],
+    capabilities: [
+      "Rapid Rocket Reusability",
+      "Low Earth Orbit Internet",
+      "Heavy Lift Capability",
+      "Private Astronautics",
+      "In-orbit Propellant Transfer (Planned)"
     ]
   }
 };
@@ -202,321 +221,191 @@ const agencyData: Record<string, AgencyData> = {
 export default function AgencyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const data = agencyData[id as keyof typeof agencyData] || agencyData.nasa;
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  const { scrollYProgress } = useScroll();
-  const titleY = useTransform(scrollYProgress, [0, 0.2], [0, -100]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-
-  useEffect(() => {
-    const scroller = document.querySelector(".smooth-scroll");
-    if (!scroller) return;
-
-    const ctx = gsap.context(() => {
-      // Achievement scaling and reveals
-      gsap.utils.toArray(".story-section").forEach((section: any) => {
-        const content = section.querySelector(".content-box");
-        const img = section.querySelector(".bg-image");
-
-        gsap.fromTo(content,
-          { opacity: 0, scale: 0.9, y: 50 },
-          {
-            opacity: 1, scale: 1, y: 0,
-            duration: 1.2,
-            ease: "power4.out",
-            scrollTrigger: {
-              trigger: section,
-              scroller: scroller,
-              start: "top 60%",
-              end: "bottom center",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
-
-        gsap.to(img, {
-          scale: 1.1,
-          scrollTrigger: {
-            trigger: section,
-            scroller: scroller,
-            scrub: true,
-            start: "top bottom",
-            end: "bottom top"
-          }
-        });
-      });
-
-      // Stats stagger reveal
-      gsap.from(".stat-card", {
-        y: 60,
-        opacity: 0,
-        stagger: 0.2,
-        duration: 1,
-        ease: "back.out(1.7)",
-        scrollTrigger: {
-          trigger: ".stats-grid",
-          scroller: scroller,
-          start: "top 80%"
-        }
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, [id]);
 
   return (
     <SmoothScroll>
-      <div ref={containerRef} className="relative min-h-screen bg-[#030014] selection:bg-purple-500/30 font-[family-name:var(--font-orbitron)]">
+      <div className="relative min-h-screen bg-[#020205] text-zinc-300 font-sans selection:bg-blue-500/30">
         <CustomCursor />
         <Taskbar />
         <MilkyWay />
 
-        {/* Dynamic Background Overlays */}
-        <div className="fixed inset-0 pointer-events-none z-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(76,29,149,0.05)_0%,transparent_70%)]" />
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+        {/* Sidebar Navigation - Fixed */}
+        <div className="hidden xl:flex fixed left-8 top-1/2 -translate-y-1/2 flex-col gap-6 z-50 text-[10px] uppercase tracking-widest font-bold text-zinc-600">
+           <a href="#overview" className="hover:text-white transition-colors">01 Overview</a>
+           <a href="#technical" className="hover:text-white transition-colors">02 Technical</a>
+           <a href="#facilities" className="hover:text-white transition-colors">03 Facilities</a>
+           <a href="#timeline" className="hover:text-white transition-colors">04 Timeline</a>
+           <a href="#active" className="hover:text-white transition-colors">05 Active</a>
         </div>
 
-        {/* Hero Section - Advanced Editorial Layout */}
-        <section className="relative min-h-screen flex items-center justify-center px-6 pt-32 pb-20 overflow-hidden">
-          <motion.div 
-            style={{ y: titleY, opacity: titleOpacity }}
-            className="w-full max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-end z-20"
-          >
-            {/* Left Side: Large Technical Typography */}
-            <div className="lg:col-span-8">
-              <div className="flex items-center gap-4 mb-8 overflow-hidden">
+        <main className="max-w-7xl mx-auto px-6 pt-32 pb-40 relative z-10">
+          
+          {/* Header Section - Informative & Clean */}
+          <header className="border-b border-zinc-800 pb-12 mb-20">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+              <div>
                 <motion.div 
-                  initial={{ x: -100, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  className="h-px w-24 bg-white/20" 
-                />
-                <span className="text-zinc-500 text-xs font-bold tracking-[1em] uppercase">Sector Profile</span>
-              </div>
-              
-              <h1 className="relative">
-                <motion.span
-                  initial={{ y: 100, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 1, delay: 0.2 }}
-                  className={`block text-[15vw] lg:text-[18rem] font-black leading-[0.8] tracking-tighter bg-gradient-to-br ${data.flagGradient} bg-clip-text text-transparent drop-shadow-[0_0_50px_rgba(255,255,255,0.1)]`}
+                  initial={{ opacity: 0, y: 10 }} 
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-3 text-blue-500 font-mono text-xs tracking-tighter mb-4"
                 >
-                  {data.name}
-                </motion.span>
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 1.5, delay: 0.5 }}
-                  className="absolute -bottom-4 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent origin-left"
-                />
-              </h1>
-            </div>
-
-            {/* Right Side: Quick Specs */}
-            <div className="lg:col-span-4 space-y-12 mb-8">
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="glass-card p-10 rounded-[2.5rem] border-white/5 relative group hover:border-white/10 transition-colors"
-              >
-                <div className="absolute -top-4 -left-4 w-20 h-20 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-all" />
-                <p className="text-zinc-400 text-xl md:text-2xl font-light italic leading-relaxed relative z-10">
-                  "{data.tagline}"
-                </p>
-              </motion.div>
-              
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-                className="flex flex-col gap-6 pl-4"
-              >
-                <div className="flex justify-between items-baseline border-b border-white/5 pb-4">
-                  <span className="text-zinc-600 text-[10px] uppercase tracking-widest font-black">Est. Date</span>
-                  <span className="text-white text-xl font-bold font-mono tracking-tighter">{data.founded}</span>
-                </div>
-                <div className="flex justify-between items-baseline border-b border-white/5 pb-4">
-                  <span className="text-zinc-600 text-[10px] uppercase tracking-widest font-black">HQ Loc</span>
-                  <span className="text-white text-xl font-bold tracking-tighter">{data.hq}</span>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Background Decorative Element */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none opacity-20">
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[conic-gradient(from_0deg,transparent,rgba(168,85,247,0.1),transparent)] animate-[spin_20s_linear_infinite]" />
-          </div>
-        </section>
-
-        {/* Stats Section - Data Intensive Grid */}
-        <section className="relative py-32 z-20">
-          <div className="max-w-screen-2xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stats-grid">
-              {data.stats.map((stat, i) => (
-                <div key={i} className="stat-card glass-card p-12 rounded-[3rem] border-white/5 flex flex-col items-center text-center group hover:bg-white/[0.05] transition-all duration-500">
-                  <span className="text-zinc-500 text-[10px] uppercase tracking-[0.5em] font-black mb-6 group-hover:text-purple-400 transition-colors">{stat.label}</span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-7xl font-black text-white tracking-tighter tabular-nums">{stat.value}</span>
-                    {stat.suffix && <span className="text-3xl font-black text-purple-500">{stat.suffix}</span>}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Mission Statement with Reveal */}
-        <section className="relative py-60 z-20 overflow-hidden">
-           <div className="max-w-5xl mx-auto px-6 text-center">
-             <motion.div
-               initial={{ opacity: 0, scale: 0.9 }}
-               whileInView={{ opacity: 1, scale: 1 }}
-               transition={{ duration: 1.5 }}
-               className="relative"
-             >
-                <span className="absolute -top-20 left-1/2 -translate-x-1/2 text-[15rem] font-black text-white/[0.02] tracking-tighter pointer-events-none whitespace-nowrap">MISSION</span>
-                <p className="text-4xl md:text-6xl text-white font-black leading-[1.1] tracking-tighter mb-12">
-                  Driving the frontiers of <span className="text-purple-500 italic">human knowledge</span> across the cosmic ocean.
-                </p>
-                <div className="max-w-2xl mx-auto h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent my-16 opacity-30" />
-                <p className="text-zinc-400 text-xl md:text-2xl font-light leading-relaxed max-w-3xl mx-auto">
-                  {data.description} Our work is not just about exploring space; it's about understanding our origin and securing our future.
-                </p>
-             </motion.div>
-           </div>
-        </section>
-
-        {/* Achievements - Advanced Sticky Scroller */}
-        <div className="relative z-10 bg-[#030014]">
-          <div className="sticky top-0 h-screen flex items-center overflow-hidden pointer-events-none z-0">
-             <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(168,85,247,0.05)_0%,transparent_50%)]" />
-          </div>
-
-          {data.achievements.map((item, i) => (
-            <section key={i} className="story-section relative min-h-screen flex items-center justify-center py-40">
-              <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-                
-                {/* Visual Side */}
-                <div className="relative aspect-[4/5] lg:aspect-square overflow-hidden rounded-[4rem] group shadow-2xl">
-                   <img src={item.image} alt={item.title} className="bg-image absolute inset-0 w-full h-full object-cover transition-transform duration-[2s]" />
-                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
-                   <div className="absolute bottom-12 left-12">
-                      <span className="text-white/60 font-mono text-sm tracking-widest uppercase mb-2 block">Archive Ref. // 0{i+1}</span>
-                      <h3 className="text-4xl font-black text-white tracking-tighter uppercase">{item.year}</h3>
-                   </div>
-                </div>
-
-                {/* Content Side */}
-                <div className="content-box">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="h-px w-12 bg-purple-500" />
-                    <span className="text-purple-400 font-black uppercase tracking-[0.4em] text-[10px]">Historic Milestone</span>
-                  </div>
-                  <h3 className="text-6xl md:text-8xl font-black text-white mb-10 tracking-tighter uppercase leading-none">{item.title}</h3>
-                  <div className="glass-card p-12 rounded-[3rem] border-white/5 bg-white/[0.02]">
-                    <p className="text-zinc-400 text-xl md:text-2xl leading-relaxed font-light">
-                      {item.description}
-                    </p>
-                    <div className="mt-12 flex items-center gap-6">
-                       <button className="text-white text-xs font-black uppercase tracking-widest flex items-center gap-3 group/btn">
-                          Launch Archive <span className="w-8 h-px bg-white/20 group-hover/btn:w-12 transition-all" />
-                       </button>
-                    </div>
-                  </div>
-                </div>
-
+                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                  AGENCY DATA DOSSIER // {id.toUpperCase()}
+                </motion.div>
+                <h1 className="text-6xl md:text-8xl font-bold text-white tracking-tight mb-2 uppercase">{data.name}</h1>
+                <p className="text-zinc-500 font-mono text-sm tracking-tight">{data.fullname}</p>
               </div>
-            </section>
-          ))}
-        </div>
-
-        {/* Future Spectrums Grid */}
-        <section className="relative py-60 bg-[#05001a] z-20 border-t border-white/5 overflow-hidden">
-          {/* Grid Background Pattern */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
-          
-          <div className="max-w-screen-2xl mx-auto px-6">
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-32 gap-12">
-              <div className="max-w-2xl">
-                <h2 className="text-purple-500 text-[10px] font-black uppercase tracking-[1.5em] mb-8">Active Spectrums</h2>
-                <div className="text-6xl md:text-[9rem] font-black text-white tracking-tighter italic leading-none">
-                  Future <span className="text-zinc-800">Frontiers</span>
-                </div>
+              <div className="flex flex-wrap gap-4">
+                 <div className="bg-zinc-900/50 border border-zinc-800 px-6 py-3 rounded-lg">
+                    <span className="block text-[10px] text-zinc-600 uppercase font-bold tracking-widest mb-1">Founded</span>
+                    <span className="text-white font-mono">{data.founded}</span>
+                 </div>
+                 <div className="bg-zinc-900/50 border border-zinc-800 px-6 py-3 rounded-lg">
+                    <span className="block text-[10px] text-zinc-600 uppercase font-bold tracking-widest mb-1">HQ</span>
+                    <span className="text-white font-mono">{data.hq}</span>
+                 </div>
               </div>
-              <p className="text-zinc-500 text-xl max-w-sm font-light italic leading-relaxed pb-6">
-                Redefining the boundaries of possible through relentless technological evolution.
-              </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {data.projects.map((project, i) => (
-                <div key={i} className="group relative aspect-video rounded-[4rem] overflow-hidden glass-card border-white/5 transition-all duration-700 hover:scale-[1.01] hover:border-white/20">
-                  <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-50 transition-all duration-1000 scale-100 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#05001a] via-[#05001a]/20 to-transparent" />
-                  
-                  <div className="absolute bottom-16 left-16 right-16 z-10">
-                    <div className="flex items-center gap-4 mb-6">
-                      <span className="h-px w-12 bg-purple-500" />
-                      <span className="text-purple-400 font-bold uppercase tracking-[0.3em] text-[11px]">{project.year}</span>
-                    </div>
-                    <h4 className="text-5xl font-black text-white mb-6 tracking-tighter uppercase">{project.title}</h4>
-                    <p className="text-zinc-400 text-xl leading-relaxed font-light line-clamp-2 group-hover:line-clamp-none transition-all duration-500">
-                      {project.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm leading-relaxed">
+               <div className="col-span-2">
+                 <h2 id="overview" className="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.2em] mb-4">Executive Summary</h2>
+                 <p className="text-xl text-zinc-200 font-light italic leading-relaxed mb-6">"{data.motto}"</p>
+                 <p className="max-w-2xl">{data.description}</p>
+               </div>
+               <div className="space-y-4">
+                 <div>
+                    <span className="block text-[10px] text-zinc-600 uppercase font-bold tracking-widest mb-1">Leadership</span>
+                    <span className="text-white">{data.leadership}</span>
+                 </div>
+                 <div>
+                    <span className="block text-[10px] text-zinc-600 uppercase font-bold tracking-widest mb-1">Current Budget</span>
+                    <span className="text-white">{data.budget}</span>
+                 </div>
+                 <div>
+                    <span className="block text-[10px] text-zinc-600 uppercase font-bold tracking-widest mb-1">Workforce</span>
+                    <span className="text-white">{data.workforce}</span>
+                 </div>
+               </div>
             </div>
-          </div>
-        </section>
+          </header>
 
-        {/* Technical Specification Footer */}
-        <footer className="relative py-40 px-6 border-t border-white/5 z-20 bg-black overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent" />
-          
-          <div className="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-20">
-             <div className="lg:col-span-8">
-                <h2 className={`text-9xl lg:text-[12rem] font-black bg-gradient-to-br ${data.flagGradient} bg-clip-text text-transparent tracking-tighter opacity-10 leading-none mb-12`}>
-                   {data.name}
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-                   <div>
-                      <span className="block text-[10px] font-black text-zinc-700 uppercase tracking-widest mb-4">Core Systems</span>
-                      <ul className="space-y-2 text-zinc-500 text-xs font-mono uppercase tracking-tight">
-                         <li>Guidance Nav</li>
-                         <li>Propulsion</li>
-                         <li>Life Support</li>
-                         <li>Avionics</li>
-                      </ul>
-                   </div>
-                   <div>
-                      <span className="block text-[10px] font-black text-zinc-700 uppercase tracking-widest mb-4">Operations</span>
-                      <ul className="space-y-2 text-zinc-500 text-xs font-mono uppercase tracking-tight">
-                         <li>Ground Ctrl</li>
-                         <li>Deep Space</li>
-                         <li>Satellite Ops</li>
-                         <li>Telemetry</li>
-                      </ul>
-                   </div>
-                </div>
-             </div>
+          {/* Technical Section */}
+          <section id="technical" className="mb-32">
+             <h2 className="text-zinc-600 text-[10px] uppercase font-bold tracking-[0.3em] mb-12 flex items-center gap-4">
+               <span className="w-8 h-px bg-zinc-800" /> Technical Capabilities & Arsenal
+             </h2>
              
-             <div className="lg:col-span-4 flex flex-col justify-end text-right">
-                <p className="text-zinc-700 text-[10px] font-black tracking-[1em] uppercase mb-8">
-                  Voyage Protocol: Active
-                </p>
-                <p className="text-zinc-500 text-2xl font-light italic leading-snug">
-                  "The stars are not reachable by the feet, but by the mind and the heart of the curious."
-                </p>
-                <div className="mt-16 pt-8 border-t border-white/5 text-[10px] text-zinc-800 font-mono tracking-[0.2em]">
-                  ENCRYPTED DATA STREAM // {new Date().getFullYear()} // COSMOS CORE
+             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div className="lg:col-span-4">
+                   <p className="text-zinc-400 leading-relaxed mb-8">{data.technicalOverview}</p>
+                   <ul className="space-y-3">
+                      {data.capabilities.map((cap, i) => (
+                        <li key={i} className="flex items-center gap-3 text-xs font-mono text-zinc-500">
+                           <span className="w-1.5 h-1.5 bg-blue-500/50 rounded-full" /> {cap}
+                        </li>
+                      ))}
+                   </ul>
+                </div>
+                <div className="lg:col-span-8 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/20 backdrop-blur-sm">
+                   <table className="w-full text-left text-xs border-collapse">
+                      <thead className="bg-zinc-900/50 text-zinc-500 font-mono">
+                         <tr>
+                            <th className="p-4 font-normal">Vehicle / System</th>
+                            <th className="p-4 font-normal">Classification</th>
+                            <th className="p-4 font-normal">Status</th>
+                            <th className="p-4 font-normal">Capability</th>
+                         </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-800">
+                         {data.vehicles.map((v, i) => (
+                           <tr key={i} className="hover:bg-white/[0.02] transition-colors">
+                              <td className="p-4 text-white font-bold">{v.name}</td>
+                              <td className="p-4 text-zinc-500">{v.type}</td>
+                              <td className="p-4">
+                                 <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${v.status.includes('Active') ? 'bg-green-500/10 text-green-500' : 'bg-orange-500/10 text-orange-500'}`}>
+                                   {v.status}
+                                 </span>
+                              </td>
+                              <td className="p-4 font-mono text-zinc-400">{v.payload}</td>
+                           </tr>
+                         ))}
+                      </tbody>
+                   </table>
                 </div>
              </div>
-          </div>
-        </footer>
+          </section>
 
+          {/* Facilities Section */}
+          <section id="facilities" className="mb-32">
+             <h2 className="text-zinc-600 text-[10px] uppercase font-bold tracking-[0.3em] mb-12 flex items-center gap-4">
+               <span className="w-8 h-px bg-zinc-800" /> Operational Infrastructure
+             </h2>
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {data.facilities.map((f, i) => (
+                  <div key={i} className="p-6 rounded-xl border border-zinc-800 bg-zinc-900/20 hover:border-zinc-700 transition-colors">
+                     <span className="block text-[9px] text-zinc-600 uppercase font-bold tracking-widest mb-3">{f.role}</span>
+                     <h4 className="text-white font-bold mb-1">{f.name}</h4>
+                     <p className="text-zinc-500 text-xs">{f.location}</p>
+                  </div>
+                ))}
+             </div>
+          </section>
+
+          {/* Dual Column: Timeline & Active Missions */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+             
+             {/* Timeline */}
+             <section id="timeline">
+                <h2 className="text-zinc-600 text-[10px] uppercase font-bold tracking-[0.3em] mb-12 flex items-center gap-4">
+                  <span className="w-8 h-px bg-zinc-800" /> Historical Milestones
+                </h2>
+                <div className="space-y-8 border-l border-zinc-800 pl-8 ml-2">
+                   {data.timeline.map((t, i) => (
+                     <div key={i} className="relative">
+                        <div className="absolute -left-[37px] top-1 w-2.5 h-2.5 rounded-full bg-zinc-800 border-2 border-zinc-950" />
+                        <span className="text-blue-500 font-mono text-xs font-bold mb-1 block">{t.year}</span>
+                        <h4 className="text-white font-bold mb-2">{t.event}</h4>
+                        <p className="text-sm text-zinc-500 leading-relaxed">{t.detail}</p>
+                     </div>
+                   ))}
+                </div>
+             </section>
+
+             {/* Active Missions */}
+             <section id="active">
+                <h2 className="text-zinc-600 text-[10px] uppercase font-bold tracking-[0.3em] mb-12 flex items-center gap-4">
+                  <span className="w-8 h-px bg-zinc-800" /> Active Operations
+                </h2>
+                <div className="bg-zinc-900/20 rounded-2xl border border-zinc-800 p-8">
+                   <ul className="divide-y divide-zinc-800">
+                      {data.activeMissions.map((m, i) => (
+                        <li key={i} className="py-5 flex items-center justify-between group cursor-default">
+                           <span className="text-zinc-300 group-hover:text-white transition-colors">{m}</span>
+                           <span className="text-[10px] font-mono text-zinc-600 group-hover:text-blue-500 transition-colors">STATUS: NOMINAL</span>
+                        </li>
+                      ))}
+                   </ul>
+                   <div className="mt-8 p-4 rounded-lg bg-blue-500/5 border border-blue-500/10">
+                      <p className="text-[10px] text-blue-400 font-mono uppercase tracking-tight">
+                        Note: Live telemetry data streams are available for selected missions via the deep space network portal.
+                      </p>
+                   </div>
+                </div>
+             </section>
+
+          </div>
+
+          {/* Footer Metadata */}
+          <footer className="mt-40 pt-12 border-t border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] text-zinc-600 font-mono tracking-widest uppercase">
+             <div>Source: Official {data.name} Communications Archive</div>
+             <div className="flex gap-8">
+                <span>Last Refreshed: {new Date().toLocaleDateString()}</span>
+                <span>System Status: Online</span>
+             </div>
+          </footer>
+
+        </main>
       </div>
     </SmoothScroll>
   );
