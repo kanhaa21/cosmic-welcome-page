@@ -167,7 +167,7 @@ export function Taskbar() {
               opacity: section.name === "Nexus" || isHovered ? 1 : 0,
               pointerEvents: section.name === "Nexus" || isHovered ? "auto" : "none"
             }}
-            transition={{ duration: 0.2, ease: "circOut" }}
+            transition={{ duration: 0.5, ease: "circOut" }}
             className="overflow-hidden flex items-center"
           >
             <button
