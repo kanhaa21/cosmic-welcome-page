@@ -75,22 +75,26 @@ export function SolarSystem() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedPlanet, setSelectedPlanet] = useState<number | null>(0);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      planets.forEach((planet, i) => {
-        // Orbit animation
-        gsap.to(`.planet-${i}`, {
-          rotation: 360,
-          duration: 20 / planet.speed,
-          repeat: -1,
-          ease: "none",
-          transformOrigin: "center center",
+    useEffect(() => {
+      const ctx = gsap.context((self) => {
+        const q = self.selector!;
+        planets.forEach((planet, i) => {
+          const target = q(`.planet-${i}`);
+          if (target.length === 0) return;
+          
+          // Orbit animation
+          gsap.to(target, {
+            rotation: 360,
+            duration: 20 / planet.speed,
+            repeat: -1,
+            ease: "none",
+            transformOrigin: "center center",
+          });
         });
-      });
-    }, containerRef);
+      }, containerRef);
 
-    return () => ctx.revert();
-  }, []);
+      return () => ctx.revert();
+    }, []);
 
   return (
     <section ref={containerRef} className="relative min-h-screen py-32 flex flex-col items-start justify-center z-10 bg-[#020108]">
