@@ -174,42 +174,55 @@ export function Taskbar() {
             transition={{ duration: 0.5, ease: "circOut" }}
             className="overflow-hidden flex items-center"
           >
-                <motion.button
-                  whileHover={section.id === "solar" ? { 
-                    scale: 1.15, 
-                    textShadow: "0 0 15px rgba(168,85,247,0.8)",
-                    letterSpacing: "0.3em"
-                  } : { scale: 1.05 }}
-                  onClick={() => {
-                    if (section.path && pathname !== section.path) {
-                      window.location.href = section.path;
-                      return;
-                    }
-                    if (pathname !== "/" && !section.path) {
-                      window.location.href = `/#${section.id}`;
-                      return;
-                    }
-                    if (section.id !== "nexus") {
-                      if (window.location.hash === "#nexus") window.location.hash = "";
-                      handleScroll(section.id);
-                    }
-                  }}
-                  className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
-                    activeSection === section.id 
-                      ? (section.name === "Nexus" ? "bg-gradient-to-r from-purple-400 via-white to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" : "text-white")
-                      : (section.name === "Nexus" ? "bg-gradient-to-r from-zinc-400 via-zinc-200 to-zinc-500 bg-clip-text text-transparent hover:from-white hover:to-white" : "text-zinc-500 hover:text-zinc-300")
-                  } ${section.name === "Nexus" ? "font-[family-name:var(--font-orbitron)] font-black text-[12px] md:text-[14px] tracking-[0.4em] scale-110" : ""} ${
-                    section.id === "solar" ? "hover:bg-purple-500/20 hover:border-purple-500/40 border border-transparent transition-all duration-500 shadow-[0_0_20px_rgba(168,85,247,0)] hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]" : ""
-                  }`}
-                >
-                  {section.name === "Solar" && (
-                    <motion.span 
-                      animate={{ opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="absolute -top-1 -right-1 w-2 h-2 bg-purple-500 rounded-full blur-[2px]"
-                    />
-                  )}
-                  {section.name}
+                  <motion.button
+                    whileHover={section.id === "solar" ? { 
+                      scale: 1.15, 
+                      textShadow: "0 0 15px rgba(168,85,247,0.8)",
+                      letterSpacing: "0.4em"
+                    } : { scale: 1.05 }}
+                    onClick={() => {
+                      if (section.path && pathname !== section.path) {
+                        window.location.href = section.path;
+                        return;
+                      }
+                      if (pathname !== "/" && !section.path) {
+                        window.location.href = `/#${section.id}`;
+                        return;
+                      }
+                      if (section.id !== "nexus") {
+                        if (window.location.hash === "#nexus") window.location.hash = "";
+                        handleScroll(section.id);
+                      }
+                    }}
+                    className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
+                      activeSection === section.id 
+                        ? (section.name === "Nexus" ? "bg-gradient-to-r from-purple-400 via-white to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" : "text-white")
+                        : (section.name === "Nexus" ? "bg-gradient-to-r from-zinc-400 via-zinc-200 to-zinc-500 bg-clip-text text-transparent hover:from-white hover:to-white" : "text-zinc-500 hover:text-zinc-300")
+                    } ${section.name === "Nexus" ? "font-[family-name:var(--font-orbitron)] font-black text-[12px] md:text-[14px] tracking-[0.4em] scale-110" : ""} ${
+                      section.id === "solar" ? "hover:bg-purple-600/30 hover:border-purple-400/50 border border-transparent transition-all duration-500 shadow-[0_0_25px_rgba(168,85,247,0)] hover:shadow-[0_0_30px_rgba(168,85,247,0.4)] relative overflow-visible" : ""
+                    }`}
+                  >
+                    {section.name === "Solar" && (
+                      <motion.span 
+                        animate={{ 
+                          scale: [1, 1.5, 1],
+                          opacity: [0.3, 1, 0.3],
+                          rotate: 360
+                        }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                        className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-purple-500 rounded-full blur-[2px] shadow-[0_0_10px_rgba(168,85,247,1)]"
+                      />
+                    )}
+                    <span className="relative z-10">{section.name}</span>
+                    {section.name === "Solar" && isHovered && (
+                      <motion.div
+                        layoutId="solar-glow"
+                        className="absolute inset-0 bg-purple-500/10 blur-xl rounded-full -z-10"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                      />
+                    )}
+
               {activeSection === section.id && (
                 <motion.div
                   layoutId="nav-scroll-segment"
