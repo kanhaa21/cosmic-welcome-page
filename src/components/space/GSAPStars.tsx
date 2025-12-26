@@ -129,46 +129,56 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         if (px >= -500 && px <= width + 500 && py >= -500 && py <= height + 500) {
           const s = (1 - star.z / 2000) * 4.5; // Increased size
           
-          // More pronounced radial fade for better readability of center content
+          // Brighten stars significantly near borders
           const distFromCenter = Math.sqrt(Math.pow(px - centerX, 2) + Math.pow(py - centerY, 2));
-            const fadeRadius = Math.min(width, height) * 1.5; 
-            const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 4); // Slightly relaxed fade
+          const edgeThreshold = Math.min(width, height) * 0.4;
+          const borderBoost = Math.pow(Math.min(distFromCenter / edgeThreshold, 2), 1.5);
           
           // Twinkle effect
           const twinkle = Math.sin(time * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
-          const currentOpacity = (1 - star.z / 2000) * star.opacity * centerFade * (0.6 + twinkle * 0.4);
+          const currentOpacity = (1 - star.z / 2000) * star.opacity * borderBoost * (0.6 + twinkle * 0.4);
 
           // Add a glowy golden trail for falling stars
-          const trailLength = Math.max(0.5, currentSpeed * 0.15);
-          const trailK = fov / (star.z + trailLength * 40);
+          const trailLength = Math.max(0.5, currentSpeed * 0.25);
+          const trailK = fov / (star.z + trailLength * 50);
           const tx = star.x * trailK + centerX;
           const ty = star.y * trailK + centerY;
 
-          // Trail Glow (Golden)
+          // Soft Glowy Golden Trail Layers
+          // Outer Glow
           ctx.beginPath();
           ctx.moveTo(px, py);
           ctx.lineTo(tx, ty);
-          ctx.strokeStyle = "#fbbf24"; // Golden amber
-          ctx.lineWidth = s * 1.5;
-          ctx.globalAlpha = currentOpacity * 0.15;
+          ctx.strokeStyle = "#fbbf24"; // Golden
+          ctx.lineWidth = s * 4;
+          ctx.globalAlpha = currentOpacity * 0.1;
           ctx.lineCap = "round";
           ctx.stroke();
 
-          // Main Trail Line
+          // Mid Trail
           ctx.beginPath();
           ctx.moveTo(px, py);
           ctx.lineTo(tx, ty);
-          ctx.strokeStyle = star.color;
-          ctx.lineWidth = s * 0.6;
+          ctx.strokeStyle = "#f59e0b"; // Amber
+          ctx.lineWidth = s * 2;
+          ctx.globalAlpha = currentOpacity * 0.2;
+          ctx.stroke();
+
+          // Core Trail
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(tx, ty);
+          ctx.strokeStyle = "#fff"; 
+          ctx.lineWidth = s * 0.5;
           ctx.globalAlpha = currentOpacity * 0.4;
           ctx.stroke();
 
           // Outer glow for stars
           if (currentOpacity > 0.3) {
             ctx.beginPath();
-            ctx.arc(px, py, s * 2.5, 0, Math.PI * 2);
-            ctx.fillStyle = star.color === "#ffffff" ? "#fbbf24" : star.color;
-            ctx.globalAlpha = currentOpacity * 0.25;
+            ctx.arc(px, py, s * 3, 0, Math.PI * 2);
+            ctx.fillStyle = "#fbbf24";
+            ctx.globalAlpha = currentOpacity * 0.3;
             ctx.fill();
           }
 
@@ -176,7 +186,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           ctx.beginPath();
           ctx.arc(px, py, s, 0, Math.PI * 2);
           ctx.fillStyle = star.color;
-          ctx.globalAlpha = currentOpacity;
+          ctx.globalAlpha = Math.min(currentOpacity * 1.5, 1);
           ctx.fill();
         }
       });
