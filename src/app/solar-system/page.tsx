@@ -1,14 +1,13 @@
 "use client";
 
+import { CustomCursor } from "@/components/space/CustomCursor";
 import { Taskbar } from "@/components/space/Taskbar";
 import { SmoothScroll } from "@/components/space/SmoothScroll";
-import { CustomCursor } from "@/components/space/CustomCursor";
 import { motion } from "framer-motion";
 import { useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useSmoothScroll } from "@/components/space/SmoothScroll";
 
-const GSAPStars = dynamic(() => import("@/components/space/GSAPStars").then(mod => mod.GSAPStars), { ssr: false });
 const PlanetDetailSection = dynamic(() => import("@/components/space/PlanetDetailSection").then(mod => mod.PlanetDetailSection), { ssr: false });
 
 export default function SolarSystemPage() {
