@@ -70,7 +70,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
 
       stars.forEach((star) => {
         // Move towards screen
-        star.z -= 0.5 * currentSpeed * 2;
+        star.z -= 0.5 * currentSpeed * 1.5;
         
         // Reset star if it passes the screen or gets too far
         if (star.z <= 0) {
@@ -90,8 +90,8 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           
           // More pronounced radial fade for better readability of center content
           const distFromCenter = Math.sqrt(Math.pow(px - centerX, 2) + Math.pow(py - centerY, 2));
-          const fadeRadius = Math.min(width, height) * 0.45; // Slightly tighter radius
-          const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 2.5); // Higher power for sharper center clearing
+          const fadeRadius = Math.min(width, height) * 0.4; // Slightly tighter radius
+          const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 4); // Higher power for sharper center clearing
           
           const currentOpacity = (1 - star.z / 2000) * star.opacity * centerFade;
 
@@ -105,13 +105,13 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           if (currentSpeed > 4) {
              ctx.beginPath();
              ctx.moveTo(px, py);
-             const trailK = fov / (star.z + currentSpeed * 5);
+             const trailK = fov / (star.z + currentSpeed * 1.5);
              const tx = star.x * trailK + centerX;
              const ty = star.y * trailK + centerY;
              ctx.lineTo(tx, ty);
              ctx.strokeStyle = star.color;
-             ctx.lineWidth = s * 0.5;
-             ctx.globalAlpha = currentOpacity * 0.5;
+             ctx.lineWidth = s * 0.4;
+             ctx.globalAlpha = currentOpacity * 0.3;
              ctx.stroke();
           }
         }
