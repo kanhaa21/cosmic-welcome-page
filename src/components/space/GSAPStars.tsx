@@ -36,13 +36,17 @@ export function GSAPStars({ count = 1200 }: { count?: number }) {
     
     // Create static stars with random properties
     const stars: Star[] = Array.from({ length: count }, () => {
+      const p = Math.random();
+      let size = 0.1 + Math.random() * 0.4;
+      if (p > 0.95) size = 0.6 + Math.random() * 0.4; // Occasional slightly larger star
+      
       return {
         x: Math.random() * width,
         y: Math.random() * height,
-        size: Math.random() * 0.8 + 0.1, // Very small stars
+        size: size,
         color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random() * 0.5 + 0.1, // Dim opacity
-        twinkleSpeed: 0.005 + Math.random() * 0.01,
+        opacity: Math.random() * 0.3 + 0.05, // Much dimmer overall
+        twinkleSpeed: 0.003 + Math.random() * 0.008,
         twinklePhase: Math.random() * Math.PI * 2
       };
     });
