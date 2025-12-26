@@ -13,7 +13,8 @@ import dynamic from "next/dynamic";
 
 import { useSmoothScroll } from "@/components/space/SmoothScroll";
 
-const GSAPStars = dynamic(() => import("@/components/space/GSAPStars").then(mod => mod.GSAPStars), { ssr: false });
+import { useStarContext } from "@/context/StarContext";
+
 const StoryTeller = dynamic(() => import("@/components/space/StoryTeller").then(mod => mod.StoryTeller), { ssr: false });
 const RealisticEarth = dynamic(() => import("@/components/space/RealisticEarth").then(mod => mod.RealisticEarth), { ssr: false });
 
@@ -24,6 +25,7 @@ export default function Home() {
   const heroRef = useRef(null);
   const [isNexusActive, setIsNexusActive] = useState(false);
   const { scroll: locoScroll } = useSmoothScroll();
+  const { setSpeed } = useStarContext();
   const lastScrollTime = useRef(0);
   const currentSectionIndex = useRef(0);
   const sectionIds = ["hero", "earth", "story", "explore", "footer"];
@@ -36,6 +38,12 @@ export default function Home() {
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
   const starSpeed = useTransform(scrollYProgress, [0, 1], [1.5, 10]);
+
+  useEffect(() => {
+    return starSpeed.on("change", (latest) => {
+      setSpeed(latest);
+    });
+  }, [starSpeed, setSpeed]);
 
   useEffect(() => {
     if (!locoScroll) return;
