@@ -143,7 +143,7 @@ export function Taskbar() {
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-full border border-white/5 bg-[#030014]/60 backdrop-blur-3xl flex items-center shadow-[0_30px_60px_-12px_rgba(0,0,0,0.9)] hover:border-white/10 overflow-hidden"
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-full border border-white/5 bg-[#030014]/60 backdrop-blur-3xl flex items-center shadow-[0_30px_60px_-12px_rgba(0,0,0,0.9)] hover:border-white/10"
       style={{ 
         padding: "0.75rem 1.5rem"
       }}
@@ -153,14 +153,14 @@ export function Taskbar() {
         opacity: { duration: 0.8 }
       }}
     >
-      <div className="flex items-center w-full justify-between gap-6">
+      <div className="flex items-center w-full justify-between gap-6 px-1">
         <motion.button
           layout
           onClick={() => {
             if (pathname !== "/") router.push("/");
             else handleScroll("hero");
           }}
-          className="text-[12px] font-bold uppercase tracking-[0.6em] transition-all relative whitespace-nowrap bg-gradient-to-r from-purple-400 via-white to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(168,85,247,0.3)] font-[family-name:var(--font-syncopate)] shrink-0"
+          className="text-[12px] font-bold uppercase tracking-[0.6em] transition-all relative whitespace-nowrap bg-gradient-to-r from-purple-400 via-white to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(168,85,247,0.3)] font-[family-name:var(--font-syncopate)] shrink-0 pr-2"
         >
           NEXUS
         </motion.button>
@@ -173,11 +173,11 @@ export function Taskbar() {
               animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, x: 10, filter: "blur(10px)" }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-center gap-6"
+              className="flex items-center gap-6 overflow-visible"
             >
               <div className="w-px h-4 bg-white/10 shrink-0" />
               
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1 sm:gap-4">
                 {sections.map((section) => (
                   <button
                     key={section.id}
@@ -202,7 +202,7 @@ export function Taskbar() {
                 ))}
               </div>
 
-              <div className="hidden lg:flex items-center gap-6 pl-6 border-l border-white/10">
+              <div className="flex items-center gap-4 sm:gap-6 pl-4 sm:pl-6 border-l border-white/10">
                 {agencies.map((agency) => (
                   <Link
                     key={agency.name}
