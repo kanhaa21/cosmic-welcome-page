@@ -87,7 +87,13 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         // Only draw if within bounds
         if (px >= 0 && px <= width && py >= 0 && py <= height) {
           const s = (1 - star.z / 2000) * 3;
-          const currentOpacity = (1 - star.z / 2000) * star.opacity;
+          
+          // Fade stars towards the center for readability
+          const distFromCenter = Math.sqrt(Math.pow(px - centerX, 2) + Math.pow(py - centerY, 2));
+          const fadeRadius = Math.min(width, height) * 0.5;
+          const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 1.5);
+          
+          const currentOpacity = (1 - star.z / 2000) * star.opacity * centerFade;
 
           ctx.beginPath();
           ctx.arc(px, py, s, 0, Math.PI * 2);
