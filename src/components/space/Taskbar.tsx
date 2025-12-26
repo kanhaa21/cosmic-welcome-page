@@ -105,37 +105,6 @@ export function Taskbar() {
     handleScroll(section.id);
   };
 
-  if (isAgencyPage) {
-    return (
-      <motion.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-8 py-4 rounded-full border border-white/5 bg-[#030014]/40 backdrop-blur-3xl flex items-center gap-8 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.8)]"
-      >
-        <button 
-          onClick={() => router.push("/")}
-          className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] hover:text-white transition-all"
-        >
-          Back to Nexus
-        </button>
-        <div className="h-4 w-px bg-white/10" />
-        <div className="flex items-center gap-8">
-          {agencies.map((agency) => (
-            <Link
-              key={agency.name}
-              href={agency.path}
-              className={`text-[10px] font-bold uppercase tracking-[0.3em] transition-all relative whitespace-nowrap ${
-                pathname === agency.path ? "text-blue-400" : "text-zinc-500 hover:text-zinc-300"
-              }`}
-            >
-              {agency.name}
-            </Link>
-          ))}
-        </div>
-      </motion.nav>
-    );
-  }
-
   return (
     <motion.nav
       initial={{ y: -50, opacity: 0 }}
