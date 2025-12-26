@@ -122,7 +122,7 @@ export function SmoothScroll({ children, fixedChildren }: { children: ReactNode,
   return (
     <SmoothScrollContext.Provider value={{ scroll: locoScroll }}>
       {fixedChildren}
-      <main ref={containerRef} data-scroll-container className="smooth-scroll">
+      <main ref={containerRef} data-scroll-container className="smooth-scroll relative">
         {children}
       </main>
     </SmoothScrollContext.Provider>
