@@ -139,7 +139,8 @@ export default function Home() {
             <CustomCursor />
             <Taskbar />
             <div className="fixed inset-0 z-[-3] bg-black pointer-events-none" />
-            <div className="fixed inset-0 z-[-1] bg-gradient-to-b from-black/60 via-black/20 to-[#030014] pointer-events-none opacity-90" />
+              <div className="fixed inset-0 z-[-1] bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.8)_0%,transparent_80%)] pointer-events-none" />
+              <div className="fixed inset-0 z-[-1] bg-gradient-to-b from-black/60 via-black/20 to-[#030014] pointer-events-none opacity-90" />
             <GSAPStars speed={starSpeed} count={800} />
           </>
         }
