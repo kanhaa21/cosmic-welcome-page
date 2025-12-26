@@ -11,11 +11,21 @@ import { useSmoothScroll } from "@/components/space/SmoothScroll";
 const GSAPStars = dynamic(() => import("@/components/space/GSAPStars").then(mod => mod.GSAPStars), { ssr: false });
 const PlanetDetailSection = dynamic(() => import("@/components/space/PlanetDetailSection").then(mod => mod.PlanetDetailSection), { ssr: false });
 
+import { useAudio } from "@/hooks/AudioContext";
+import { useParallax } from "@/hooks/useParallax";
+
 export default function SolarSystemPage() {
   const containerRef = useRef(null);
   const { scroll: locoScroll } = useSmoothScroll();
+  const { setTone } = useAudio();
+  const parallax = useParallax(15);
   const currentSection = useRef(0);
   const totalSections = 10; // Hero + 8 Planets + Footer
+
+  useEffect(() => {
+    setTone("ambient");
+    return () => setTone("none");
+  }, [setTone]);
 
   useEffect(() => {
     if (!locoScroll) return;
