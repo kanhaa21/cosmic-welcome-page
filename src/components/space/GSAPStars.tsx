@@ -120,52 +120,64 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           star.y = (Math.random() - 0.5) * 3000;
         }
 
-        // Project 3D to 2D
+          // Project 3D to 2D
         const k = fov / star.z;
         const px = star.x * k + centerX;
         const py = star.y * k + centerY;
 
         // Only draw if within bounds
-        if (px >= -100 && px <= width + 100 && py >= -100 && py <= height + 100) {
-          const s = (1 - star.z / 2000) * 3.5;
+        if (px >= -500 && px <= width + 500 && py >= -500 && py <= height + 500) {
+          const s = (1 - star.z / 2000) * 4.5; // Increased size
           
           // More pronounced radial fade for better readability of center content
           const distFromCenter = Math.sqrt(Math.pow(px - centerX, 2) + Math.pow(py - centerY, 2));
-            const fadeRadius = Math.min(width, height) * 1.4; 
-            const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 6);
+            const fadeRadius = Math.min(width, height) * 1.5; 
+            const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 4); // Slightly relaxed fade
           
           // Twinkle effect
           const twinkle = Math.sin(time * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
-          const currentOpacity = (1 - star.z / 2000) * star.opacity * centerFade * (0.4 + twinkle * 0.6);
+          const currentOpacity = (1 - star.z / 2000) * star.opacity * centerFade * (0.6 + twinkle * 0.4);
 
+          // Add a glowy golden trail for falling stars
+          const trailLength = Math.max(0.5, currentSpeed * 0.15);
+          const trailK = fov / (star.z + trailLength * 40);
+          const tx = star.x * trailK + centerX;
+          const ty = star.y * trailK + centerY;
+
+          // Trail Glow (Golden)
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(tx, ty);
+          ctx.strokeStyle = "#fbbf24"; // Golden amber
+          ctx.lineWidth = s * 1.5;
+          ctx.globalAlpha = currentOpacity * 0.15;
+          ctx.lineCap = "round";
+          ctx.stroke();
+
+          // Main Trail Line
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(tx, ty);
+          ctx.strokeStyle = star.color;
+          ctx.lineWidth = s * 0.6;
+          ctx.globalAlpha = currentOpacity * 0.4;
+          ctx.stroke();
+
+          // Outer glow for stars
+          if (currentOpacity > 0.3) {
+            ctx.beginPath();
+            ctx.arc(px, py, s * 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = star.color === "#ffffff" ? "#fbbf24" : star.color;
+            ctx.globalAlpha = currentOpacity * 0.25;
+            ctx.fill();
+          }
+
+          // Core
           ctx.beginPath();
           ctx.arc(px, py, s, 0, Math.PI * 2);
           ctx.fillStyle = star.color;
           ctx.globalAlpha = currentOpacity;
           ctx.fill();
-
-          // Outer glow for brighter stars
-          if (star.size > 1.5 && currentOpacity > 0.5) {
-            ctx.beginPath();
-            ctx.arc(px, py, s * 2, 0, Math.PI * 2);
-            ctx.fillStyle = star.color;
-            ctx.globalAlpha = currentOpacity * 0.2;
-            ctx.fill();
-          }
-
-            // Add a small trail for fast moving stars
-            if (currentSpeed > 5) {
-               ctx.beginPath();
-               ctx.moveTo(px, py);
-                 const trailK = fov / (star.z + currentSpeed * 0.05);
-               const tx = star.x * trailK + centerX;
-               const ty = star.y * trailK + centerY;
-               ctx.lineTo(tx, ty);
-               ctx.strokeStyle = star.color;
-               ctx.lineWidth = s * 0.3;
-               ctx.globalAlpha = currentOpacity * 0.3;
-               ctx.stroke();
-            }
         }
       });
     };
