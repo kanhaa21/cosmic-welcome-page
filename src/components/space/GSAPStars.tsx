@@ -20,7 +20,7 @@ interface GSAPStarsProps {
   speed?: MotionValue<number> | number;
 }
 
-export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
+export function GSAPStars({ count = 450, speed = 1 }: GSAPStarsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const speedRef = useRef(typeof speed === "number" ? speed : 1);
 
