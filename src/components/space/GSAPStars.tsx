@@ -101,19 +101,19 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           ctx.globalAlpha = currentOpacity;
           ctx.fill();
 
-          // Add a small trail for fast moving stars
-          if (currentSpeed > 4) {
-             ctx.beginPath();
-             ctx.moveTo(px, py);
-             const trailK = fov / (star.z + currentSpeed * 1.5);
-             const tx = star.x * trailK + centerX;
-             const ty = star.y * trailK + centerY;
-             ctx.lineTo(tx, ty);
-             ctx.strokeStyle = star.color;
-             ctx.lineWidth = s * 0.4;
-             ctx.globalAlpha = currentOpacity * 0.3;
-             ctx.stroke();
-          }
+            // Add a small trail for fast moving stars
+            if (currentSpeed > 4) {
+               ctx.beginPath();
+               ctx.moveTo(px, py);
+               const trailK = fov / (star.z + currentSpeed * 0.4);
+               const tx = star.x * trailK + centerX;
+               const ty = star.y * trailK + centerY;
+               ctx.lineTo(tx, ty);
+               ctx.strokeStyle = star.color;
+               ctx.lineWidth = s * 0.2;
+               ctx.globalAlpha = currentOpacity * 0.2;
+               ctx.stroke();
+            }
         }
       });
     };
