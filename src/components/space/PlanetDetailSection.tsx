@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
 import { useSmoothScroll } from "./SmoothScroll";
+import { motion } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
