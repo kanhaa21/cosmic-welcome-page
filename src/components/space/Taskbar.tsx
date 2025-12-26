@@ -38,7 +38,10 @@ export function Taskbar() {
       setActiveSection("solar");
       return;
     }
-    if (pathname !== "/") return;
+    if (isAgencyPage) {
+      setActiveSection(""); // No specific home section active
+      return;
+    }
 
     const ctx = gsap.context(() => {
       const scroller = document.querySelector(".smooth-scroll");
