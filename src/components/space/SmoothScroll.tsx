@@ -18,93 +18,108 @@ export function SmoothScroll({ children, fixedChildren }: { children: ReactNode,
   const containerRef = useRef<HTMLDivElement>(null);
   const [locoScroll, setLocoScroll] = useState<any>(null);
 
-  useEffect(() => {
-    let scrollInstance: any = null;
-    let resizeObserver: ResizeObserver | null = null;
-    let isMounted = true;
+    useEffect(() => {
+      let scrollInstance: any = null;
+      let resizeObserver: ResizeObserver | null = null;
+      let isMounted = true;
 
-    const init = async () => {
-      try {
-        const LocomotiveScroll = (await import("locomotive-scroll")).default;
-        
-        if (!containerRef.current || !isMounted) return;
-
-        scrollInstance = new LocomotiveScroll({
-          el: containerRef.current,
-          smooth: true,
-          multiplier: 1,
-          class: "is-reveal",
-          getDirection: true,
-          touchMultiplier: 2,
-          lerp: 0.1,
-          scrollFromAnywhere: true,
-          reloadOnContextChange: false,
-          resetNativeScroll: true
-        });
-
-        if (!isMounted) {
-          scrollInstance.destroy();
-          return;
+      // Use a stable reference for the refresh handler to avoid leaks
+      const handleRefresh = () => {
+        if (scrollInstance && !scrollInstance.destroyed) {
+          scrollInstance.update();
         }
+      };
 
-        // Set up scroller proxy for GSAP
-        ScrollTrigger.scrollerProxy(containerRef.current, {
-          scrollTop(value) {
-            if (scrollInstance) {
-              return arguments.length
-                ? scrollInstance.scrollTo(value, 0, 0)
-                : (scrollInstance.scroll.instance ? scrollInstance.scroll.instance.scroll.y : 0);
-            }
-            return 0;
-          },
-          getBoundingClientRect() {
-            return {
-              top: 0,
-              left: 0,
-              width: window.innerWidth,
-              height: window.innerHeight,
-            };
-          },
-          pinType: containerRef.current!.style.transform ? "transform" : "fixed",
-        });
+      const init = async () => {
+        try {
+          const LocomotiveScroll = (await import("locomotive-scroll")).default;
+          
+          if (!containerRef.current || !isMounted) return;
 
-        scrollInstance.on("scroll", ScrollTrigger.update);
+          scrollInstance = new LocomotiveScroll({
+            el: containerRef.current,
+            smooth: true,
+            multiplier: 1,
+            class: "is-reveal",
+            getDirection: true,
+            touchMultiplier: 2,
+            lerp: 0.1,
+            scrollFromAnywhere: true,
+            reloadOnContextChange: false,
+            resetNativeScroll: true
+          });
 
-        // Update ScrollTrigger on resize
-        ScrollTrigger.addEventListener("refresh", () => scrollInstance?.update());
-        ScrollTrigger.refresh();
-
-        setLocoScroll(scrollInstance);
-
-        // Resize handling
-        resizeObserver = new ResizeObserver(() => {
-          if (scrollInstance && isMounted) {
-            scrollInstance.update();
-            ScrollTrigger.refresh();
+          if (!isMounted) {
+            scrollInstance.destroy();
+            return;
           }
-        });
-        resizeObserver.observe(containerRef.current);
 
-      } catch (error) {
-        console.error("Locomotive Scroll initialization failed:", error);
-      }
-    };
+          // Set up scroller proxy for GSAP
+          ScrollTrigger.scrollerProxy(containerRef.current, {
+            scrollTop(value) {
+              if (scrollInstance && !scrollInstance.destroyed) {
+                return arguments.length
+                  ? scrollInstance.scrollTo(value, 0, 0)
+                  : (scrollInstance.scroll.instance ? scrollInstance.scroll.instance.scroll.y : 0);
+              }
+              return 0;
+            },
+            getBoundingClientRect() {
+              return {
+                top: 0,
+                left: 0,
+                width: window.innerWidth,
+                height: window.innerHeight,
+              };
+            },
+            // Improved pinType detection: only use transform if locomotive is actually moving the container
+            pinType: containerRef.current!.style.transform ? "transform" : "fixed",
+          });
 
-    // Small delay to ensure DOM is ready
-    const timeoutId = setTimeout(init, 50);
+          scrollInstance.on("scroll", ScrollTrigger.update);
 
-    return () => {
-      isMounted = false;
-      clearTimeout(timeoutId);
-      if (scrollInstance) {
-        scrollInstance.destroy();
-      }
-      if (resizeObserver) {
-        resizeObserver.disconnect();
-      }
-      ScrollTrigger.removeEventListener("refresh", () => scrollInstance?.update());
-    };
-  }, []);
+          // Update ScrollTrigger on refresh
+          ScrollTrigger.addEventListener("refresh", handleRefresh);
+          ScrollTrigger.refresh();
+
+          setLocoScroll(scrollInstance);
+
+          // Resize handling with debounce to prevent excessive updates and race conditions
+          let resizeTimer: NodeJS.Timeout;
+          resizeObserver = new ResizeObserver(() => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+              if (scrollInstance && !scrollInstance.destroyed && isMounted) {
+                scrollInstance.update();
+                ScrollTrigger.refresh();
+              }
+            }, 100);
+          });
+          resizeObserver.observe(containerRef.current);
+
+        } catch (error) {
+          console.error("Locomotive Scroll initialization failed:", error);
+        }
+      };
+
+      // Small delay to ensure DOM is ready and hydrated
+      const timeoutId = setTimeout(init, 100);
+
+      return () => {
+        isMounted = false;
+        clearTimeout(timeoutId);
+        
+        ScrollTrigger.removeEventListener("refresh", handleRefresh);
+        
+        if (scrollInstance) {
+          scrollInstance.destroy();
+          scrollInstance.destroyed = true; // Flag for safety
+        }
+        if (resizeObserver) {
+          resizeObserver.disconnect();
+        }
+      };
+    }, []);
 
   return (
     <SmoothScrollContext.Provider value={{ scroll: locoScroll }}>
