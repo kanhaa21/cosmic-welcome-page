@@ -1,11 +1,13 @@
 "use client";
 
 import { use, useEffect, useRef, useState } from "react";
-import { MilkyWay } from "@/components/space/MilkyWay";
 import { Taskbar } from "@/components/space/Taskbar";
 import { SmoothScroll } from "@/components/space/SmoothScroll";
 import { CustomCursor } from "@/components/space/CustomCursor";
 import { motion, AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
+
+const GSAPStars = dynamic(() => import("@/components/space/GSAPStars").then(mod => mod.GSAPStars), { ssr: false });
 
 interface TimelineItem {
   year: string;
