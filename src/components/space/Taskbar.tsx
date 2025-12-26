@@ -133,24 +133,29 @@ export function Taskbar() {
     );
   }
 
-  return (
     <motion.nav
+      layout
       initial={{ y: -50, opacity: 0 }}
       animate={{ 
         y: 0, 
-        opacity: 1,
-        width: isHovered ? "auto" : 160
+        opacity: 1
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-full border border-white/5 bg-[#030014]/40 backdrop-blur-3xl flex items-center shadow-[0_30px_60px_-12px_rgba(0,0,0,0.9)] transition-all duration-700 ease-[0.16,1,0.3,1] hover:border-white/10 overflow-hidden"
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-full border border-white/5 bg-[#030014]/60 backdrop-blur-3xl flex items-center shadow-[0_30px_60px_-12px_rgba(0,0,0,0.9)] hover:border-white/10 overflow-hidden"
       style={{ 
         padding: "0.75rem 1.5rem"
+      }}
+      transition={{
+        layout: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+        y: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+        opacity: { duration: 0.8 }
       }}
     >
       <div className="flex items-center w-full justify-between gap-6">
         {/* Branding Always Visible */}
-        <button
+        <motion.button
+          layout
           onClick={() => {
             if (pathname !== "/") router.push("/");
             else handleScroll("hero");
@@ -158,15 +163,15 @@ export function Taskbar() {
           className="text-[12px] font-bold uppercase tracking-[0.6em] transition-all relative whitespace-nowrap bg-gradient-to-r from-purple-400 via-white to-blue-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(168,85,247,0.3)] font-[family-name:var(--font-syncopate)] shrink-0"
         >
           NEXUS
-        </button>
+        </motion.button>
 
-        <AnimatePresence>
+        <AnimatePresence mode="popLayout">
           {isHovered && (
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              initial={{ opacity: 0, x: 20, filter: "blur(10px)" }}
+              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, x: 10, filter: "blur(10px)" }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="flex items-center gap-6"
             >
               <div className="w-px h-4 bg-white/10 shrink-0" />
@@ -197,7 +202,7 @@ export function Taskbar() {
               </div>
 
               <div className="hidden lg:flex items-center gap-6 pl-6 border-l border-white/10">
-                {agencies.slice(0, 2).map((agency) => (
+                {agencies.map((agency) => (
                   <Link
                     key={agency.name}
                     href={agency.path}
