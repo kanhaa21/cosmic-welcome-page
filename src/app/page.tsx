@@ -138,15 +138,13 @@ export default function Home() {
         <>
           <CustomCursor />
           <Taskbar />
+          <GSAPStars speed={starSpeed} count={1500} />
+          <div className="fixed inset-0 z-[-1] bg-black/60 pointer-events-none" />
+          <div className="fixed inset-0 z-[-1] bg-gradient-to-b from-black/40 via-transparent to-[#030014] pointer-events-none" />
         </>
       }
     >
       <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 will-change-transform">
-        <GSAPStars speed={starSpeed} count={1500} />
-        
-        <div className="fixed inset-0 z-0 bg-black/60 pointer-events-none" />
-        <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/40 via-transparent to-[#030014] pointer-events-none" />
-
         {/* Hero Section */}
         <section id="hero" ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden z-10">
           <AnimatePresence mode="wait">
