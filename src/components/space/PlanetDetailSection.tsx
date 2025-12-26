@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
+import { useSmoothScroll } from "./SmoothScroll";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const PlanetSphere = dynamic(() => import("./PlanetSphere").then(mod => mod.PlanetSphere), { 
   ssr: false,
@@ -131,10 +134,16 @@ const planetData: PlanetData[] = [
 
 function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
   const sectionRef = useRef<HTMLElement>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
+  const sphereRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const { scroll } = useSmoothScroll();
 
   useEffect(() => {
+    if (!scroll || !sectionRef.current) return;
+
     const ctx = gsap.context(() => {
+      // Visibility Toggle for Three.js Rendering
       ScrollTrigger.create({
         trigger: sectionRef.current,
         scroller: ".smooth-scroll",
@@ -144,9 +153,48 @@ function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
           if (self.isActive) setIsVisible(true);
         }
       });
+
+      // Entrance Animations
+      if (infoRef.current) {
+        gsap.fromTo(infoRef.current, 
+          { opacity: 0, x: idx % 2 === 0 ? -40 : 40 },
+          { 
+            opacity: 1, 
+            x: 0, 
+            duration: 1.5,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              scroller: ".smooth-scroll",
+              start: "top 70%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+
+      if (sphereRef.current) {
+        gsap.fromTo(sphereRef.current,
+          { opacity: 0, scale: 0.8, filter: "blur(20px)" },
+          {
+            opacity: 1,
+            scale: 1,
+            filter: "blur(0px)",
+            duration: 2,
+            ease: "expo.out",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              scroller: ".smooth-scroll",
+              start: "top 70%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
     });
+
     return () => ctx.revert();
-  }, []);
+  }, [scroll, idx]);
 
   return (
     <section 
@@ -155,7 +203,7 @@ function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
     >
       <div className={`max-w-7xl w-full flex flex-col lg:flex-row gap-20 lg:gap-40 items-center justify-between ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
           {/* Info Box - Sleek Redesign */}
-          <div className="planet-info w-full max-w-xl relative">
+          <div ref={infoRef} className="planet-info w-full max-w-xl relative">
             <div className="flex items-center gap-6 mb-12 opacity-30">
               <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-white pl-[0.8em]">
                 {String(idx + 1).padStart(2, '0')}
@@ -200,7 +248,7 @@ function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
 
 
         {/* Sphere Container */}
-        <div className="planet-sphere-container relative flex justify-center items-center flex-1">
+        <div ref={sphereRef} className="planet-sphere-container relative flex justify-center items-center flex-1">
           {isVisible ? (
             <PlanetSphere 
               textureUrl={planet.textureUrl} 
@@ -222,56 +270,8 @@ function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
 }
 
 export function PlanetDetailSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const sections = gsap.utils.toArray(".planet-section");
-      
-      sections.forEach((section: any) => {
-        const info = section.querySelector(".planet-info");
-        const sphere = section.querySelector(".planet-sphere-container");
-        
-        gsap.fromTo(info, 
-          { opacity: 0, x: -30 },
-          { 
-            opacity: 1, 
-            x: 0, 
-            duration: 1.5,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: section,
-              scroller: ".smooth-scroll",
-              start: "top 70%",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
-
-        gsap.fromTo(sphere,
-          { opacity: 0, scale: 0.9, filter: "blur(20px)" },
-          {
-            opacity: 1,
-            scale: 1,
-            filter: "blur(0px)",
-            duration: 2,
-            ease: "expo.out",
-            scrollTrigger: {
-              trigger: section,
-              scroller: ".smooth-scroll",
-              start: "top 70%",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <div ref={containerRef} className="relative z-10 bg-[#020108]">
+    <div className="relative z-10 bg-[#020108]">
       {planetData.map((planet, idx) => (
         <PlanetSection key={planet.name} planet={planet} idx={idx} />
       ))}
