@@ -39,7 +39,7 @@ export function Taskbar() {
       return;
     }
     if (isAgencyPage) {
-      setActiveSection(""); // No specific home section active
+      setActiveSection("");
       return;
     }
 
@@ -190,13 +190,11 @@ export function Taskbar() {
         </AnimatePresence>
       </div>
 
-      {/* Progress Bar with cleaner styling */}
       <motion.div 
         className="absolute bottom-0 left-0 h-[1.5px] bg-gradient-to-r from-transparent via-purple-500 to-transparent"
         style={{ width: "100%", scaleX: globalProgress, originX: 0.5, opacity: 0.5 }}
       />
       
-      {/* Glow Effect */}
       <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
     </motion.nav>
   );
