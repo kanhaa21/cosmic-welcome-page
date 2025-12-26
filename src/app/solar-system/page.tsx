@@ -19,16 +19,15 @@ export default function SolarSystemPage() {
         <>
           <CustomCursor />
           <Taskbar />
+          <GSAPStars count={1500} />
+          {/* Cinematic Background Elements */}
+          <div className="fixed inset-0 z-[-1] bg-[#020108] pointer-events-none" />
+          <div className="fixed inset-0 z-[-1] bg-[radial-gradient(circle_at_50%_50%,rgba(15,5,30,0.4),transparent_70%)] pointer-events-none" />
+          <div className="fixed inset-0 z-[-1] bg-gradient-to-b from-transparent via-transparent to-[#020108] pointer-events-none" />
         </>
       }
     >
-      <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 bg-[#020108] overflow-hidden">
-        <GSAPStars count={1500} />
-        
-        {/* Cinematic Background Elements */}
-        <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_50%_50%,rgba(15,5,30,0.4),transparent_70%)] pointer-events-none" />
-        <div className="fixed inset-0 z-0 bg-gradient-to-b from-transparent via-transparent to-[#020108] pointer-events-none" />
-
+      <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 overflow-hidden">
         {/* Hero Section - Refined & Elegant */}
         <div className="relative z-10 pt-64 pb-32 px-6 flex flex-col items-center justify-center min-h-screen">
           <motion.div
