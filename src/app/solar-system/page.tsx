@@ -100,7 +100,7 @@ export default function SolarSystemPage() {
         {/* Planet Detail Sections */}
         <PlanetDetailSection />
 
-        <footer className="relative py-48 px-6 text-center z-10">
+        <footer id="footer" className="relative py-48 px-6 text-center z-10">
           <div className="max-w-4xl mx-auto">
             <div className="h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent mb-20" />
             
