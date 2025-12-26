@@ -49,48 +49,55 @@ export function SmoothScroll({ children, fixedChildren }: { children: ReactNode,
 
         setLocoScroll(scrollInstance);
 
-        // Tell ScrollTrigger to use these proxy methods (getter/setter) for the ".smooth-scroll" element since Locomotive Scroll is hijacking things
-        ScrollTrigger.scrollerProxy(containerRef.current, {
-          scrollTop(value) {
-            if (scrollInstance) {
-              return arguments.length
-                ? scrollInstance.scrollTo(value, 0, 0)
-                : scrollInstance.scroll.instance.scroll.y;
-            }
-            return 0;
-          },
-          getBoundingClientRect() {
-            return {
-              top: 0,
-              left: 0,
-              width: window.innerWidth,
-              height: window.innerHeight,
-            };
-          },
-          pinType: containerRef.current.style.transform ? "transform" : "fixed",
-        });
+          // Tell ScrollTrigger to use these proxy methods (getter/setter) for the ".smooth-scroll" element since Locomotive Scroll is hijacking things
+          ScrollTrigger.scrollerProxy(containerRef.current, {
+            scrollTop(value) {
+              if (scrollInstance && scrollInstance.scroll && scrollInstance.scroll.instance) {
+                return arguments.length
+                  ? scrollInstance.scrollTo(value, 0, 0)
+                  : scrollInstance.scroll.instance.scroll.y;
+              }
+              return 0;
+            },
+            getBoundingClientRect() {
+              return {
+                top: 0,
+                left: 0,
+                width: window.innerWidth,
+                height: window.innerHeight,
+              };
+            },
+            // LocomotiveScroll handles things with transforms
+            pinType: containerRef.current.style.transform ? "transform" : "fixed",
+          });
 
-        scrollInstance.on("scroll", ScrollTrigger.update);
+          scrollInstance.on("scroll", () => {
+            ScrollTrigger.update();
+          });
 
-        let rafId: number;
-        resizeObserver = new ResizeObserver(() => {
-          if (rafId) cancelAnimationFrame(rafId);
-          rafId = requestAnimationFrame(() => {
-            if (scrollInstance && isMounted && containerRef.current) {
-              try {
-                if (typeof scrollInstance.update === 'function') {
+          let rafId: number;
+          resizeObserver = new ResizeObserver(() => {
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(() => {
+              if (scrollInstance && isMounted && containerRef.current) {
+                try {
                   scrollInstance.update();
                   ScrollTrigger.refresh();
+                } catch (e) {
+                  // Silent catch for potential race conditions during destruction
                 }
-              } catch (e) {
-                console.warn("SmoothScroll update suppressed:", e);
               }
-            }
+            });
           });
-        });
-        resizeObserver.observe(containerRef.current);
+          resizeObserver.observe(containerRef.current);
 
-        ScrollTrigger.refresh();
+          // Force a refresh after a small delay to ensure all components are rendered
+          setTimeout(() => {
+            if (isMounted) {
+              ScrollTrigger.refresh();
+              window.dispatchEvent(new Event('resize'));
+            }
+          }, 500);
         
       } catch (error) {
         console.error("Locomotive Scroll initialization failed:", error);
