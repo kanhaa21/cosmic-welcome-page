@@ -240,6 +240,7 @@ export function PlanetDetailSection() {
             ease: "power2.out",
             scrollTrigger: {
               trigger: section,
+              scroller: ".smooth-scroll",
               start: "top 70%",
               toggleActions: "play none none reverse"
             }
@@ -256,6 +257,7 @@ export function PlanetDetailSection() {
             ease: "expo.out",
             scrollTrigger: {
               trigger: section,
+              scroller: ".smooth-scroll",
               start: "top 70%",
               toggleActions: "play none none reverse"
             }
