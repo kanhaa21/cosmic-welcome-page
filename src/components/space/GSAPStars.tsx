@@ -11,6 +11,8 @@ interface Star {
   size: number;
   color: string;
   opacity: number;
+  twinklePhase: number;
+  twinkleSpeed: number;
 }
 
 interface GSAPStarsProps {
