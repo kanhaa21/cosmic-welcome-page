@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useSmoothScroll } from "./SmoothScroll";
 import gsap from "gsap";
@@ -154,7 +154,6 @@ export function Taskbar() {
       }}
     >
       <div className="flex items-center w-full justify-between gap-6">
-        {/* Branding Always Visible */}
         <motion.button
           layout
           onClick={() => {
@@ -169,6 +168,7 @@ export function Taskbar() {
         <AnimatePresence mode="popLayout">
           {isHovered && (
             <motion.div
+              key="expanded-nav"
               initial={{ opacity: 0, x: 20, filter: "blur(10px)" }}
               animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, x: 10, filter: "blur(10px)" }}
@@ -218,7 +218,6 @@ export function Taskbar() {
         </AnimatePresence>
       </div>
 
-      {/* Global Progress Line */}
       <motion.div 
         className="absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-30"
         style={{ width: "100%", scaleX: globalProgress, originX: 0.5 }}
