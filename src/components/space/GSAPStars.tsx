@@ -101,11 +101,15 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
 
       // Draw distant background stars first
       backgroundStars.forEach(star => {
+        const distFromCenter = Math.sqrt(Math.pow(star.x - centerX, 2) + Math.pow(star.y - centerY, 2));
+        const maxDist = Math.max(width, height);
+        const centerFade = Math.pow(Math.min(distFromCenter / (maxDist * 0.4), 1), 2);
+        
         const twinkle = Math.sin(time * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
         ctx.fillStyle = star.color;
-        ctx.globalAlpha = star.opacity * (0.3 + twinkle * 0.7);
+        ctx.globalAlpha = star.opacity * (0.3 + twinkle * 0.7) * centerFade;
         ctx.fill();
       });
 
@@ -116,8 +120,8 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         // Reset star if it passes the screen or gets too far
         if (star.z <= 0) {
           star.z = 2000;
-          star.x = (Math.random() - 0.5) * 3000;
-          star.y = (Math.random() - 0.5) * 3000;
+          star.x = (Math.random() - 0.5) * 4000; // Wider spread
+          star.y = (Math.random() - 0.5) * 4000;
         }
 
           // Project 3D to 2D
@@ -127,16 +131,17 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
 
         // Only draw if within bounds
         if (px >= -500 && px <= width + 500 && py >= -500 && py <= height + 500) {
-          const s = (1 - star.z / 2000) * 4.5; // Increased size
+          const s = (1 - star.z / 2000) * 4.5;
           
-          // Brighten stars significantly near borders
+          // Brighten stars significantly near borders, fade at center
           const distFromCenter = Math.sqrt(Math.pow(px - centerX, 2) + Math.pow(py - centerY, 2));
-          const edgeThreshold = Math.min(width, height) * 0.4;
-          const borderBoost = Math.pow(Math.min(distFromCenter / edgeThreshold, 2), 1.5);
+          const edgeThreshold = Math.min(width, height) * 0.5;
+          const centerFade = Math.pow(Math.min(distFromCenter / (edgeThreshold * 0.8), 1.5), 2);
+          const borderBoost = Math.pow(Math.min(distFromCenter / edgeThreshold, 2.5), 2);
           
           // Twinkle effect
           const twinkle = Math.sin(time * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
-          const currentOpacity = (1 - star.z / 2000) * star.opacity * borderBoost * (0.6 + twinkle * 0.4);
+          const currentOpacity = (1 - star.z / 2000) * star.opacity * borderBoost * centerFade * (0.6 + twinkle * 0.4);
 
           // Add a glowy golden trail for falling stars
           const trailLength = Math.max(0.5, currentSpeed * 0.25);
