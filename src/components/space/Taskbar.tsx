@@ -183,24 +183,19 @@ export function Taskbar() {
                 ))}
               </div>
 
-                <div className="flex items-center gap-6 pl-6 border-l border-white/10">
-                  {agencies.map((agency) => (
-                    <motion.div layout="position" key={agency.name}>
-                      <Link
-                        href={agency.path}
-                        className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.3em] hover:text-purple-400 transition-all whitespace-nowrap"
-                      >
-                        {agency.name}
-                      </Link>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-              </motion.div>
-
+              <div className="flex items-center gap-6 pl-6 border-l border-white/10">
+                {agencies.map((agency) => (
+                  <motion.div layout="position" key={agency.name}>
+                    <Link
+                      href={agency.path}
+                      className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.3em] hover:text-purple-400 transition-all whitespace-nowrap"
+                    >
+                      {agency.name}
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
