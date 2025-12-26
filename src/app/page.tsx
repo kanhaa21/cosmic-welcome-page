@@ -134,15 +134,15 @@ export default function Home() {
 
   return (
     <SmoothScroll
-      fixedChildren={
-        <>
-          <CustomCursor />
-          <Taskbar />
-          <GSAPStars speed={starSpeed} count={1500} />
-          <div className="fixed inset-0 z-[-1] bg-black/60 pointer-events-none" />
-          <div className="fixed inset-0 z-[-1] bg-gradient-to-b from-black/40 via-transparent to-[#030014] pointer-events-none" />
-        </>
-      }
+        fixedChildren={
+          <>
+            <CustomCursor />
+            <Taskbar />
+            <div className="fixed inset-0 z-[-2] bg-[#020108] pointer-events-none" />
+            <div className="fixed inset-0 z-[-1] bg-gradient-to-b from-black/40 via-transparent to-[#030014] pointer-events-none opacity-50" />
+            <GSAPStars speed={starSpeed} count={2000} />
+          </>
+        }
     >
       <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 will-change-transform">
         {/* Hero Section */}
