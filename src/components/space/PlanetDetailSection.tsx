@@ -154,49 +154,50 @@ function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
       className="planet-section min-h-screen flex items-center justify-center px-6 py-20"
     >
       <div className={`max-w-7xl w-full flex flex-col lg:flex-row gap-20 lg:gap-40 items-center justify-between ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
-        {/* Info Box - Sleek Redesign */}
-        <div className="planet-info w-full max-w-xl relative">
-          <div className="flex items-center gap-4 mb-8 opacity-40">
-            <span className="text-[9px] font-bold uppercase tracking-[0.5em] text-white">
-              S0{idx + 1}
-            </span>
-            <div className="h-px w-12 bg-white/20" />
-            <span className="text-[9px] font-bold uppercase tracking-[0.5em] text-zinc-500">
-              {planet.name.substring(0, 3)}
-            </span>
-          </div>
+          {/* Info Box - Sleek Redesign */}
+          <div className="planet-info w-full max-w-xl relative">
+            <div className="flex items-center gap-6 mb-12 opacity-30">
+              <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-white pl-[0.8em]">
+                {String(idx + 1).padStart(2, '0')}
+              </span>
+              <div className="h-px w-16 bg-gradient-to-r from-white/40 to-transparent" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-500">
+                {planet.name.substring(0, 3)} // LOCAL_OBJECT
+              </span>
+            </div>
 
-          <h3 className="text-6xl md:text-8xl font-light text-white tracking-tight mb-4 font-[family-name:var(--font-orbitron)]">
-            {planet.name}
-          </h3>
-          
-          <div className="flex items-center gap-3 mb-12">
-            <div className="w-1 h-1 rounded-full bg-purple-500" />
-            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.4em]">
-              {planet.tagline}
+            <h3 className="text-7xl md:text-[8rem] font-light text-white tracking-[-0.04em] leading-[0.9] mb-8 font-[family-name:var(--font-orbitron)]">
+              {planet.name}
+            </h3>
+            
+            <div className="flex items-center gap-4 mb-14">
+              <div className="w-1.5 h-1.5 rounded-full bg-purple-500/60 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+              <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.6em] pl-[0.6em]">
+                {planet.tagline}
+              </p>
+            </div>
+            
+            <p className="text-lg md:text-xl text-zinc-500 font-light leading-relaxed mb-20 max-w-lg">
+              {planet.description}
             </p>
-          </div>
-          
-          <p className="text-lg text-zinc-400 font-light leading-relaxed mb-16 max-w-lg">
-            {planet.description}
-          </p>
 
-          <div className="grid grid-cols-3 gap-12">
-            {planet.details.map((detail) => (
-              <div key={detail.label} className="flex flex-col gap-1.5">
-                <span className="text-[8px] uppercase tracking-[0.3em] text-zinc-600 font-bold">
-                  {detail.label}
-                </span>
-                <span className="text-white font-light text-base tracking-tight">
-                  {detail.value}
-                </span>
-              </div>
-            ))}
+            <div className="grid grid-cols-3 gap-16 border-t border-white/5 pt-12">
+              {planet.details.map((detail) => (
+                <div key={detail.label} className="flex flex-col gap-2">
+                  <span className="text-[9px] uppercase tracking-[0.5em] text-zinc-700 font-bold">
+                    {detail.label}
+                  </span>
+                  <span className="text-zinc-300 font-light text-lg tracking-tight">
+                    {detail.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+            
+            {/* Elegant Accents */}
+            <div className="absolute -left-20 top-1/2 -translate-y-1/2 w-px h-64 bg-gradient-to-b from-transparent via-white/5 to-transparent hidden lg:block" />
           </div>
-          
-          {/* Elegant Accents */}
-          <div className="absolute -left-12 top-1/2 -translate-y-1/2 w-px h-32 bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block" />
-        </div>
+
 
         {/* Sphere Container */}
         <div className="planet-sphere-container relative flex justify-center items-center flex-1">
