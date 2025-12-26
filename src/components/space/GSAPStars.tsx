@@ -53,16 +53,16 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
     
     // 3D Starfield implementation
     const stars: Star[] = Array.from({ length: count }, () => {
-      return {
-        x: (Math.random() - 0.5) * 2000,
-        y: (Math.random() - 0.5) * 2000,
-        z: Math.random() * 2000,
-        size: Math.random() * 2,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random() * 0.3 + 0.2, // Increased brightness
-        twinklePhase: Math.random() * Math.PI * 2,
-        twinkleSpeed: Math.random() * 0.005 + 0.002
-      };
+        return {
+          x: (Math.random() - 0.5) * 2000,
+          y: (Math.random() - 0.5) * 2000,
+          z: Math.random() * 2000,
+          size: Math.random() * 2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          opacity: Math.random() * 0.4 + 0.4, // Increased brightness
+          twinklePhase: Math.random() * Math.PI * 2,
+          twinkleSpeed: Math.random() * 0.005 + 0.002
+        };
     });
 
     const render = () => {
