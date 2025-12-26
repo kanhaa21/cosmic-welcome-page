@@ -186,19 +186,35 @@ export function Taskbar() {
                 ))}
               </div>
 
-              <div className="flex items-center gap-6 pl-6 border-l border-white/10">
-                {agencies.map((agency) => (
-                  <motion.div layout="position" key={agency.name}>
-                    <Link
-                      href={agency.path}
-                      className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.3em] hover:text-purple-400 transition-all whitespace-nowrap"
-                    >
-                      {agency.name}
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+                <div className="flex items-center gap-6 pl-6 border-l border-white/10">
+                  {agencies.map((agency) => (
+                    <motion.div layout="position" key={agency.name}>
+                      <Link
+                        href={agency.path}
+                        className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.3em] hover:text-purple-400 transition-all whitespace-nowrap"
+                      >
+                        {agency.name}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-4 pl-6 border-l border-white/10">
+                  <motion.button
+                    layout="position"
+                    onClick={toggleAudio}
+                    className={`p-2 rounded-full transition-all ${isEnabled ? 'text-purple-400 bg-purple-500/10' : 'text-zinc-500 hover:text-zinc-300'}`}
+                    title={isEnabled ? "Disable Ambient Audio" : "Enable Ambient Audio"}
+                  >
+                    {isEnabled ? (
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.08"></path></svg>
+                    ) : (
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+                    )}
+                  </motion.button>
+                </div>
+              </motion.div>
+
           )}
         </AnimatePresence>
       </div>
