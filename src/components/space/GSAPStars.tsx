@@ -133,7 +133,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
   return (
     <canvas 
       ref={canvasRef} 
-      className="fixed inset-0 pointer-events-none z-0"
+      className="fixed inset-0 pointer-events-none z-[-2]"
       style={{ filter: "blur(0.2px)" }}
     />
   );
