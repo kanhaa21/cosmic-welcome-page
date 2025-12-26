@@ -35,11 +35,11 @@ export default function SolarSystemPage() {
 
       if (target) {
         locoScroll.scrollTo(target, {
-          duration: 2000,
+          duration: 2500,
           easing: [0.16, 1, 0.3, 1]
         });
       }
-    }, 7000);
+    }, 6000);
 
     return () => clearInterval(interval);
   }, [locoScroll]);
