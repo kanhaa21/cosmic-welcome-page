@@ -139,19 +139,17 @@ export function Taskbar() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ 
         y: 0, 
-        opacity: 1,
-        padding: isHovered ? "0.6rem 2.5rem" : "0.6rem 1.5rem"
+        opacity: 1
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-full border border-white/5 bg-[#030014]/80 backdrop-blur-3xl flex items-center shadow-[0_30px_60px_-12px_rgba(0,0,0,0.9)] hover:border-white/10 transition-colors duration-500 overflow-hidden"
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-full border border-white/5 bg-[#030014]/80 backdrop-blur-3xl flex items-center shadow-[0_30px_60px_-12px_rgba(0,0,0,0.9)] hover:border-white/10 transition-colors duration-500 overflow-hidden px-6 py-2.5"
       transition={{
-        layout: { type: "spring", stiffness: 200, damping: 25 },
-        padding: { type: "spring", stiffness: 200, damping: 25 },
+        layout: { type: "spring", stiffness: 200, damping: 30 },
         y: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
       }}
     >
-      <div className="flex items-center gap-6 px-1">
+      <div className="flex items-center gap-6">
         <motion.button
           layout="position"
           onClick={() => {
@@ -163,15 +161,15 @@ export function Taskbar() {
           NEXUS
         </motion.button>
 
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence>
           {isHovered && (
             <motion.div
               key="expanded-nav"
-              initial={{ opacity: 0, x: -10, filter: "blur(10px)" }}
-              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, x: -20, filter: "blur(10px)", transition: { duration: 0.2 } }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-center gap-6"
+              initial={{ opacity: 0, width: 0, x: -10, filter: "blur(10px)" }}
+              animate={{ opacity: 1, width: "auto", x: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, width: 0, x: -10, filter: "blur(10px)" }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="flex items-center gap-6 overflow-hidden"
             >
               <div className="w-px h-4 bg-white/10 shrink-0" />
               
