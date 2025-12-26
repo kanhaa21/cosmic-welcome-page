@@ -115,13 +115,13 @@ export function GSAPStars({ count = 450, speed = 1 }: GSAPStarsProps) {
 
         stars.forEach((star) => {
           // Move towards screen
-          star.z -= 0.5 * currentSpeed * 1.5;
+          star.z -= 0.5 * currentSpeed * 1.2;
           
           // Reset star if it passes the screen or gets too far
           if (star.z <= 0) {
             star.z = 2000;
-            star.x = (Math.random() - 0.5) * 4000; // Wider spread
-            star.y = (Math.random() - 0.5) * 4000;
+            star.x = (Math.random() - 0.5) * 4500; // Wider spread
+            star.y = (Math.random() - 0.5) * 4500;
           }
 
             // Project 3D to 2D
@@ -131,21 +131,21 @@ export function GSAPStars({ count = 450, speed = 1 }: GSAPStarsProps) {
 
           // Only draw if within bounds
           if (px >= -500 && px <= width + 500 && py >= -500 && py <= height + 500) {
-            const s = (1 - star.z / 2000) * 4.5;
+            const s = (1 - star.z / 2000) * 3.5;
             
             // Brighten stars significantly near borders, fade at center
             const distFromCenter = Math.sqrt(Math.pow(px - centerX, 2) + Math.pow(py - centerY, 2));
             const edgeThreshold = Math.min(width, height) * 0.5;
-            const centerFade = Math.pow(Math.min(distFromCenter / (edgeThreshold * 0.8), 1.5), 2);
-            const borderBoost = Math.pow(Math.min(distFromCenter / edgeThreshold, 2.5), 2);
+            const centerFade = Math.pow(Math.min(distFromCenter / (edgeThreshold * 0.8), 1.2), 2);
+            const borderBoost = Math.pow(Math.min(distFromCenter / edgeThreshold, 2.0), 2);
             
             // Twinkle effect
             const twinkle = Math.sin(time * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
-            const currentOpacity = (1 - star.z / 2000) * star.opacity * borderBoost * centerFade * (0.6 + twinkle * 0.4) * 0.18;
+            const currentOpacity = (1 - star.z / 2000) * star.opacity * borderBoost * centerFade * (0.6 + twinkle * 0.4) * 0.06;
 
             // Add a glowy golden trail for falling stars
-            const trailLength = Math.max(0.5, currentSpeed * 0.08);
-            const trailK = fov / (star.z + trailLength * 50);
+            const trailLength = Math.max(0.4, currentSpeed * 0.04);
+            const trailK = fov / (star.z + trailLength * 25);
           const tx = star.x * trailK + centerX;
           const ty = star.y * trailK + centerY;
 
@@ -155,8 +155,8 @@ export function GSAPStars({ count = 450, speed = 1 }: GSAPStarsProps) {
           ctx.moveTo(px, py);
           ctx.lineTo(tx, ty);
           ctx.strokeStyle = "#fbbf24"; // Golden
-          ctx.lineWidth = s * 4;
-          ctx.globalAlpha = currentOpacity * 0.1;
+          ctx.lineWidth = s * 3;
+          ctx.globalAlpha = currentOpacity * 0.05;
           ctx.lineCap = "round";
           ctx.stroke();
 
@@ -165,8 +165,8 @@ export function GSAPStars({ count = 450, speed = 1 }: GSAPStarsProps) {
           ctx.moveTo(px, py);
           ctx.lineTo(tx, ty);
           ctx.strokeStyle = "#f59e0b"; // Amber
-          ctx.lineWidth = s * 2;
-          ctx.globalAlpha = currentOpacity * 0.15;
+          ctx.lineWidth = s * 1.5;
+          ctx.globalAlpha = currentOpacity * 0.08;
           ctx.stroke();
 
           // Core Trail
@@ -174,8 +174,8 @@ export function GSAPStars({ count = 450, speed = 1 }: GSAPStarsProps) {
           ctx.moveTo(px, py);
           ctx.lineTo(tx, ty);
           ctx.strokeStyle = "#fff"; 
-          ctx.lineWidth = s * 0.5;
-          ctx.globalAlpha = currentOpacity * 0.3;
+          ctx.lineWidth = s * 0.4;
+          ctx.globalAlpha = currentOpacity * 0.15;
           ctx.stroke();
 
           // Outer glow for stars
