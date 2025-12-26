@@ -133,6 +133,7 @@ export function Taskbar() {
     );
   }
 
+  return (
     <motion.nav
       layout
       initial={{ y: -50, opacity: 0 }}
