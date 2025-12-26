@@ -144,7 +144,7 @@ export default function Home() {
           </>
         }
     >
-      <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 will-change-transform">
+      <div ref={containerRef} data-scroll-section className="relative min-h-screen selection:bg-purple-500/30 will-change-transform">
         {/* Hero Section */}
         <section id="hero" ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden z-10">
           <AnimatePresence mode="wait">
