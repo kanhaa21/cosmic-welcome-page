@@ -312,7 +312,6 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
     <div className="bg-[#020205] text-zinc-300 font-sans selection:bg-blue-500/30 min-h-screen">
       <CustomCursor />
       <Taskbar />
-      <GSAPStars count={1000} />
       <div className="fixed inset-0 z-[-1] bg-[radial-gradient(circle_at_50%_50%,rgba(15,5,30,0.4),transparent_70%)] pointer-events-none" />
 
       {/* Sidebar Navigation - Fixed - Outside SmoothScroll to maintain position */}
