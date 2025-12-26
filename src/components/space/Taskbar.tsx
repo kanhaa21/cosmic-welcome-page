@@ -14,6 +14,7 @@ const sections = [
   { name: "Story", id: "story" },
   { name: "Explore", id: "explore" },
   { name: "Solar", id: "solar", path: "/solar-system" },
+  { name: "Agencies", id: "agencies", path: "/agencies" },
 ];
 
 const agencies = [
