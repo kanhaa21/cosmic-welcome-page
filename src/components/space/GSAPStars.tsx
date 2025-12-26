@@ -95,8 +95,8 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           
           // More pronounced radial fade for better readability of center content
           const distFromCenter = Math.sqrt(Math.pow(px - centerX, 2) + Math.pow(py - centerY, 2));
-            const fadeRadius = Math.min(width, height) * 0.7; // Increased radius for larger dark center
-            const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 6); // Sharper transition for darker center
+            const fadeRadius = Math.min(width, height) * 1.2; // Increased radius for larger dark center
+            const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 8); // Sharper transition for darker center
           
           // Twinkle effect
           const twinkle = Math.sin(time * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
@@ -112,7 +112,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
             if (currentSpeed > 4) {
                ctx.beginPath();
                ctx.moveTo(px, py);
-                 const trailK = fov / (star.z + currentSpeed * 0.2);
+                 const trailK = fov / (star.z + currentSpeed * 0.1);
                const tx = star.x * trailK + centerX;
                const ty = star.y * trailK + centerY;
                ctx.lineTo(tx, ty);
