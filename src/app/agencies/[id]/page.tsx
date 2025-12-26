@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useRef, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Taskbar } from "@/components/space/Taskbar";
 import { SmoothScroll } from "@/components/space/SmoothScroll";
 import { CustomCursor } from "@/components/space/CustomCursor";
@@ -11,113 +11,176 @@ import dynamic from "next/dynamic";
 
 const GSAPStars = dynamic(() => import("@/components/space/GSAPStars").then(mod => mod.GSAPStars), { ssr: false });
 
+const HUDCorner = ({ className }: { className?: string }) => (
+  <div className={`absolute w-8 h-8 pointer-events-none opacity-40 ${className}`}>
+    <div className="absolute top-0 left-0 w-full h-[1px] bg-white" />
+    <div className="absolute top-0 left-0 w-[1px] h-full bg-white" />
+  </div>
+);
+
+const DataLine = ({ label, value, color }: { label: string; value: string; color?: string }) => (
+  <div className="flex items-center gap-4 py-2 border-b border-white/5 group">
+    <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest min-w-[100px]">{label}</span>
+    <span className="h-px flex-1 bg-white/5 group-hover:bg-white/10 transition-colors" />
+    <span className="text-xs font-mono text-zinc-400 group-hover:text-white transition-colors uppercase" style={{ color: color }}>{value}</span>
+  </div>
+);
+
 export default function AgencyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const data = agencyData[id as keyof typeof agencyData] || agencyData.nasa;
+  const [activeSection, setActiveSection] = useState("overview");
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    document.querySelectorAll("section, header").forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="bg-[#020205] text-zinc-300 font-sans selection:bg-purple-500/30 min-h-screen overflow-hidden">
       <CustomCursor />
       <Taskbar />
       <NebulaBackground />
-      <GSAPStars />
+      <GSAPStars count={250} />
+
+      {/* Global HUD Overlays */}
+      <div className="fixed inset-0 pointer-events-none z-[100]">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] opacity-20" />
+        <div className="absolute inset-0 bg-noise opacity-[0.03] mix-blend-overlay" />
+        <div className="absolute top-10 left-10 text-[10px] font-mono text-white/20 uppercase tracking-[0.5em] vertical-text">
+          SYSTEM_VERSION: 4.0.2 // DATA_LINK: ESTABLISHED
+        </div>
+        <div className="absolute bottom-10 right-10 text-[10px] font-mono text-white/20 uppercase tracking-[0.5em] text-right">
+          LAT: 28.5721° N<br />LON: 80.6480° W
+        </div>
+      </div>
 
       {/* Dynamic Nebula Highlight */}
       <div 
-        className="fixed inset-0 z-[-1] opacity-30 pointer-events-none blur-[150px]"
+        className="fixed inset-0 z-[-1] opacity-20 pointer-events-none blur-[180px]"
         style={{ 
-          background: `radial-gradient(circle at 80% 20%, ${data.accentColor} 0%, transparent 50%), radial-gradient(circle at 20% 80%, ${data.accentColor} 0%, transparent 50%)` 
+          background: `radial-gradient(circle at 70% 30%, ${data.accentColor} 0%, transparent 60%), radial-gradient(circle at 30% 70%, ${data.accentColor} 0%, transparent 60%)` 
         }}
       />
 
-      {/* Sidebar Navigation */}
-      <div className="hidden xl:flex fixed left-12 top-1/2 -translate-y-1/2 flex-col gap-8 z-50 text-[10px] uppercase tracking-[0.3em] font-black text-zinc-600">
-         <a href="#overview" className="hover:text-white transition-all flex items-center gap-4 group">
-           <span className="w-6 h-px bg-zinc-800 group-hover:w-12 group-hover:bg-purple-500 transition-all" /> 01 Overview
-         </a>
-         <a href="#arsenal" className="hover:text-white transition-all flex items-center gap-4 group">
-           <span className="w-6 h-px bg-zinc-800 group-hover:w-12 group-hover:bg-purple-500 transition-all" /> 02 Arsenal
-         </a>
-         <a href="#projects" className="hover:text-white transition-all flex items-center gap-4 group">
-           <span className="w-6 h-px bg-zinc-800 group-hover:w-12 group-hover:bg-purple-500 transition-all" /> 03 Projects
-         </a>
-         <a href="#milestones" className="hover:text-white transition-all flex items-center gap-4 group">
-           <span className="w-6 h-px bg-zinc-800 group-hover:w-12 group-hover:bg-purple-500 transition-all" /> 04 Milestones
-         </a>
-         <a href="#horizon" className="hover:text-white transition-all flex items-center gap-4 group">
-           <span className="w-6 h-px bg-zinc-800 group-hover:w-12 group-hover:bg-purple-500 transition-all" /> 05 Horizon
-         </a>
-      </div>
+      {/* Futuristic Sidebar */}
+      <nav className="hidden xl:flex fixed left-12 top-1/2 -translate-y-1/2 flex-col gap-6 z-50">
+        {["overview", "arsenal", "projects", "milestones", "horizon"].map((section, idx) => (
+          <a 
+            key={section}
+            href={`#${section}`} 
+            className={`group relative flex items-center transition-all duration-500 ${activeSection === section ? 'text-white' : 'text-zinc-600'}`}
+          >
+            <div className={`absolute -left-4 w-1 transition-all duration-500 ${activeSection === section ? 'h-full bg-white opacity-100' : 'h-0 bg-zinc-800 opacity-0'}`} style={{ backgroundColor: data.accentColor }} />
+            <div className="flex flex-col">
+              <span className={`text-[8px] font-mono mb-1 transition-colors ${activeSection === section ? 'text-white/40' : 'text-transparent'}`}>0{idx + 1}</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] group-hover:tracking-[0.4em] transition-all">
+                {section}
+              </span>
+            </div>
+            {activeSection === section && (
+              <motion.div 
+                layoutId="nav-dot"
+                className="ml-4 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_10px_white]"
+                style={{ backgroundColor: data.accentColor, boxShadow: `0 0 10px ${data.accentColor}` }}
+              />
+            )}
+          </a>
+        ))}
+      </nav>
 
       <SmoothScroll key={id}>
         <div className="max-w-7xl mx-auto px-6 pt-32 pb-40 relative z-10">
           
           {/* Hero Section */}
-          <header id="overview" className="relative mb-40 min-h-[70vh] flex flex-col justify-center">
+          <header id="overview" className="relative mb-64 min-h-[90vh] flex flex-col justify-center">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1 }}
-              className="absolute -left-24 top-1/2 -translate-y-1/2 text-[25vw] font-black text-white/[0.03] select-none pointer-events-none tracking-tighter leading-none font-[family-name:var(--font-orbitron)]"
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.5, ease: "circOut" }}
+              className="absolute -right-20 top-1/2 -translate-y-1/2 text-[30vw] font-black text-white/[0.02] select-none pointer-events-none tracking-tighter leading-none font-[family-name:var(--font-orbitron)]"
             >
               {data.name}
             </motion.div>
             
-            <div className="relative">
+            <div className="relative z-10">
               <motion.div 
-                initial={{ opacity: 0, x: -20 }} 
-                animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-4 font-mono text-[10px] tracking-[0.5em] mb-12"
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-4 font-mono text-[10px] tracking-[0.8em] mb-16"
                 style={{ color: data.accentColor }}
               >
-                <span className="w-16 h-px bg-current opacity-50" />
-                GALACTIC ENTITY DOSSIER // {id.toUpperCase()}
+                <div className="flex gap-1">
+                   {[1,2,3].map(i => <div key={i} className="w-1 h-3 bg-current opacity-30" />)}
+                </div>
+                AGENCY_PROTOTYPE // {id.toUpperCase()} // LEVEL_4_ACCESS
               </motion.div>
               
-              <div className="max-w-4xl mb-24">
+              <div className="max-w-5xl">
                 <motion.h1 
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-8xl md:text-[10rem] font-black text-white tracking-tighter mb-8 uppercase leading-[0.85] font-[family-name:var(--font-orbitron)]"
+                  initial={{ opacity: 0, y: 50, rotateX: -20 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className="text-8xl md:text-[14rem] font-black text-white tracking-tighter mb-4 uppercase leading-[0.8] font-[family-name:var(--font-orbitron)]"
                 >
                   {data.name}
                 </motion.h1>
-                <motion.p 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className="text-zinc-500 font-mono text-sm tracking-[0.2em] uppercase mb-12"
+                  transition={{ delay: 0.5 }}
+                  className="flex items-center gap-6 mb-20"
                 >
-                  {data.fullname}
-                </motion.p>
-                <motion.div 
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="relative pl-12"
-                >
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500 to-transparent opacity-50" />
-                  <p className="text-3xl md:text-4xl text-zinc-200 font-light leading-tight italic max-w-2xl">
-                    "{data.motto}"
+                  <p className="text-zinc-500 font-mono text-sm tracking-[0.4em] uppercase border-l-2 border-white/10 pl-6">
+                    {data.fullname}
                   </p>
+                  <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
                 </motion.div>
-              </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
-                <div className="lg:col-span-8">
-                  <p className="text-2xl text-zinc-400 leading-relaxed font-light">
-                    {data.description}
-                  </p>
-                </div>
-                <div className="lg:col-span-4 grid grid-cols-2 gap-8">
-                  <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 backdrop-blur-md">
-                    <span className="block text-[9px] text-zinc-600 uppercase font-black tracking-widest mb-3">Established</span>
-                    <span className="text-white font-mono text-xl">{data.founded.split(',')[1] || data.founded}</span>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+                  <div className="lg:col-span-7">
+                    <motion.p 
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.8 }}
+                      className="text-3xl md:text-4xl text-zinc-100 font-light leading-tight mb-12"
+                    >
+                      {data.description}
+                    </motion.p>
+                    
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 1 }}
+                      className="inline-flex items-center gap-6 px-8 py-4 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md group hover:bg-white/[0.05] transition-all cursor-pointer"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-current animate-pulse" style={{ color: data.accentColor }} />
+                      <span className="text-sm font-mono tracking-widest uppercase italic text-zinc-400">"{data.motto}"</span>
+                    </motion.div>
                   </div>
-                  <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 backdrop-blur-md">
-                    <span className="block text-[9px] text-zinc-600 uppercase font-black tracking-widest mb-3">Budget</span>
-                    <span className="text-white font-mono text-xl">{data.budget.split('(')[0]}</span>
+
+                  <div className="lg:col-span-5 space-y-4">
+                     <div className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 backdrop-blur-xl relative overflow-hidden group">
+                        <HUDCorner className="top-0 left-0" />
+                        <HUDCorner className="bottom-0 right-0 rotate-180" />
+                        <h4 className="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.4em] mb-8">System_Metadata</h4>
+                        <DataLine label="Established" value={data.founded} />
+                        <DataLine label="Headquarters" value={data.hq} />
+                        <DataLine label="Leadership" value={data.leadership} />
+                        <DataLine label="Budget" value={data.budget} color={data.accentColor} />
+                        <DataLine label="Personnel" value={data.workforce} />
+                     </div>
                   </div>
                 </div>
               </div>
@@ -125,51 +188,86 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </header>
 
           {/* Technical Arsenal */}
-          <section id="arsenal" className="mb-56">
-             <div className="flex items-center gap-8 mb-20">
-               <h2 className="text-white text-5xl font-black uppercase tracking-tighter font-[family-name:var(--font-orbitron)]">Technical Arsenal</h2>
-               <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
+          <section id="arsenal" className="mb-64">
+             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-24">
+               <div>
+                  <motion.span 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    className="text-[10px] font-mono text-zinc-600 uppercase tracking-[1em] mb-4 block"
+                  >
+                    Capability_Matrix
+                  </motion.span>
+                  <h2 className="text-white text-7xl md:text-9xl font-black uppercase tracking-tighter font-[family-name:var(--font-orbitron)] leading-none">Arsenal</h2>
+               </div>
+               <div className="flex items-center gap-4 text-xs font-mono text-zinc-500">
+                  <span className="w-12 h-px bg-zinc-800" />
+                  TOTAL_ASSETS: {data.vehicles.length + data.facilities.length}
+               </div>
              </div>
              
              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-1 p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 backdrop-blur-xl relative overflow-hidden group">
+                <div className="lg:col-span-1 p-12 rounded-[3.5rem] bg-gradient-to-br from-white/[0.05] to-transparent border border-white/10 backdrop-blur-2xl relative overflow-hidden group">
                    <div 
-                     className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-700"
+                     className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-1000"
                      style={{ background: `radial-gradient(circle at 50% 50%, ${data.accentColor}, transparent 70%)` }}
                    />
                    <div className="relative">
-                      <span className="text-zinc-500 font-mono text-[10px] uppercase tracking-[0.4em] mb-8 block">Operational Capabilities</span>
-                      <ul className="space-y-6">
+                      <div className="flex items-center gap-4 mb-12">
+                         <div className="w-12 h-[1px] bg-white/20" />
+                         <span className="text-zinc-400 font-mono text-[10px] uppercase tracking-[0.4em]">Core_Competencies</span>
+                      </div>
+                      <ul className="space-y-8">
                         {data.capabilities.map((cap, i) => (
-                          <li key={i} className="flex items-center gap-6 group/item">
-                             <span className="w-2 h-2 rounded-full bg-white/20 group-hover/item:bg-white group-hover/item:scale-150 transition-all duration-300" />
-                             <span className="text-lg font-medium text-zinc-300 group-hover/item:text-white transition-colors">{cap}</span>
+                          <li key={i} className="group/item relative pl-8">
+                             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-white/20 group-hover/item:bg-white group-hover/item:border-white transition-all duration-300" style={{ borderColor: activeSection === 'arsenal' ? data.accentColor : '' }} />
+                             <span className="text-xl font-medium text-zinc-400 group-hover/item:text-white transition-colors">{cap}</span>
+                             <div className="mt-2 text-[9px] font-mono text-zinc-700 uppercase tracking-widest opacity-0 group-hover/item:opacity-100 transition-opacity">Module_Loaded // 0{i+1}</div>
                           </li>
                         ))}
                       </ul>
-                      <div className="mt-16 pt-10 border-t border-white/5 text-sm text-zinc-500 leading-relaxed">
-                        {data.technicalOverview}
+                      <div className="mt-20 p-8 rounded-3xl bg-black/40 border border-white/5 text-sm text-zinc-500 leading-relaxed italic">
+                        "{data.technicalOverview}"
                       </div>
                    </div>
                 </div>
 
                 <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
                    {data.vehicles.map((v, i) => (
-                     <div key={i} className="p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all group relative overflow-hidden">
-                        <div className="flex justify-between items-start mb-8">
-                           <h4 className="text-2xl font-bold text-white group-hover:translate-x-1 transition-transform">{v.name}</h4>
-                           <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${v.status.includes('Active') || v.status.includes('Operational') ? 'bg-green-500/10 text-green-500' : 'bg-orange-500/10 text-orange-500'}`}>
-                              {v.status}
-                           </span>
+                     <div key={i} className="p-12 rounded-[3.5rem] bg-white/[0.01] border border-white/5 hover:border-white/20 hover:bg-white/[0.03] transition-all group relative overflow-hidden flex flex-col justify-between min-h-[400px]">
+                        <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:opacity-20 transition-opacity text-8xl font-black font-[family-name:var(--font-orbitron)] pointer-events-none">
+                          0{i+1}
                         </div>
-                        <div className="space-y-6">
-                           <div>
-                              <span className="block text-[9px] text-zinc-600 uppercase font-black tracking-widest mb-2">Class</span>
-                              <span className="text-zinc-300 font-medium">{v.type}</span>
+                        
+                        <div>
+                           <div className="flex justify-between items-start mb-12">
+                              <h4 className="text-3xl font-black text-white group-hover:translate-x-2 transition-transform uppercase tracking-tighter font-[family-name:var(--font-orbitron)]">{v.name}</h4>
+                              <div className="flex flex-col items-end gap-2">
+                                <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] ${v.status.includes('Active') || v.status.includes('Operational') ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-orange-500/10 text-orange-500 border border-orange-500/20'}`}>
+                                    {v.status}
+                                </span>
+                              </div>
                            </div>
-                           <div>
-                              <span className="block text-[9px] text-zinc-600 uppercase font-black tracking-widest mb-2">Capacity</span>
-                              <span className="text-xl font-mono text-zinc-400">{v.payload}</span>
+                           
+                           <div className="space-y-8">
+                              <div className="group/detail">
+                                 <span className="block text-[10px] text-zinc-600 uppercase font-black tracking-[0.3em] mb-3 group-hover/detail:text-white/40 transition-colors">Asset_Classification</span>
+                                 <span className="text-zinc-200 text-lg font-medium tracking-tight uppercase">{v.type}</span>
+                              </div>
+                              <div className="group/detail">
+                                 <span className="block text-[10px] text-zinc-600 uppercase font-black tracking-[0.3em] mb-3 group-hover/detail:text-white/40 transition-colors">Payload_Capacity</span>
+                                 <div className="flex items-end gap-3">
+                                    <span className="text-4xl font-mono text-zinc-100 tracking-tighter" style={{ color: data.accentColor }}>{v.payload.split(' ')[0]}</span>
+                                    <span className="text-xs font-mono text-zinc-600 mb-2 uppercase">{v.payload.split(' ').slice(1).join(' ')}</span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div className="mt-12 pt-8 border-t border-white/5 flex items-center justify-between opacity-40 group-hover:opacity-100 transition-opacity">
+                           <span className="text-[9px] font-mono tracking-widest">UID: {id.toUpperCase()}-{v.name.replace(/\s+/g, '')}</span>
+                           <div className="flex gap-1">
+                              {[1,2,3,4].map(j => <div key={j} className="w-3 h-[1px] bg-current" />)}
                            </div>
                         </div>
                      </div>
@@ -179,25 +277,41 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Strategic Projects */}
-          <section id="projects" className="mb-56">
-             <div className="flex items-center gap-8 mb-20">
-               <h2 className="text-white text-5xl font-black uppercase tracking-tighter font-[family-name:var(--font-orbitron)]">Strategic Projects</h2>
-               <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
+          <section id="projects" className="mb-64">
+             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-24">
+                <h2 className="text-white text-7xl md:text-9xl font-black uppercase tracking-tighter font-[family-name:var(--font-orbitron)] leading-none">Initiatives</h2>
+                <p className="max-w-md text-zinc-500 text-sm font-mono tracking-widest uppercase text-right">
+                   High-priority orbital and interplanetary deployments currently under execution.
+                </p>
              </div>
              
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {data.projects.map((p, i) => (
-                  <div key={i} className="group relative p-1 rounded-[3rem] transition-all duration-500 hover:scale-[1.02]">
-                     <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 rounded-[3rem] transition-opacity" />
-                     <div className="relative p-10 h-full rounded-[2.9rem] bg-black/40 border border-white/5 backdrop-blur-md flex flex-col">
-                        <div className="flex justify-between items-center mb-8">
-                           <span className="font-mono text-xs opacity-50">{p.year}</span>
-                           <div className={`w-3 h-3 rounded-full ${p.status === 'Active' ? 'bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.5)] animate-pulse' : 'bg-zinc-800'}`} />
+                  <div key={i} className="group relative p-[1px] rounded-[3rem] transition-all duration-700 hover:scale-[1.03]">
+                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 rounded-[3rem] transition-opacity" style={{ backgroundImage: `linear-gradient(135deg, ${data.accentColor}44, transparent, transparent)` }} />
+                     
+                     <div className="relative p-12 h-full rounded-[2.95rem] bg-[#050508] border border-white/5 backdrop-blur-3xl flex flex-col">
+                        <HUDCorner className="top-8 left-8 opacity-20" />
+                        
+                        <div className="flex justify-between items-center mb-12">
+                           <div className="px-4 py-1 rounded-sm bg-white/5 text-[10px] font-mono text-zinc-500">{p.year}</div>
+                           <div className="relative">
+                              <div className={`w-3 h-3 rounded-full ${p.status === 'Active' ? 'shadow-[0_0_15px_current]' : 'bg-zinc-800'}`} style={{ backgroundColor: p.status === 'Active' ? data.accentColor : '' }} />
+                              {p.status === 'Active' && <div className="absolute inset-0 rounded-full animate-ping opacity-50" style={{ backgroundColor: data.accentColor }} />}
+                           </div>
                         </div>
-                        <h4 className="text-3xl font-black text-white mb-6 tracking-tighter uppercase">{p.name}</h4>
-                        <p className="text-zinc-400 leading-relaxed mb-10 flex-1">{p.description}</p>
-                        <div className="pt-8 border-t border-white/5 flex items-center justify-between">
-                           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">Phase: {p.status}</span>
+
+                        <h4 className="text-4xl font-black text-white mb-8 tracking-tighter uppercase font-[family-name:var(--font-orbitron)] leading-none">{p.name}</h4>
+                        <p className="text-zinc-400 text-lg leading-relaxed mb-12 flex-1 font-light">{p.description}</p>
+                        
+                        <div className="pt-10 border-t border-white/5 flex items-center justify-between">
+                           <div className="flex flex-col">
+                              <span className="text-[8px] font-mono text-zinc-700 uppercase tracking-widest mb-1">Deployment_Phase</span>
+                              <span className="text-xs font-black uppercase tracking-[0.2em] text-white/80">{p.status}</span>
+                           </div>
+                           <button className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white/40 transition-all">
+                              <div className="w-1.5 h-1.5 rotate-45 border-t border-r border-white" />
+                           </button>
                         </div>
                      </div>
                   </div>
@@ -206,26 +320,54 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Milestones & Timeline */}
-          <section id="milestones" className="mb-56">
+          <section id="milestones" className="mb-64">
              <div className="grid grid-cols-1 lg:grid-cols-12 gap-24">
-                <div className="lg:col-span-4 sticky top-32 h-fit">
-                   <h2 className="text-white text-6xl font-black uppercase tracking-tighter mb-10 leading-[0.9] font-[family-name:var(--font-orbitron)]">
-                     Historical <br /> Milestones
+                <div className="lg:col-span-5 sticky top-32 h-fit">
+                   <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-[1em] mb-6 block">Historical_Archive</span>
+                   <h2 className="text-white text-8xl md:text-[7rem] font-black uppercase tracking-tighter mb-12 leading-[0.85] font-[family-name:var(--font-orbitron)]">
+                     Chronicle <br /> Of Success
                    </h2>
-                   <div className="w-20 h-2 bg-purple-500 mb-10" />
-                   <p className="text-zinc-500 text-lg leading-relaxed font-light">
-                     A permanent record of human ingenuity and the relentless pursuit of cosmic knowledge.
+                   <div className="w-32 h-1 bg-gradient-to-r from-white/40 to-transparent mb-12" style={{ backgroundImage: `linear-gradient(90deg, ${data.accentColor}, transparent)` }} />
+                   <p className="text-zinc-400 text-xl leading-relaxed font-light mb-16 max-w-sm">
+                     Decades of exploration distilled into defining moments of human achievement.
                    </p>
+                   
+                   <div className="p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 backdrop-blur-xl">
+                      <h5 className="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.4em] mb-6">Key_Achievements</h5>
+                      <div className="space-y-4">
+                        {data.achievements.slice(0, 3).map((ach, idx) => (
+                          <div key={idx} className="flex gap-4 text-sm text-zinc-400">
+                             <span className="text-white/20 font-mono">[{idx + 1}]</span>
+                             <span>{ach}</span>
+                          </div>
+                        ))}
+                      </div>
+                   </div>
                 </div>
                 
-                <div className="lg:col-span-8">
-                   <div className="space-y-20 border-l border-white/5 pl-12 ml-6">
+                <div className="lg:col-span-7">
+                   <div className="space-y-32 border-l border-white/5 pl-12 ml-6 relative">
                       {data.timeline.map((t, i) => (
                         <div key={i} className="relative group">
-                           <div className="absolute -left-[54px] top-2 w-3 h-3 rounded-full bg-zinc-800 border-2 border-white/10 group-hover:bg-purple-500 group-hover:scale-150 transition-all duration-500" />
-                           <span className="text-purple-500 font-mono text-sm font-black mb-4 block tracking-widest">{t.year}</span>
-                           <h4 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase">{t.event}</h4>
-                           <p className="text-xl text-zinc-400 leading-relaxed font-light max-w-2xl">{t.detail}</p>
+                           <div className="absolute -left-[61px] top-2 w-4 h-4 rounded-full bg-[#020205] border border-white/10 group-hover:border-white transition-all duration-500 flex items-center justify-center">
+                              <div className="w-1.5 h-1.5 rounded-full bg-zinc-800 group-hover:scale-110 transition-transform" style={{ backgroundColor: activeSection === 'milestones' ? data.accentColor : '' }} />
+                           </div>
+                           
+                           <div className="flex items-center gap-6 mb-6">
+                              <span className="text-white font-mono text-2xl font-black tracking-tighter" style={{ color: data.accentColor }}>{t.year}</span>
+                              <div className="h-px w-12 bg-white/10" />
+                           </div>
+                           
+                           <h4 className="text-4xl font-black text-white mb-6 tracking-tighter uppercase font-[family-name:var(--font-orbitron)] group-hover:translate-x-4 transition-transform duration-500">{t.event}</h4>
+                           <p className="text-xl text-zinc-400 leading-relaxed font-light max-w-2xl border-l border-white/5 pl-8 group-hover:border-white/20 transition-colors">
+                              {t.detail}
+                           </p>
+                           
+                           <div className="mt-10 opacity-0 group-hover:opacity-20 transition-opacity flex gap-2">
+                              {Array.from({ length: 12 }).map((_, j) => (
+                                <div key={j} className="w-[2px] h-8 bg-white" />
+                              ))}
+                           </div>
                         </div>
                       ))}
                    </div>
@@ -234,31 +376,46 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Strategic Horizon */}
-          <section id="horizon" className="mb-56 py-32 px-12 md:px-24 rounded-[5rem] bg-white/[0.02] border border-white/5 relative overflow-hidden">
+          <section id="horizon" className="mb-64 p-16 md:p-32 rounded-[5rem] bg-white/[0.01] border border-white/5 relative overflow-hidden">
              <div 
                className="absolute inset-0 opacity-10 pointer-events-none"
-               style={{ background: `linear-gradient(45deg, ${data.accentColor} 0%, transparent 100%)` }}
+               style={{ background: `radial-gradient(circle at 100% 0%, ${data.accentColor} 0%, transparent 50%)` }}
              />
-             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/10 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2" />
+             <div className="absolute -bottom-64 -left-64 w-[600px] h-[600px] bg-white/5 blur-[120px] rounded-full" />
              
              <div className="relative z-10">
-                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-16 mb-24">
-                   <div className="max-w-2xl">
-                      <span className="text-purple-500 font-mono text-[10px] uppercase tracking-[0.5em] mb-6 block">Future Initiatives</span>
-                      <h2 className="text-7xl md:text-9xl font-black text-white tracking-tighter font-[family-name:var(--font-orbitron)] uppercase">Strategic Horizon</h2>
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-16 mb-32">
+                   <div className="max-w-4xl">
+                      <motion.span 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        className="text-zinc-500 font-mono text-[10px] uppercase tracking-[1em] mb-8 block"
+                      >
+                        Mission_Continuum
+                      </motion.span>
+                      <h2 className="text-8xl md:text-[11rem] font-black text-white tracking-tighter font-[family-name:var(--font-orbitron)] uppercase leading-[0.8]">Strategic <br /> Horizon</h2>
                    </div>
-                   <p className="max-w-xs text-zinc-500 text-sm font-mono tracking-widest uppercase italic">
-                     Charting the next century of interplanetary expansion.
-                   </p>
+                   <div className="p-8 border border-white/5 backdrop-blur-md rounded-2xl max-w-xs">
+                      <p className="text-zinc-500 text-[10px] font-mono tracking-widest uppercase italic leading-loose">
+                        // CAUTION: PROVISIONAL DATA<br />
+                        // TIMELINES SUBJECT TO ORBITAL WINDOWS AND RESOURCE LOGISTICS
+                      </p>
+                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
                    {data.futurePlans.map((plan, i) => (
-                     <div key={i} className="group">
-                        <div className="text-white/5 text-8xl font-black mb-8 group-hover:text-white/10 transition-colors">0{i+1}</div>
-                        <span className="text-purple-500 font-mono text-xs font-black mb-4 block tracking-widest">EST: {plan.timeframe}</span>
-                        <h4 className="text-3xl font-black text-white mb-6 tracking-tighter uppercase">{plan.title}</h4>
-                        <p className="text-zinc-400 text-lg leading-relaxed font-light">{plan.description}</p>
+                     <div key={i} className="group relative">
+                        <div className="text-white/5 text-[12rem] font-black absolute -top-16 -left-8 group-hover:text-white/10 transition-colors pointer-events-none font-[family-name:var(--font-orbitron)]">0{i+1}</div>
+                        <div className="relative pt-24">
+                           <div className="flex items-center gap-4 mb-6">
+                              <span className="text-[10px] font-mono text-zinc-500 uppercase">Target_Epoch:</span>
+                              <span className="px-3 py-1 bg-white/5 text-white font-mono text-sm font-black tracking-widest">{plan.timeframe}</span>
+                           </div>
+                           <h4 className="text-4xl font-black text-white mb-8 tracking-tighter uppercase font-[family-name:var(--font-orbitron)]">{plan.title}</h4>
+                           <div className="h-[1px] w-full bg-gradient-to-r from-white/20 to-transparent mb-8" />
+                           <p className="text-zinc-400 text-lg leading-relaxed font-light group-hover:text-zinc-200 transition-colors">{plan.description}</p>
+                        </div>
                      </div>
                    ))}
                 </div>
@@ -266,14 +423,20 @@ export default function AgencyPage({ params }: { params: Promise<{ id: string }>
           </section>
 
           {/* Footer Metadata */}
-          <footer className="pt-20 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-12 text-[10px] text-zinc-600 font-mono tracking-[0.5em] uppercase" data-scroll-section>
-             <div className="flex items-center gap-6">
-                <span className="w-12 h-px bg-zinc-800" />
-                ARCHIVE: {data.name} // GEN-4 DATASET
+          <footer className="pt-24 border-t border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-12 text-[10px] text-zinc-600 font-mono tracking-[0.5em] uppercase">
+             <div className="flex items-center gap-8">
+                <div className="flex gap-1">
+                   {[1,2,3].map(i => <div key={i} className="w-1.5 h-1.5 bg-zinc-800" />)}
+                </div>
+                ARCHIVE_ENTITY: {data.name} // SOURCE: NASA_DSN_V4
              </div>
-             <div className="flex gap-12">
-                <span>UPDATED: {new Date().toLocaleDateString()}</span>
-                <span className="text-green-500/50">LINK STATUS: ACTIVE</span>
+             <div className="flex flex-wrap gap-12">
+                <div className="flex items-center gap-4">
+                   <div className="w-2 h-2 rounded-full bg-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.3)]" />
+                   LINK_STATUS: STABLE
+                </div>
+                <span>PACKET_LOSS: 0.00%</span>
+                <span className="text-zinc-400">© {new Date().getFullYear()} GALACTIC_HUB</span>
              </div>
           </footer>
 
