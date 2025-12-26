@@ -90,8 +90,8 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           
           // More pronounced radial fade for better readability of center content
           const distFromCenter = Math.sqrt(Math.pow(px - centerX, 2) + Math.pow(py - centerY, 2));
-          const fadeRadius = Math.min(width, height) * 0.4; // Slightly tighter radius
-          const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 4); // Higher power for sharper center clearing
+            const fadeRadius = Math.min(width, height) * 0.7; // Increased radius for larger dark center
+            const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 6); // Sharper transition for darker center
           
           const currentOpacity = (1 - star.z / 2000) * star.opacity * centerFade;
 
