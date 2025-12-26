@@ -57,12 +57,12 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         z: Math.random() * 2000,
         size: Math.random() * 2,
         color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random() * 0.2 + 0.1
+        opacity: Math.random() * 0.1 + 0.05 // Further reduced base opacity
       };
     });
 
     const render = () => {
-      ctx.fillStyle = "rgba(0, 0, 0, 1)"; // Fully clear each frame or use very low trail
+      ctx.fillStyle = "rgba(0, 0, 0, 1)";
       ctx.fillRect(0, 0, width, height);
       
       const currentSpeed = speedRef.current;
@@ -88,10 +88,10 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         if (px >= 0 && px <= width && py >= 0 && py <= height) {
           const s = (1 - star.z / 2000) * 3;
           
-          // Fade stars towards the center for readability
+          // More pronounced radial fade for better readability of center content
           const distFromCenter = Math.sqrt(Math.pow(px - centerX, 2) + Math.pow(py - centerY, 2));
-          const fadeRadius = Math.min(width, height) * 0.5;
-          const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 1.5);
+          const fadeRadius = Math.min(width, height) * 0.45; // Slightly tighter radius
+          const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 2.5); // Higher power for sharper center clearing
           
           const currentOpacity = (1 - star.z / 2000) * star.opacity * centerFade;
 
