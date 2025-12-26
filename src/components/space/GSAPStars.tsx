@@ -129,11 +129,11 @@ export function GSAPStars({ count = 1200, speed = 1 }: GSAPStarsProps) {
     };
   }, [count]);
 
-  return (
-    <canvas 
-      ref={canvasRef} 
-      className="fixed inset-0 pointer-events-none z-[-1]"
-      style={{ filter: "blur(0.3px)" }}
-    />
-  );
+    return (
+      <canvas 
+        ref={canvasRef} 
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{ filter: "blur(0.3px)" }}
+      />
+    );
 }
