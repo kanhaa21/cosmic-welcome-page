@@ -59,7 +59,9 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         z: Math.random() * 2000,
         size: Math.random() * 2,
         color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random() * 0.04 + 0.01 // Minimal base opacity for maximum content clarity
+        opacity: Math.random() * 0.3 + 0.2, // Increased brightness
+        twinklePhase: Math.random() * Math.PI * 2,
+        twinkleSpeed: Math.random() * 0.005 + 0.002
       };
     });
 
@@ -69,6 +71,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
       
       const currentSpeed = speedRef.current;
       const fov = 200;
+      const time = Date.now();
 
       stars.forEach((star) => {
         // Move towards screen
@@ -95,7 +98,9 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
             const fadeRadius = Math.min(width, height) * 0.7; // Increased radius for larger dark center
             const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 6); // Sharper transition for darker center
           
-          const currentOpacity = (1 - star.z / 2000) * star.opacity * centerFade;
+          // Twinkle effect
+          const twinkle = Math.sin(time * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
+          const currentOpacity = (1 - star.z / 2000) * star.opacity * centerFade * (0.6 + twinkle * 0.4);
 
           ctx.beginPath();
           ctx.arc(px, py, s, 0, Math.PI * 2);
