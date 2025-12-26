@@ -132,25 +132,33 @@ const planetData: PlanetData[] = [
   }
 ];
 
+import { useAudio } from "@/hooks/AudioContext";
+import { useParallax } from "@/hooks/useParallax";
+
 function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
   const sectionRef = useRef<HTMLElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
   const sphereRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const { scroll } = useSmoothScroll();
+  const { setTone } = useAudio();
+  const parallax = useParallax(idx % 2 === 0 ? 20 : -20);
 
   useEffect(() => {
     if (!scroll || !sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Visibility Toggle for Three.js Rendering
+      // Visibility Toggle for Three.js Rendering & Audio
       ScrollTrigger.create({
         trigger: sectionRef.current,
         scroller: ".smooth-scroll",
-        start: "top bottom",
-        end: "bottom top",
+        start: "top center",
+        end: "bottom center",
         onToggle: (self) => {
-          if (self.isActive) setIsVisible(true);
+          if (self.isActive) {
+            setIsVisible(true);
+            setTone("ambient");
+          }
         }
       });
 
