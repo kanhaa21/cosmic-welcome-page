@@ -107,6 +107,7 @@ export function Taskbar() {
 
   return (
     <motion.nav
+      layout
       initial={{ y: -50, opacity: 0 }}
       animate={{ 
         y: 0, 
@@ -114,14 +115,18 @@ export function Taskbar() {
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-full border border-white/5 bg-[#030014]/40 backdrop-blur-3xl flex items-center shadow-[0_30px_60px_-12px_rgba(0,0,0,0.9)] hover:border-white/10 transition-all duration-500 px-6 py-2.5 min-w-max"
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-full border border-white/5 bg-[#030014]/60 backdrop-blur-3xl flex items-center shadow-[0_30px_60px_-12px_rgba(0,0,0,0.9)] hover:border-white/10 px-6 py-2.5 min-w-max group overflow-hidden"
       transition={{
+        layout: { 
+          duration: isHovered ? 0.6 : 1.2,
+          ease: [0.16, 1, 0.3, 1] 
+        },
         y: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
       }}
     >
       <div className="flex items-center gap-6 relative">
         <motion.button
-          layout
+          layout="position"
           onClick={() => {
             if (pathname !== "/") router.push("/");
             else handleScroll("hero");
@@ -131,17 +136,22 @@ export function Taskbar() {
           NEXUS
         </motion.button>
 
-        <AnimatePresence mode="popLayout" initial={false}>
+        <AnimatePresence mode="popLayout">
           {isHovered && (
             <motion.div
               key="expanded-nav"
-              initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)", x: -20 }}
+              initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)", x: -10 }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)", x: 0 }}
-              exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)", x: -20 }}
+              exit={{ 
+                opacity: 0, 
+                scale: 0.9, 
+                filter: "blur(10px)", 
+                x: -10,
+                transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+              }}
               transition={{ 
-                duration: 0.4, 
-                ease: [0.23, 1, 0.32, 1],
-                opacity: { duration: 0.3 }
+                duration: 0.5, 
+                ease: [0.16, 1, 0.3, 1]
               }}
               className="flex items-center gap-6"
             >
@@ -150,7 +160,7 @@ export function Taskbar() {
               <div className="flex items-center gap-2">
                 {sections.map((section) => (
                   <motion.button
-                    layout
+                    layout="position"
                     key={section.id}
                     onClick={() => handleNavigation(section)}
                     className={`text-[9px] font-bold uppercase tracking-[0.2em] transition-all relative px-3 py-1.5 rounded-full whitespace-nowrap ${
@@ -175,7 +185,7 @@ export function Taskbar() {
 
               <div className="flex items-center gap-6 pl-6 border-l border-white/10">
                 {agencies.map((agency) => (
-                  <motion.div layout key={agency.name}>
+                  <motion.div layout="position" key={agency.name}>
                     <Link
                       href={agency.path}
                       className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.3em] hover:text-purple-400 transition-all whitespace-nowrap"
