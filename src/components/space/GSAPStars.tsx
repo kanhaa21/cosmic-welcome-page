@@ -57,7 +57,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         z: Math.random() * 2000,
         size: Math.random() * 2,
         color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random() * 0.1 + 0.05 // Further reduced base opacity
+        opacity: Math.random() * 0.07 + 0.02 // Minimal base opacity for maximum content clarity
       };
     });
 
