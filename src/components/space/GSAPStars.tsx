@@ -178,6 +178,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
       height = canvas.height = window.innerHeight;
       centerX = width / 2;
       centerY = height / 2;
+      initBackgroundStars(width, height);
     };
 
     window.addEventListener("resize", handleResize);
