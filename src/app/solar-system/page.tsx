@@ -11,13 +11,11 @@ import { useSmoothScroll } from "@/components/space/SmoothScroll";
 const GSAPStars = dynamic(() => import("@/components/space/GSAPStars").then(mod => mod.GSAPStars), { ssr: false });
 const PlanetDetailSection = dynamic(() => import("@/components/space/PlanetDetailSection").then(mod => mod.PlanetDetailSection), { ssr: false });
 
-import { useParallax } from "@/hooks/useParallax";
-
 export default function SolarSystemPage() {
   const containerRef = useRef(null);
   const { scroll: locoScroll } = useSmoothScroll();
-  const parallax = useParallax(15);
   const currentSection = useRef(0);
+  const totalSections = 10; // Hero + 8 Planets + Footer
 
   useEffect(() => {
     if (!locoScroll) return;
@@ -59,6 +57,17 @@ export default function SolarSystemPage() {
         </>
       }
     >
+      <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 overflow-hidden">
+        {/* Hero Section - Refined & Elegant */}
+        <div id="top" className="relative z-10 pt-64 pb-32 px-6 flex flex-col items-center justify-center min-h-screen">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              opacity: { duration: 1.8, ease: [0.16, 1, 0.3, 1] }
+            }}
+            className="text-center max-w-6xl"
+          >
       <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 overflow-hidden">
         {/* Hero Section - Refined & Elegant */}
         <div id="top" className="relative z-10 pt-64 pb-32 px-6 flex flex-col items-center justify-center min-h-screen">
