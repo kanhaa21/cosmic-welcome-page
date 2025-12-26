@@ -4,14 +4,45 @@ import { Taskbar } from "@/components/space/Taskbar";
 import { SmoothScroll } from "@/components/space/SmoothScroll";
 import { CustomCursor } from "@/components/space/CustomCursor";
 import { motion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useSmoothScroll } from "@/components/space/SmoothScroll";
 
 const GSAPStars = dynamic(() => import("@/components/space/GSAPStars").then(mod => mod.GSAPStars), { ssr: false });
 const PlanetDetailSection = dynamic(() => import("@/components/space/PlanetDetailSection").then(mod => mod.PlanetDetailSection), { ssr: false });
 
 export default function SolarSystemPage() {
   const containerRef = useRef(null);
+  const { scroll: locoScroll } = useSmoothScroll();
+  const currentSection = useRef(0);
+  const totalSections = 10; // Hero + 8 Planets + Footer
+
+  useEffect(() => {
+    if (!locoScroll) return;
+
+    const interval = setInterval(() => {
+      currentSection.current = (currentSection.current + 1) % totalSections;
+      
+      let target;
+      if (currentSection.current === 0) {
+        target = "top";
+      } else if (currentSection.current === totalSections - 1) {
+        target = "footer";
+      } else {
+        const planetSections = document.querySelectorAll(".planet-section");
+        target = planetSections[currentSection.current - 1] as HTMLElement;
+      }
+
+      if (target) {
+        locoScroll.scrollTo(target, {
+          duration: 2000,
+          easing: [0.16, 1, 0.3, 1]
+        });
+      }
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, [locoScroll]);
   
   return (
     <SmoothScroll
@@ -28,7 +59,7 @@ export default function SolarSystemPage() {
     >
       <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 overflow-hidden">
         {/* Hero Section - Refined & Elegant */}
-        <div className="relative z-10 pt-64 pb-32 px-6 flex flex-col items-center justify-center min-h-screen">
+        <div id="top" className="relative z-10 pt-64 pb-32 px-6 flex flex-col items-center justify-center min-h-screen">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
