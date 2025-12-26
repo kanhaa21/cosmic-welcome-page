@@ -94,13 +94,6 @@ export default function BlackHolePage() {
       <CustomCursor />
       <Taskbar />
       
-      {/* Background Layer */}
-      <motion.div 
-        style={{ opacity: backgroundOpacity }}
-        className="fixed inset-0 z-0"
-      >
-      </motion.div>
-
       {/* Dark Overlay for Readability */}
       <div className="fixed inset-0 z-[1] pointer-events-none bg-black/40 backdrop-blur-[1px]" />
 
