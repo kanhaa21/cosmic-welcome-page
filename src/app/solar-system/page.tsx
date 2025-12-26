@@ -51,7 +51,6 @@ export default function SolarSystemPage() {
           <CustomCursor />
           <Taskbar />
           <div className="fixed inset-0 z-[-2] bg-[#020108] pointer-events-none" />
-          <div className="fixed inset-0 z-[-1] bg-[radial-gradient(circle_at_50%_50%,rgba(15,5,30,0.4),transparent_70%)] pointer-events-none" />
           <div className="fixed inset-0 z-[-1] bg-gradient-to-b from-transparent via-transparent to-[#020108] pointer-events-none" />
           <GSAPStars count={2000} />
         </>
