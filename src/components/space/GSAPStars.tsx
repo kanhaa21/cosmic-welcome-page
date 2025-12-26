@@ -57,12 +57,12 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         z: Math.random() * 2000,
         size: Math.random() * 2,
         color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random() * 0.5 + 0.3
+        opacity: Math.random() * 0.2 + 0.1
       };
     });
 
     const render = () => {
-      ctx.fillStyle = "rgba(2, 1, 8, 0.4)"; // Trails effect
+      ctx.fillStyle = "rgba(0, 0, 0, 1)"; // Fully clear each frame or use very low trail
       ctx.fillRect(0, 0, width, height);
       
       const currentSpeed = speedRef.current;
