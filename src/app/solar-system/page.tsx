@@ -68,19 +68,6 @@ export default function SolarSystemPage() {
             }}
             className="text-center max-w-6xl"
           >
-      <div ref={containerRef} className="relative min-h-screen selection:bg-purple-500/30 overflow-hidden">
-        {/* Hero Section - Refined & Elegant */}
-        <div id="top" className="relative z-10 pt-64 pb-32 px-6 flex flex-col items-center justify-center min-h-screen">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0, x: parallax.x, y: parallax.y }}
-            transition={{ 
-              opacity: { duration: 1.8, ease: [0.16, 1, 0.3, 1] },
-              x: { duration: 0.1, ease: "linear" },
-              y: { duration: 0.1, ease: "linear" }
-            }}
-            className="text-center max-w-6xl"
-          >
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
