@@ -133,7 +133,6 @@ const planetData: PlanetData[] = [
   }
 ];
 
-import { useAudio } from "@/hooks/AudioContext";
 import { useParallax } from "@/hooks/useParallax";
 
 function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
@@ -142,14 +141,13 @@ function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
   const sphereRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const { scroll } = useSmoothScroll();
-  const { setTone } = useAudio();
   const parallax = useParallax(idx % 2 === 0 ? 20 : -20);
 
   useEffect(() => {
     if (!scroll || !sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Visibility Toggle for Three.js Rendering & Audio
+      // Visibility Toggle for Three.js Rendering
       ScrollTrigger.create({
         trigger: sectionRef.current,
         scroller: ".smooth-scroll",
@@ -158,7 +156,6 @@ function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
         onToggle: (self) => {
           if (self.isActive) {
             setIsVisible(true);
-            setTone("ambient");
           }
         }
       });
