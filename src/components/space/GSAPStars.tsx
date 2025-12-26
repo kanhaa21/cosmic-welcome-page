@@ -77,13 +77,13 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
 
     let backgroundStars: Star[] = [];
     const initBackgroundStars = (w: number, h: number) => {
-      backgroundStars = Array.from({ length: 1000 }, () => ({
+      backgroundStars = Array.from({ length: 1200 }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
         z: 0,
-        size: Math.random() * 1.5,
+        size: Math.random() * 1.5 + 0.2,
         color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random() * 0.4 + 0.3,
+        opacity: Math.random() * 0.5 + 0.4,
         twinklePhase: Math.random() * Math.PI * 2,
         twinkleSpeed: Math.random() * 0.01 + 0.002
       }));
