@@ -23,8 +23,6 @@ const agencies = [
   { name: "SpaceX", path: "/agencies/spacex" }
 ];
 
-import { useAudio } from "@/hooks/AudioContext";
-
 export function Taskbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -32,7 +30,6 @@ export function Taskbar() {
   const [activeSection, setActiveSection] = useState("hero");
   const [globalProgress, setGlobalProgress] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const { isEnabled, toggleAudio } = useAudio();
 
   const isAgencyPage = pathname?.startsWith("/agencies/");
 
