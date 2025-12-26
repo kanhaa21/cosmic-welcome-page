@@ -137,6 +137,7 @@ function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: sectionRef.current,
+        scroller: ".smooth-scroll",
         start: "top bottom",
         end: "bottom top",
         onToggle: (self) => {
