@@ -105,7 +105,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
             if (currentSpeed > 4) {
                ctx.beginPath();
                ctx.moveTo(px, py);
-               const trailK = fov / (star.z + currentSpeed * 0.4);
+                 const trailK = fov / (star.z + currentSpeed * 0.2);
                const tx = star.x * trailK + centerX;
                const ty = star.y * trailK + centerY;
                ctx.lineTo(tx, ty);
