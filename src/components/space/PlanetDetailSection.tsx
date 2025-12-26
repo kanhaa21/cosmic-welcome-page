@@ -256,18 +256,23 @@ function PlanetSection({ planet, idx }: { planet: PlanetData; idx: number }) {
 
 
         {/* Sphere Container */}
-        <div ref={sphereRef} className="planet-sphere-container relative flex justify-center items-center flex-1">
-          {isVisible ? (
-            <PlanetSphere 
-              textureUrl={planet.textureUrl} 
-              cloudUrl={planet.cloudUrl}
-              color={planet.color}
-              rotationDuration={planet.rotationDuration}
-              size="w-[300px] md:w-[450px] lg:w-[550px]"
-            />
-          ) : (
-            <div className="w-[300px] md:w-[450px] lg:w-[550px] aspect-square rounded-full bg-white/[0.02]" />
-          )}
+        <div ref={sphereRef} className="planet-sphere-container relative flex justify-center items-center flex-1 hover-glow cursor-pointer">
+          <motion.div
+            animate={{ x: parallax.x, y: parallax.y }}
+            transition={{ type: "tween", ease: "linear", duration: 0.1 }}
+          >
+            {isVisible ? (
+              <PlanetSphere 
+                textureUrl={planet.textureUrl} 
+                cloudUrl={planet.cloudUrl}
+                color={planet.color}
+                rotationDuration={planet.rotationDuration}
+                size="w-[300px] md:w-[450px] lg:w-[550px]"
+              />
+            ) : (
+              <div className="w-[300px] md:w-[450px] lg:w-[550px] aspect-square rounded-full bg-white/[0.02]" />
+            )}
+          </motion.div>
           
           {/* Orbital Path Line (Aesthetic) */}
           <div className="absolute inset-0 border border-white/5 rounded-full scale-[1.3] opacity-10 pointer-events-none" />
