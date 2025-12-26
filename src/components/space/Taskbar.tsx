@@ -26,7 +26,7 @@ const agencies = [
 export function Taskbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { scroll } = useSmoothScroll();
+  const { scroll: locoScroll } = useSmoothScroll();
   const [activeSection, setActiveSection] = useState("hero");
   const [globalProgress, setGlobalProgress] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -74,13 +74,13 @@ export function Taskbar() {
     });
 
     return () => ctx.revert();
-  }, [scroll, pathname]);
+  }, [locoScroll, pathname]);
 
   const handleScroll = (id: string) => {
-    if (scroll) {
+    if (locoScroll) {
       const target = document.querySelector(`#${id}`);
       if (target) {
-        scroll.scrollTo(target, {
+        locoScroll.scrollTo(target, {
           offset: 0,
           duration: 1.5,
           easing: [0.25, 0.00, 0.35, 1.00]
