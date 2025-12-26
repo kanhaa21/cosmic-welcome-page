@@ -75,18 +75,21 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         };
     });
 
-    const backgroundStars: Star[] = Array.from({ length: 1000 }, () => {
-        return {
-          x: Math.random() * width,
-          y: Math.random() * height,
-          z: 0,
-          size: Math.random() * 1.5,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          opacity: Math.random() * 0.3 + 0.1,
-          twinklePhase: Math.random() * Math.PI * 2,
-          twinkleSpeed: Math.random() * 0.01 + 0.002
-        };
-    });
+    let backgroundStars: Star[] = [];
+    const initBackgroundStars = (w: number, h: number) => {
+      backgroundStars = Array.from({ length: 1000 }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        z: 0,
+        size: Math.random() * 1.5,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        opacity: Math.random() * 0.3 + 0.1,
+        twinklePhase: Math.random() * Math.PI * 2,
+        twinkleSpeed: Math.random() * 0.01 + 0.002
+      }));
+    };
+
+    initBackgroundStars(width, height);
 
     const render = () => {
       ctx.fillStyle = "black";
