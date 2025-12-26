@@ -83,7 +83,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         z: 0,
         size: Math.random() * 1.5,
         color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random() * 0.3 + 0.1,
+        opacity: Math.random() * 0.4 + 0.3,
         twinklePhase: Math.random() * Math.PI * 2,
         twinkleSpeed: Math.random() * 0.01 + 0.002
       }));
@@ -109,7 +109,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
         ctx.fillStyle = star.color;
-        ctx.globalAlpha = star.opacity * (0.3 + twinkle * 0.7) * centerFade;
+        ctx.globalAlpha = star.opacity * (0.4 + twinkle * 0.6) * centerFade;
         ctx.fill();
       });
 
@@ -141,7 +141,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           
           // Twinkle effect
           const twinkle = Math.sin(time * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
-          const currentOpacity = (1 - star.z / 2000) * star.opacity * borderBoost * centerFade * (0.6 + twinkle * 0.4);
+          const currentOpacity = (1 - star.z / 2000) * star.opacity * borderBoost * centerFade * (0.6 + twinkle * 0.4) * 0.4;
 
           // Add a glowy golden trail for falling stars
           const trailLength = Math.max(0.5, currentSpeed * 0.25);
@@ -166,7 +166,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           ctx.lineTo(tx, ty);
           ctx.strokeStyle = "#f59e0b"; // Amber
           ctx.lineWidth = s * 2;
-          ctx.globalAlpha = currentOpacity * 0.2;
+          ctx.globalAlpha = currentOpacity * 0.15;
           ctx.stroke();
 
           // Core Trail
@@ -175,15 +175,15 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           ctx.lineTo(tx, ty);
           ctx.strokeStyle = "#fff"; 
           ctx.lineWidth = s * 0.5;
-          ctx.globalAlpha = currentOpacity * 0.4;
+          ctx.globalAlpha = currentOpacity * 0.3;
           ctx.stroke();
 
           // Outer glow for stars
-          if (currentOpacity > 0.3) {
+          if (currentOpacity > 0.2) {
             ctx.beginPath();
             ctx.arc(px, py, s * 3, 0, Math.PI * 2);
             ctx.fillStyle = "#fbbf24";
-            ctx.globalAlpha = currentOpacity * 0.3;
+            ctx.globalAlpha = currentOpacity * 0.2;
             ctx.fill();
           }
 
@@ -191,7 +191,7 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           ctx.beginPath();
           ctx.arc(px, py, s, 0, Math.PI * 2);
           ctx.fillStyle = star.color;
-          ctx.globalAlpha = Math.min(currentOpacity * 1.5, 1);
+          ctx.globalAlpha = Math.min(currentOpacity * 1.2, 1);
           ctx.fill();
         }
       });
