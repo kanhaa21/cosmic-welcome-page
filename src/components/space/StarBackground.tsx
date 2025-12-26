@@ -22,7 +22,7 @@ export function StarBackground() {
           <div className="fixed inset-0 z-[-1] bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,1)_0%,rgba(0,0,0,0.5)_30%,rgba(0,0,0,0)_70%)] pointer-events-none" />
           <div className="fixed inset-0 z-[-1] bg-gradient-to-b from-black/60 via-transparent to-[#030014] pointer-events-none opacity-90" />
 
-        <GSAPStars speed={speed} count={2000} />
+        <GSAPStars speed={speed} count={800} />
       </>
     );
 }
