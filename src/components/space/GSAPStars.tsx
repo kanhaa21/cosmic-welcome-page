@@ -46,32 +46,65 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
 
     const colors = [
       "#ffffff", // Pure white
-      "#f0f9ff", // Blueish
-      "#fffaf0", // Warm
-      "#faf5ff", // Purplish
+      "#fef08a", // Yellow 200
+      "#fde047", // Yellow 400
+      "#d8b4fe", // Purple 300
+      "#c084fc", // Purple 500
+      "#e0f2fe", // Blue 100
     ];
     
     // 3D Starfield implementation
     const stars: Star[] = Array.from({ length: count }, () => {
+        const colorWeight = Math.random();
+        let color = colors[0];
+        if (colorWeight > 0.85) color = colors[1]; // Yellow 200
+        else if (colorWeight > 0.95) color = colors[2]; // Yellow 400
+        else if (colorWeight > 0.7) color = colors[3]; // Purple 300
+        else if (colorWeight > 0.8) color = colors[4]; // Purple 500
+        else if (colorWeight > 0.6) color = colors[5]; // Blue 100
+
         return {
-          x: (Math.random() - 0.5) * 2000,
-          y: (Math.random() - 0.5) * 2000,
+          x: (Math.random() - 0.5) * 3000,
+          y: (Math.random() - 0.5) * 3000,
           z: Math.random() * 2000,
-          size: Math.random() * 2,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          opacity: Math.random() * 0.4 + 0.4, // Increased brightness
+          size: Math.random() * 2 + 0.5,
+          color,
+          opacity: Math.random() * 0.5 + 0.5,
           twinklePhase: Math.random() * Math.PI * 2,
-          twinkleSpeed: Math.random() * 0.005 + 0.002
+          twinkleSpeed: Math.random() * 0.015 + 0.005 // Faster twinkling
+        };
+    });
+
+    const backgroundStars: Star[] = Array.from({ length: 1000 }, () => {
+        return {
+          x: Math.random() * width,
+          y: Math.random() * height,
+          z: 0,
+          size: Math.random() * 1.5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          opacity: Math.random() * 0.3 + 0.1,
+          twinklePhase: Math.random() * Math.PI * 2,
+          twinkleSpeed: Math.random() * 0.01 + 0.002
         };
     });
 
     const render = () => {
-      ctx.fillStyle = "rgba(0, 0, 0, 1)";
+      ctx.fillStyle = "black";
       ctx.fillRect(0, 0, width, height);
       
       const currentSpeed = speedRef.current;
-      const fov = 200;
+      const fov = 250;
       const time = Date.now();
+
+      // Draw distant background stars first
+      backgroundStars.forEach(star => {
+        const twinkle = Math.sin(time * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fillStyle = star.color;
+        ctx.globalAlpha = star.opacity * (0.3 + twinkle * 0.7);
+        ctx.fill();
+      });
 
       stars.forEach((star) => {
         // Move towards screen
@@ -80,8 +113,8 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         // Reset star if it passes the screen or gets too far
         if (star.z <= 0) {
           star.z = 2000;
-          star.x = (Math.random() - 0.5) * 2000;
-          star.y = (Math.random() - 0.5) * 2000;
+          star.x = (Math.random() - 0.5) * 3000;
+          star.y = (Math.random() - 0.5) * 3000;
         }
 
         // Project 3D to 2D
@@ -90,17 +123,17 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
         const py = star.y * k + centerY;
 
         // Only draw if within bounds
-        if (px >= 0 && px <= width && py >= 0 && py <= height) {
-          const s = (1 - star.z / 2000) * 3;
+        if (px >= -100 && px <= width + 100 && py >= -100 && py <= height + 100) {
+          const s = (1 - star.z / 2000) * 3.5;
           
           // More pronounced radial fade for better readability of center content
           const distFromCenter = Math.sqrt(Math.pow(px - centerX, 2) + Math.pow(py - centerY, 2));
-            const fadeRadius = Math.min(width, height) * 1.2; // Increased radius for larger dark center
-            const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 8); // Sharper transition for darker center
+            const fadeRadius = Math.min(width, height) * 1.4; 
+            const centerFade = Math.pow(Math.min(distFromCenter / fadeRadius, 1), 6);
           
           // Twinkle effect
           const twinkle = Math.sin(time * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
-          const currentOpacity = (1 - star.z / 2000) * star.opacity * centerFade * (0.6 + twinkle * 0.4);
+          const currentOpacity = (1 - star.z / 2000) * star.opacity * centerFade * (0.4 + twinkle * 0.6);
 
           ctx.beginPath();
           ctx.arc(px, py, s, 0, Math.PI * 2);
@@ -108,17 +141,26 @@ export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
           ctx.globalAlpha = currentOpacity;
           ctx.fill();
 
+          // Outer glow for brighter stars
+          if (star.size > 1.5 && currentOpacity > 0.5) {
+            ctx.beginPath();
+            ctx.arc(px, py, s * 2, 0, Math.PI * 2);
+            ctx.fillStyle = star.color;
+            ctx.globalAlpha = currentOpacity * 0.2;
+            ctx.fill();
+          }
+
             // Add a small trail for fast moving stars
-            if (currentSpeed > 4) {
+            if (currentSpeed > 5) {
                ctx.beginPath();
                ctx.moveTo(px, py);
-                 const trailK = fov / (star.z + currentSpeed * 0.1);
+                 const trailK = fov / (star.z + currentSpeed * 0.05);
                const tx = star.x * trailK + centerX;
                const ty = star.y * trailK + centerY;
                ctx.lineTo(tx, ty);
                ctx.strokeStyle = star.color;
-               ctx.lineWidth = s * 0.2;
-               ctx.globalAlpha = currentOpacity * 0.2;
+               ctx.lineWidth = s * 0.3;
+               ctx.globalAlpha = currentOpacity * 0.3;
                ctx.stroke();
             }
         }
