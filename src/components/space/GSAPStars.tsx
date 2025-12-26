@@ -2,17 +2,15 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { MotionValue, useTransform } from "framer-motion";
+import { MotionValue } from "framer-motion";
 
 interface Star {
   x: number;
   y: number;
+  z: number;
   size: number;
   color: string;
   opacity: number;
-  twinkleSpeed: number;
-  twinklePhase: number;
-  baseY: number;
 }
 
 interface GSAPStarsProps {
@@ -20,7 +18,7 @@ interface GSAPStarsProps {
   speed?: MotionValue<number> | number;
 }
 
-export function GSAPStars({ count = 1200, speed = 1 }: GSAPStarsProps) {
+export function GSAPStars({ count = 1500, speed = 1 }: GSAPStarsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const speedRef = useRef(typeof speed === "number" ? speed : 1);
 
@@ -41,66 +39,75 @@ export function GSAPStars({ count = 1200, speed = 1 }: GSAPStarsProps) {
 
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
+    let centerX = width / 2;
+    let centerY = height / 2;
 
     const colors = [
       "#ffffff", // Pure white
       "#f0f9ff", // Blueish
       "#fffaf0", // Warm
       "#faf5ff", // Purplish
-      "#f5f5f5", // Greyish
     ];
     
+    // 3D Starfield implementation
     const stars: Star[] = Array.from({ length: count }, () => {
-      const p = Math.random();
-      let size = 0.2 + Math.random() * 0.5;
-      if (p > 0.95) size = 0.8 + Math.random() * 0.6;
-      
-      const x = Math.random() * width;
-      const y = Math.random() * height;
-      
       return {
-        x,
-        y,
-        baseY: y,
-        size: size,
+        x: (Math.random() - 0.5) * 2000,
+        y: (Math.random() - 0.5) * 2000,
+        z: Math.random() * 2000,
+        size: Math.random() * 2,
         color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random() * 0.5 + 0.1, // Increased visibility
-        twinkleSpeed: 0.005 + Math.random() * 0.01,
-        twinklePhase: Math.random() * Math.PI * 2
+        opacity: Math.random() * 0.5 + 0.3
       };
     });
 
-    let frame = 0;
     const render = () => {
-      frame++;
-      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "rgba(2, 1, 8, 0.4)"; // Trails effect
+      ctx.fillRect(0, 0, width, height);
       
       const currentSpeed = speedRef.current;
-      
+      const fov = 200;
+
       stars.forEach((star) => {
-        // Subtle drift based on speed
-        star.y -= 0.05 * currentSpeed;
-        if (star.y < -10) star.y = height + 10;
-        if (star.y > height + 10) star.y = -10;
+        // Move towards screen
+        star.z -= 0.5 * currentSpeed * 2;
+        
+        // Reset star if it passes the screen or gets too far
+        if (star.z <= 0) {
+          star.z = 2000;
+          star.x = (Math.random() - 0.5) * 2000;
+          star.y = (Math.random() - 0.5) * 2000;
+        }
 
-        const twinkle = Math.sin(frame * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
-        const currentOpacity = star.opacity * (0.3 + twinkle * 0.7);
+        // Project 3D to 2D
+        const k = fov / star.z;
+        const px = star.x * k + centerX;
+        const py = star.y * k + centerY;
 
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        ctx.fillStyle = star.color;
-        ctx.globalAlpha = currentOpacity;
-        ctx.fill();
+        // Only draw if within bounds
+        if (px >= 0 && px <= width && py >= 0 && py <= height) {
+          const s = (1 - star.z / 2000) * 3;
+          const currentOpacity = (1 - star.z / 2000) * star.opacity;
 
-        if (star.size > 0.8) {
           ctx.beginPath();
-          ctx.arc(star.x, star.y, star.size * 2, 0, Math.PI * 2);
-          const gradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.size * 2);
-          gradient.addColorStop(0, star.color);
-          gradient.addColorStop(1, "transparent");
-          ctx.fillStyle = gradient;
-          ctx.globalAlpha = currentOpacity * 0.4;
+          ctx.arc(px, py, s, 0, Math.PI * 2);
+          ctx.fillStyle = star.color;
+          ctx.globalAlpha = currentOpacity;
           ctx.fill();
+
+          // Add a small trail for fast moving stars
+          if (currentSpeed > 4) {
+             ctx.beginPath();
+             ctx.moveTo(px, py);
+             const trailK = fov / (star.z + currentSpeed * 5);
+             const tx = star.x * trailK + centerX;
+             const ty = star.y * trailK + centerY;
+             ctx.lineTo(tx, ty);
+             ctx.strokeStyle = star.color;
+             ctx.lineWidth = s * 0.5;
+             ctx.globalAlpha = currentOpacity * 0.5;
+             ctx.stroke();
+          }
         }
       });
     };
@@ -109,16 +116,10 @@ export function GSAPStars({ count = 1200, speed = 1 }: GSAPStarsProps) {
     gsap.ticker.add(ticker);
 
     const handleResize = () => {
-      const oldWidth = width;
-      const oldHeight = height;
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
-      
-      stars.forEach(star => {
-        star.x = (star.x / oldWidth) * width;
-        star.y = (star.y / oldHeight) * height;
-        star.baseY = (star.baseY / oldHeight) * height;
-      });
+      centerX = width / 2;
+      centerY = height / 2;
     };
 
     window.addEventListener("resize", handleResize);
@@ -129,11 +130,11 @@ export function GSAPStars({ count = 1200, speed = 1 }: GSAPStarsProps) {
     };
   }, [count]);
 
-    return (
-      <canvas 
-        ref={canvasRef} 
-        className="fixed inset-0 pointer-events-none z-0"
-        style={{ filter: "blur(0.3px)" }}
-      />
-    );
+  return (
+    <canvas 
+      ref={canvasRef} 
+      className="fixed inset-0 pointer-events-none z-0"
+      style={{ filter: "blur(0.2px)" }}
+    />
+  );
 }
