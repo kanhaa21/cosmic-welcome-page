@@ -183,6 +183,11 @@ function PlanetOrbit({ name, color, size, distance, speed, opacity, emissive, ha
     return points;
   }, [distance]);
 
+  const orbitPositions = useMemo(() => {
+    if (distance === 0 || orbitPoints.length === 0) return new Float32Array(0);
+    return new Float32Array(orbitPoints.flatMap(p => [p.x, p.y, p.z]));
+  }, [distance, orbitPoints]);
+
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     if (planetRef.current && distance > 0) {
@@ -197,13 +202,13 @@ function PlanetOrbit({ name, color, size, distance, speed, opacity, emissive, ha
 
   return (
     <group>
-      {distance > 0 && orbitPoints.length > 0 && (
+      {distance > 0 && orbitPositions.length > 0 && (
         <line>
           <bufferGeometry>
             <bufferAttribute
               attach="attributes-position"
-              count={orbitPoints.length}
-              array={new Float32Array(orbitPoints.flatMap(p => [p.x, p.y, p.z]))}
+              count={orbitPositions.length / 3}
+              array={orbitPositions}
               itemSize={3}
             />
           </bufferGeometry>
