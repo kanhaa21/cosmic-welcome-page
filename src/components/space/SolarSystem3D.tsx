@@ -2,7 +2,7 @@
 
 import React, { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Stars, Float, Text, Trail, Line } from "@react-three/drei";
+import { OrbitControls, Stars, Float, Text } from "@react-three/drei";
 import * as THREE from "three";
 
 // Fix for R3F "data-orchids-name" error
