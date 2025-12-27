@@ -75,7 +75,7 @@ function Earth({ opacity }: { opacity: number }) {
     }
   });
 
-  if (opacity <= 0.01) return null;
+  if (opacity <= 0.01) return <group visible={false} />;
 
   return (
     <group>
