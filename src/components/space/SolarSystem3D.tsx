@@ -84,7 +84,6 @@ function Planet({ name, color, size, distance, orbitalSpeed, hasRings }: any) {
             position={[0, size + 0.5, 0]}
             fontSize={0.4}
             color="white"
-            font="/fonts/Orbitron-Bold.ttf" // Fallback to system font if not exists
             anchorX="center"
             anchorY="middle"
           >
