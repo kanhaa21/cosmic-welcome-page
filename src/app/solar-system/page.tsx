@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useSmoothScroll } from "@/components/space/SmoothScroll";
+import { SolarSystem3D } from "@/components/space/SolarSystem3D";
 
 const PlanetDetailSection = dynamic(() => import("@/components/space/PlanetDetailSection").then(mod => mod.PlanetDetailSection), { ssr: false });
 
