@@ -5,6 +5,13 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars, Float, Text, Trail, Line } from "@react-three/drei";
 import * as THREE from "three";
 
+// Fix for R3F "data-orchids-name" error
+if (typeof window !== 'undefined') {
+  (THREE.Object3D.prototype as any)['data-orchids-name'] = undefined;
+  (THREE.BufferGeometry.prototype as any)['data-orchids-name'] = undefined;
+  (THREE.Material.prototype as any)['data-orchids-name'] = undefined;
+}
+
 const PLANET_DATA = [
   { name: "Mercury", color: "#A5A5A5", size: 0.4, distance: 4, speed: 1.5, orbitalSpeed: 0.04 },
   { name: "Venus", color: "#E3BB76", size: 0.7, distance: 7, speed: 1.2, orbitalSpeed: 0.015 },
