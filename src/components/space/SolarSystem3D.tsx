@@ -37,27 +37,33 @@ function Planet({ name, color, size, distance, orbitalSpeed, hasRings }: any) {
     }
   });
 
-  const orbitPoints = useMemo(() => {
-    const points = [];
-    for (let i = 0; i <= 64; i++) {
-      const angle = (i / 64) * Math.PI * 2;
-      points.push(new THREE.Vector3(Math.cos(angle) * distance, 0, Math.sin(angle) * distance));
-    }
-    return points;
-  }, [distance]);
-
-  return (
-    <group>
-      {/* Orbit Line */}
-      <Line
-        points={orbitPoints}
-        color="white"
-        lineWidth={0.5}
-        transparent
-        opacity={0.1}
-      />
-      
-      <group ref={groupRef}>
+    const orbitPositions = useMemo(() => {
+      const points = new Float32Array(65 * 3);
+      for (let i = 0; i <= 64; i++) {
+        const angle = (i / 64) * Math.PI * 2;
+        points[i * 3] = Math.cos(angle) * distance;
+        points[i * 3 + 1] = 0;
+        points[i * 3 + 2] = Math.sin(angle) * distance;
+      }
+      return points;
+    }, [distance]);
+  
+    return (
+      <group>
+        {/* Orbit Line */}
+        <line>
+          <bufferGeometry>
+            <bufferAttribute
+              attach="attributes-position"
+              count={65}
+              array={orbitPositions}
+              itemSize={3}
+            />
+          </bufferGeometry>
+          <lineBasicMaterial color="white" transparent opacity={0.1} />
+        </line>
+        
+        <group ref={groupRef}>
         <mesh ref={meshRef} position={[distance, 0, 0]}>
           <sphereGeometry args={[size, 32, 32]} />
           <meshStandardMaterial 
