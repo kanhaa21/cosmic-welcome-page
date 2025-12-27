@@ -15,6 +15,8 @@ const sections = [
   { name: "Explore", id: "explore" },
   { name: "Solar", id: "solar", path: "/solar-system" },
   { name: "Agencies", id: "agencies", path: "/agencies" },
+  { name: "Simulator", id: "simulator", path: "/black-holes/simulator" },
+  { name: "Navigator", id: "navigator", path: "/cosmic-navigator" },
 ];
 
 const agencies = [
