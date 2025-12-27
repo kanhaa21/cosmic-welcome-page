@@ -462,7 +462,54 @@ function UniverseView({ opacity }: { opacity: number }) {
   );
 }
 
+function WarpEffect({ active }: { active: boolean }) {
+  const points = useMemo(() => {
+    const p = new Float32Array(1000 * 3);
+    for (let i = 0; i < 1000; i++) {
+      p[i * 3] = (Math.random() - 0.5) * 50;
+      p[i * 3 + 1] = (Math.random() - 0.5) * 50;
+      p[i * 3 + 2] = Math.random() * -100;
+    }
+    return p;
+  }, []);
+
+  const ref = useRef<THREE.Points>(null);
+  useFrame((state) => {
+    if (!ref.current) return;
+    if (active) {
+      ref.current.position.z += 2;
+      if (ref.current.position.z > 50) ref.current.position.z = 0;
+      ref.current.visible = true;
+    } else {
+      ref.current.visible = false;
+    }
+  });
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" count={1000} array={points} itemSize={3} />
+      </bufferGeometry>
+      <pointsMaterial size={0.1} color="#ffffff" transparent opacity={0.5} blending={THREE.AdditiveBlending} />
+    </points>
+  );
+}
+
 function Scene({ zoom }: { zoom: number }) {
+  const zoomVel = useRef(0);
+  const lastZoom = useRef(zoom);
+  const [isWarping, setIsWarping] = useState(false);
+
+  useEffect(() => {
+    const diff = Math.abs(zoom - lastZoom.current);
+    if (diff > 5) {
+      setIsWarping(true);
+      const timer = setTimeout(() => setIsWarping(false), 800);
+      return () => clearTimeout(timer);
+    }
+    lastZoom.current = zoom;
+  }, [zoom]);
+
   const earthOpacity = useSmoothedValue(Math.max(0, 1 - zoom / 20), 0.05);
   const solarOpacity = useSmoothedValue(
     Math.min(1, Math.max(0, (zoom - 10) / 15)) * Math.max(0, 1 - (zoom - 35) / 15),
