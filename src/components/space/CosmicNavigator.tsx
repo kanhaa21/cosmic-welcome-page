@@ -6,6 +6,13 @@ import { OrbitControls, Stars, Points, PointMaterial } from "@react-three/drei";
 import * as THREE from "three";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Fix for R3F "data-orchids-name" error
+if (typeof window !== 'undefined') {
+  (THREE.Object3D.prototype as any)['data-orchids-name'] = undefined;
+  (THREE.BufferGeometry.prototype as any)['data-orchids-name'] = undefined;
+  (THREE.Material.prototype as any)['data-orchids-name'] = undefined;
+}
+
 const SCALE_LEVELS = [
   { name: "Earth", min: 0, max: 15, cameraZ: 8, description: "Home Planet • 12,742 km diameter" },
   { name: "Solar System", min: 15, max: 40, cameraZ: 80, description: "8 Planets • 287.46 billion km" },
