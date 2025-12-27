@@ -30,6 +30,12 @@ export interface FuturePlan {
   description: string;
 }
 
+export interface Metric {
+  label: string;
+  value: string;
+  trend?: "up" | "down" | "stable";
+}
+
 export interface AgencyData {
   id: string;
   name: string;
@@ -50,6 +56,7 @@ export interface AgencyData {
   projects: Project[];
   achievements: string[];
   futurePlans: FuturePlan[];
+  metrics: Metric[];
   accentColor: string;
   theme: "nebula-purple" | "nebula-blue" | "nebula-emerald" | "nebula-orange";
 }
@@ -69,6 +76,13 @@ export const agencyData: Record<string, AgencyData> = {
     technicalOverview: "NASA operates a vast network of research centers and launch facilities. Its technical expertise spans deep space communication (DSN), reusable launch systems, and advanced robotics.",
     accentColor: "#3b82f6",
     theme: "nebula-blue",
+    metrics: [
+      { label: "Active Missions", value: "80+", trend: "up" },
+      { label: "Total Moon Rocks", value: "382 kg" },
+      { label: "Mars Rovers", value: "5", trend: "stable" },
+      { label: "Patents Generated", value: "6,000+" },
+      { label: "ISS Occupation", value: "24 Years" }
+    ],
     facilities: [
       { name: "Kennedy Space Center", location: "Florida", role: "Primary Launch Site" },
       { name: "Jet Propulsion Laboratory", location: "California", role: "Robotic Exploration" },
@@ -133,6 +147,13 @@ export const agencyData: Record<string, AgencyData> = {
     technicalOverview: "ISRO is a world leader in cost-efficient launch systems and remote sensing. It maintains one of the largest fleets of communication and earth observation satellites.",
     accentColor: "#f59e0b",
     theme: "nebula-orange",
+    metrics: [
+      { label: "Satellites Launched", value: "430+", trend: "up" },
+      { label: "Foreign Satellites", value: "350+" },
+      { label: "PSLV Success Rate", value: "95%", trend: "up" },
+      { label: "Mars Mission Cost", value: "$74 Million" },
+      { label: "Moon Landing", value: "South Pole 1st" }
+    ],
     facilities: [
       { name: "Satish Dhawan Space Centre", location: "Sriharikota", role: "Primary Launch Port" },
       { name: "U R Rao Satellite Centre", location: "Bengaluru", role: "Satellite Design & Dev" },
@@ -195,6 +216,13 @@ export const agencyData: Record<string, AgencyData> = {
     technicalOverview: "ESA coordinates the financial and intellectual resources of its members to undertake programs far beyond the scope of any single European country.",
     accentColor: "#10b981",
     theme: "nebula-emerald",
+    metrics: [
+      { label: "Member States", value: "22", trend: "stable" },
+      { label: "Galileo Satellites", value: "28", trend: "up" },
+      { label: "Copernicus Data", value: "250 TB/day" },
+      { label: "Deep Space Stations", value: "3" },
+      { label: "Astronaut Corps", value: "17" }
+    ],
     facilities: [
       { name: "Guiana Space Centre", location: "Kourou, French Guiana", role: "Main Launch Site" },
       { name: "ESTEC", location: "Noordwijk, Netherlands", role: "Technical Heart" },
@@ -255,6 +283,13 @@ export const agencyData: Record<string, AgencyData> = {
     technicalOverview: "SpaceX pioneered the use of vertical landing and reuse of orbital-class rocket boosters, dramatically reducing the cost of access to space.",
     accentColor: "#a855f7",
     theme: "nebula-purple",
+    metrics: [
+      { label: "Total Launches", value: "385+", trend: "up" },
+      { label: "Total Landings", value: "330+", trend: "up" },
+      { label: "Starlink Users", value: "3.0M+", trend: "up" },
+      { label: "Starship Thrust", value: "7,590 tf" },
+      { label: "Flight Cadence", value: "3 Days" }
+    ],
     facilities: [
       { name: "Starbase", location: "Boca Chica, Texas", role: "Starship Dev & Launch" },
       { name: "LC-39A (KSC)", location: "Florida", role: "Crew & Heavy Launch" },
