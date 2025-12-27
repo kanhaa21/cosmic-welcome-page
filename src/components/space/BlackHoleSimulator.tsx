@@ -5,6 +5,13 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars, Float, Text, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
 
+// Fix for R3F "data-orchids-name" error
+if (typeof window !== 'undefined') {
+  (THREE.Object3D.prototype as any)['data-orchids-name'] = undefined;
+  (THREE.BufferGeometry.prototype as any)['data-orchids-name'] = undefined;
+  (THREE.Material.prototype as any)['data-orchids-name'] = undefined;
+}
+
 function AccretionDisk({ radius, color, speed }: { radius: number; color: string; speed: number }) {
   const meshRef = useRef<THREE.Mesh>(null);
   
