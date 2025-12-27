@@ -538,6 +538,7 @@ function Scene({ zoom }: { zoom: number }) {
       <SolarSystemView opacity={solarOpacity} />
       <GalaxyView opacity={galaxyOpacity} />
       <UniverseView opacity={universeOpacity} />
+      <WarpEffect active={isWarping} />
     </>
   );
 }
