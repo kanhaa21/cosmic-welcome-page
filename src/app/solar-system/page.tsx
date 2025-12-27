@@ -91,11 +91,25 @@ export default function SolarSystemPage() {
             </div>
           </motion.div>
 
-          {/* Background Ambient Glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-900/10 rounded-full blur-[160px] pointer-events-none -z-10" />
-        </div>
+            {/* Background Ambient Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-900/10 rounded-full blur-[160px] pointer-events-none -z-10" />
+          </div>
 
-        {/* Planet Detail Sections */}
+          {/* 3D Solar System Section */}
+          <section className="relative h-[800px] w-full z-10 border-y border-white/5 bg-black/50 backdrop-blur-xl">
+            <div className="absolute inset-0 pointer-events-none z-20 shadow-[inset_0_0_100px_rgba(0,0,0,1)]" />
+            <div className="absolute top-12 left-12 z-30">
+              <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-purple-400 block mb-2">Interactive Orbit</span>
+              <h2 className="text-4xl font-light text-white font-[family-name:var(--font-orbitron)]">REAL-TIME <span className="font-bold">3D ENGINE</span></h2>
+            </div>
+            <SolarSystem3D />
+            <div className="absolute bottom-12 right-12 z-30 text-right">
+              <p className="text-[10px] text-zinc-500 font-mono">DRAG TO ROTATE • SCROLL TO ZOOM</p>
+            </div>
+          </section>
+
+          {/* Planet Detail Sections */}
+
         <PlanetDetailSection />
 
         <footer id="footer" className="relative py-48 px-6 text-center z-10">
